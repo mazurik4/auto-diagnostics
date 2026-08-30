@@ -183,6 +183,17 @@
       document.getElementById('cbPhone').focus();
       return;
     }
+    // Отправляем заявку на бэкенд, чтобы она сохранилась в базе данных.
+    // Даже если это не сработает (например, бэкенд не запущен),
+    // клиент всё равно попадёт в Telegram — форма не сломается.
+    fetch('/api/callback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, phone: phone })
+    }).catch(function(err){
+      console.error('Не вдалося зберегти заявку на сервері:', err);
+    });
+
     document.getElementById('cbSuccess').style.display = 'block';
     var text = encodeURIComponent('Замовлення дзвінка з сайту.\nІм\'я: '+name+'\nТелефон: '+phone);
     setTimeout(function(){
