@@ -264,3 +264,65 @@
   .reveal.in{opacity:1;transform:translateY(0);}
 
   ::selection{background:var(--signal);color:var(--signal-ink);}
+  
+  /* =========================================================
+     МОБИЛЬНАЯ ОПТИМИЗАЦИЯ
+     Всё ниже работает только на экранах до 640px.
+     На компьютере (шире 640px) ничего не меняется.
+  ========================================================= */
+  @media (max-width:640px){
+ 
+    /* Отступы секций — на телефоне много воздуха выглядит пусто */
+    .section{padding:56px 0;}
+    .section-tight{padding:40px 0;}
+    .wrap{padding:0 18px;}
+ 
+    /* Hero — компактнее и без лишнего верхнего/нижнего воздуха */
+    .hero{padding:48px 0 40px;}
+    .hero h1{font-size:2rem;line-height:1.14;margin-bottom:16px;}
+    .lede{font-size:.96rem;margin-bottom:28px;}
+    .hero-actions{flex-direction:column;}
+    .hero-actions .btn{width:100%;justify-content:center;}
+    .hero-meta{gap:16px;}
+    .hero-meta b{font-size:1.1rem;}
+ 
+    /* Осциллограф — ниже и без лишнего паддинга по бокам */
+    .scope{padding:16px 16px 14px;}
+    .scope-screen{height:130px;}
+ 
+    /* Карточки услуг и "почему мы" — меньше внутренних отступов */
+    .svc-btn{padding:16px 16px;}
+    .why-card{padding:16px;}
+    .alert-list li{padding:14px 16px;}
+ 
+    /* Процесс — числа чуть меньше, отступы плотнее */
+    .step{grid-template-columns:44px 1fr;gap:12px;padding:16px 0;}
+    .step-num{font-size:1.25rem;}
+ 
+    /* CTA-блок с формой — без лишнего внутреннего простора */
+    .cta-band{padding:22px;border-radius:14px;}
+    .form-row{flex-direction:column;}
+    .form-row input{width:100%;}
+ 
+    /* Блок контактов — компактнее, карта не такая высокая */
+    .loc-info{padding:22px;gap:16px;}
+    .loc-map, .loc-map iframe{min-height:220px;}
+ 
+    /* Футер — в столбик, а не в строку */
+    .foot-row{flex-direction:column;text-align:center;gap:8px;}
+ 
+    /* Плавающие кнопки — чуть меньше, чтобы не перекрывали контент и не выглядели громоздко */
+    .fab-stack{right:14px;bottom:14px;gap:8px;}
+    .fab{width:46px;height:46px;font-size:.95rem;}
+ 
+    /* Хедер — логотип и текст плотнее друг к другу */
+    .brand-text{font-size:.85rem;}
+    .brand-text span{font-size:.62rem;}
+  }
+ 
+  /* Совсем маленькие экраны (старые/узкие телефоны) */
+  @media (max-width:380px){
+    .hero h1{font-size:1.7rem;}
+    .svc-grid{grid-template-columns:1fr;}
+    .why-grid{grid-template-columns:1fr;}
+  }
