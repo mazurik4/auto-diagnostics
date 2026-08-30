@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Майстерня автодіагностики — Київ</title>
+<meta name="description" content="Професійна комп'ютерна діагностика та ремонт електрообладнання авто у Києві. Осцилограф, автосканер, ендоскопія циліндрів, перевірка датчиків.">
+<link rel="icon" type="image/png" href="img/halfautoelectriklogo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="scanbar"></div>
+
+<header>
+  <nav class="nav">
+    <a href="#top" class="brand">
+      <img class ="brand-mark" src="img/halfautoelectriklogo.png" alt="Логотип Майстерні">
+      <span class="brand-text">Автодіагностика<span>Майстерня · Київ</span></span>
+    </a>
+    <button class="burger" aria-label="Меню" aria-expanded="false" id="burgerBtn">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about" data-nav>Про нас</a></li>
+      <li><a href="#services" data-nav>Послуги</a></li>
+      <li><a href="#process" data-nav>Процес</a></li>
+      <li><a href="#contacts" data-nav>Контакти</a></li>
+      <li><a class="nav-cta" href="tel:+380954851166">📞 Подзвонити</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="status-pill"><span class="dot" id="heroDot"></span><span id="heroStatusText">Перевіряємо статус…</span></div>
+        <h1>Знайдемо несправність.<br>Не вгадаємо — <em>виміряємо</em>.</h1>
+        <p class="lede">Комп'ютерна діагностика та ремонт автоелектрики в Києві. Автосканер, осцилограф, ендоскоп і 10+ спеціалізованих перевірок — замість здогадок.</p>
+        <div class="hero-actions">
+          <a href="tel:+380954851166" class="btn btn-primary">📞 +38 (095) 485-11-66</a>
+          <a href="https://t.me/" target="_blank" rel="noopener" class="btn btn-ghost">📨 Написати в Telegram</a>
+        </div>
+        <div class="hero-meta">
+          <div><b>11+</b>видів діагностики</div>
+          <div><b>Пн–Сб</b>без запису</div>
+          <div><b>Київ</b>вул. Гуцульська 97А</div>
+        </div>
+      </div>
+
+      <div class="scope reveal">
+        <div class="scope-head">
+          <span class="tag">Канал 1 · Сигнал датчика</span>
+          <span class="tag" id="scopeTime">00:00</span>
+        </div>
+        <div class="scope-screen">
+          <div class="grid-lines"></div>
+          <svg viewBox="0 0 400 170" preserveAspectRatio="none">
+            <path id="scopePath" class="scan-line" d="M0,85 L400,85"></path>
+          </svg>
+        </div>
+        <div class="scope-foot">
+          <span class="chip">OBD-II</span>
+          <span class="chip">CAN-BUS</span>
+          <span class="chip">ECU LIVE DATA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stripe"></div>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="wrap">
+      <div class="eyebrow">Про майстерню</div>
+      <h2 class="reveal">Професійна діагностика електрообладнання авто</h2>
+      <p class="lede reveal">Спеціалізуємось на пошуку несправностей та обслуговуванні електрообладнання легкових і комерційних автомобілів у Києві. Для точного пошуку причин використовуємо сучасне діагностичне обладнання, автосканери та прилади для перевірки електронних систем — без зайвої заміни деталей навмання.</p>
+
+      <div class="eyebrow" style="margin-top:8px;">Коли варто звернутися</div>
+      <ul class="alert-list reveal">
+        <li><span class="flag">!</span><div>Загорівся індикатор <b>Check Engine</b>, <b>ABS</b>, <b>Airbag</b>, <b>ESP</b> або <b>DPF</b> на панелі приладів.</div></li>
+        <li><span class="flag">!</span><div>Автомобіль погано запускається або не заводиться взагалі.</div></li>
+        <li><span class="flag">!</span><div>Двигун працює нестабільно або втрачає потужність.</div></li>
+        <li><span class="flag">!</span><div>Швидко розряджається акумулятор або присутній витік струму.</div></li>
+        <li><span class="flag">!</span><div>Некоректно працюють системи комфорту та електросистеми.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" id="services" style="background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="wrap">
+      <div class="eyebrow">Що ми перевіряємо</div>
+      <h2 class="reveal">11 напрямків діагностики — натисніть, щоб розгорнути</h2>
+      <p class="lede reveal">Кожна перевірка виконується профільним обладнанням: автосканером, осцилографом, димогенератором або ендоскопом.</p>
+      <div class="svc-grid" id="svcGrid"></div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section" id="process">
+    <div class="wrap">
+      <div class="eyebrow">Як це працює</div>
+      <h2 class="reveal">Шлях від симптому до рішення</h2>
+      <div class="process reveal" id="processList"></div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="section" style="background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="wrap">
+      <div class="eyebrow">Чому саме ми</div>
+      <h2 class="reveal">Аргументи на користь звернення</h2>
+      <div class="why-grid reveal" id="whyGrid"></div>
+    </div>
+  </section>
+
+  <!-- CTA / CALLBACK -->
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <div>
+          <h2 style="margin-bottom:12px;">Потрібна діагностика вже сьогодні?</h2>
+          <p class="lede" style="margin-bottom:0;">Залиште номер — передзвонимо і підкажемо, з чого почати, або одразу телефонуйте чи пишіть у Telegram.</p>
+        </div>
+        <form id="callbackForm">
+          <div class="form-row">
+            <input type="text" id="cbName" placeholder="Ваше ім'я" required>
+            <input type="tel" id="cbPhone" placeholder="+380 __ ___ __ __" required>
+          </div>
+          <div class="form-row" style="margin-top:10px;">
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Замовити дзвінок</button>
+          </div>
+          <div class="form-note">Немає бекенду — форма підготує повідомлення в Telegram/дзвінок для вашого зручного каналу зв'язку.</div>
+          <div class="form-success" id="cbSuccess">✓ Дякуємо! Відкриваємо канал зв'язку…</div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION + CONTACTS -->
+  <section class="section" id="contacts">
+    <div class="wrap">
+      <div class="eyebrow">Як нас знайти</div>
+      <h2 class="reveal">Контакти та адреса</h2>
+      <div class="loc-grid reveal">
+        <div class="loc-map">
+          <iframe src="https://maps-api-ssl.google.com/maps?hl=uk&ll=50.400056,30.430202&output=embed&q=50.400036,30.430157&z=16" loading="lazy" title="Карта — вул. Гуцульська 97А, Київ"></iframe>
+        </div>
+        <div class="loc-info">
+          <div class="open-badge"><span class="dot" id="badgeDot"></span><span id="badgeText">—</span></div>
+
+          <div class="info-row">
+            <svg ievwBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <div><b>+38 (095) 485-11-66</b><span>Дзвінки Пн–Сб</span></div>
+          </div>
+
+          <div class="info-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+            <div><b>Telegram: @Autoworkshop_Alex</b><span>Швидкі питання та фото</span></div>
+          </div>
+
+          <div class="info-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><b>вул. Гуцульська 97А</b><span>Київ, Україна</span></div>
+          </div>
+
+          <div class="info-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <div>
+              <b>Графік роботи</b>
+              <span>Пн–Пт: 10:00–17:00 · Сб: 10:00–14:00 · Нд: вихідний</span>
+            </div>
+          </div>
+
+          <a href="https://share.google/ujWV1K9aEZEWY6idf" target="_blank" rel="noopener" class="btn btn-ghost" style="align-self:flex-start;">📍 Побудувати маршрут</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>© 2026 Автоелектрик Київ · ФОП «Лизюк Олександр Васильович»</span>
+    <span><a href="tel:+380954851166">+38 (095) 485-11-66</a> · <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener">Telegram</a></span>
+  </div>
+</footer>
+
+<div class="fab-stack">
+  <a href="#top" class="fab fab-top" id="fabTop" aria-label="Нагору">↑</a>
+  <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" class="fab fab-tg" aria-label="Telegram">✈</a>
+  <a href="tel:+380954851166" class="fab fab-call" aria-label="Подзвонити">📞</a>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
