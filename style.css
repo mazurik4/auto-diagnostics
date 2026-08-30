@@ -98,21 +98,55 @@
   .burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
   .burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
 
-  @media (max-width:860px){
-    .nav-links{
-      position:fixed;top:var(--nav-h);left:0;right:0;
-      background:var(--ink-2);border-bottom:1px solid var(--line);
-      flex-direction:column;align-items:stretch;gap:0;
-      padding:8px 24px 20px;
-      transform:translateY(-8px);opacity:0;pointer-events:none;
-      transition:opacity .18s, transform .18s;
-    }
-    .nav-links.open{transform:translateY(0);opacity:1;pointer-events:auto;}
-    .nav-links a{padding:14px 4px;border-bottom:1px solid var(--line);}
-    .nav-cta{display:none;}
-    .nav-links .nav-cta-mobile{display:inline-flex;margin-top:12px;justify-content:center;}
-    .burger{display:block;}
+@media (max-width:860px){
+  .nav-links{
+    position:fixed;top:var(--nav-h);left:0;right:0;
+    background:var(--ink-2);border-bottom:1px solid var(--line);
+    flex-direction:column;align-items:stretch;gap:10px;        /* было gap:0 → появился отступ между карточками */
+    padding:16px 18px 22px;                                     /* было 8px 24px 20px → больше воздуха сверху/по бокам */
+    transform:translateY(-8px);opacity:0;pointer-events:none;
+    transition:opacity .18s, transform .18s;
+    max-height:calc(100vh - var(--nav-h));                      /* новое: меню не вылезет за экран, если пунктов станет больше */
+    overflow-y:auto;                                            /* новое: скролл внутри меню при необходимости */
   }
+  .nav-links.open{transform:translateY(0);opacity:1;pointer-events:auto;}
+
+  /* пункты меню как карточки-кнопки — блок полностью новый вместо одной строки */
+  .nav-links a{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 18px;
+    font-size:1.02rem;
+    font-weight:600;
+    color:var(--paper);
+    transition:background .15s, border-color .15s, transform .1s;
+  }
+  .nav-links a:active{transform:scale(.98);}                    /* новое: лёгкое "нажатие" при тапе */
+  .nav-links a::after{
+    content:"→";                                                /* новое: стрелка справа у каждого пункта */
+    color:var(--steel);
+    font-weight:500;
+    transition:transform .15s, color .15s;
+  }
+  .nav-links a:hover::after{transform:translateX(3px);}
+  /* активный (текущий) раздел подсвечен акцентом — новое */
+  .nav-links a.active{
+    background:rgba(244,180,0,.10);
+    border-color:var(--signal);
+    color:var(--signal);
+  }
+  .nav-links a.active::after{color:var(--signal);}
+
+  .nav-cta{display:none;}
+  .nav-links .nav-cta-mobile{
+    display:flex;margin-top:6px;justify-content:center;
+    padding:16px 18px;font-size:1.02rem;                        /* было inline-flex + margin-top:12px, без padding/font-size */
+  }
+  .nav-links .nav-cta-mobile::after{content:none;}              /* новое: убрал стрелку у кнопки-звонка, она не нужна там */
+  .burger{display:block;}
+}
 
   /* ---------- hero ---------- */
   .hero{
