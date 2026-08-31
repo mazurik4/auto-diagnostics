@@ -173,8 +173,47 @@
   }
   tick(); setInterval(tick, 1000);
 
+  // ---------- поле имени: только буквы и пробел ----------
+var nameInput = document.getElementById('cbName');
+var nameError = document.getElementById('cbNameError');
+var nameErrorTimeout;
 
-  // ---------- защита префикса +380 в поле телефона
+function showNameError(msg){
+  nameError.textContent = msg;
+  nameError.classList.add('show');
+  nameInput.classList.add('input-error');
+  clearTimeout(nameErrorTimeout);
+  nameErrorTimeout = setTimeout(function(){
+    nameError.classList.remove('show');
+    nameInput.classList.remove('input-error');
+  }, 2500);
+}
+function hideNameError(){
+  clearTimeout(nameErrorTimeout);
+  nameError.classList.remove('show');
+  nameInput.classList.remove('input-error');
+}
+
+nameInput.addEventListener('input', function(){
+  var raw = this.value;
+  // разрешены только буквы (кириллица/латиница) и пробел
+  var hadInvalid = /[^\p{L}\s]/u.test(raw);
+  var cleaned = raw.replace(/[^\p{L}\s]/gu, '');
+
+  if(cleaned !== raw){
+    var pos = this.selectionStart - (raw.length - cleaned.length);
+    this.value = cleaned;
+    this.setSelectionRange(pos, pos);
+  }
+
+  if(hadInvalid){
+    showNameError('Ім\'я повинно містити лише літери');
+  } else {
+    hideNameError();
+  }
+});
+
+  // ---------- защита префикса +380 в поле телефона --------
   var phoneInput = document.getElementById('cbPhone');
   var phoneError = document.getElementById('cbPhoneError');   // ← НОВОЕ: ссылка на элемент ошибки
   var PHONE_PREFIX = '+380 ';
