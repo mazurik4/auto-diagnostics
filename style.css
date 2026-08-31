@@ -295,10 +295,9 @@
   }
   .fab:hover{transform:translateY(-3px);}
   .fab-call{background:var(--signal);color:var(--signal-ink);}
-  .fab-tg{background:var(--surface-2);color:var(--paper);border:1px solid var(--line-strong);}
+  .fab-tg{background:#29a9eb;color:#fff;border:none;}
   .fab-top{background:var(--ink-2);color:var(--paper-dim);border:1px solid var(--line-strong);opacity:0;pointer-events:none;transform:translateY(8px);}
   .fab-top.show{opacity:1;pointer-events:auto;transform:translateY(0);}
-
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .5s ease, transform .5s ease;}
   .reveal.in{opacity:1;transform:translateY(0);}
 
