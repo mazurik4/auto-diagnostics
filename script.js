@@ -173,13 +173,83 @@
   }
   tick(); setInterval(tick, 1000);
 
+
+  // ---------- защита префикса +380 в поле телефона
+  var phoneInput = document.getElementById('cbPhone');
+  var phoneError = document.getElementById('cbPhoneError');   // ← НОВОЕ: ссылка на элемент ошибки
+  var PHONE_PREFIX = '+380 ';
+  var PHONE_DIGITS_LIMIT = 9;                                  // ← НОВОЕ: лимит цифр
+  var phoneErrorTimeout;                                       // ← НОВОЕ: таймер для автоскрытия ошибки
+
+  // ← НОВАЯ ФУНКЦИЯ: показать ошибку и подсветить поле
+  function showPhoneError(msg) {
+  phoneError.textContent = msg;
+  phoneError.classList.add('show');
+  phoneInput.classList.add('input-error');
+    clearTimeout(phoneErrorTimeout);
+  phoneErrorTimeout = setTimeout(function(){
+    phoneError.classList.remove('show');
+    phoneInput.classList.remove('input-error');
+  }, 2500);
+
+  }
+  // ← НОВАЯ ФУНКЦИЯ: скрыть ошибку
+  function hidePhoneError(){
+  clearTimeout(phoneErrorTimeout);
+  phoneError.classList.remove('show');
+  phoneInput.classList.remove('input-error');
+  }
+
+  phoneInput.addEventListener('focus', function(){
+  // без изменений — курсор в конец при пустом поле
+  if(this.value === PHONE_PREFIX){
+    var pos = this.value.length;
+    this.setSelectionRange(pos, pos);
+  }
+});
+
+  // ← ОБРАБОТЧИК 'input' ПОЛНОСТЬЮ ПЕРЕПИСАН
+  phoneInput.addEventListener('input', function(){
+  var tail = this.value.indexOf(PHONE_PREFIX) === 0
+    ? this.value.slice(PHONE_PREFIX.length)
+    : this.value.replace(/^\+?3?8?0?\s?/, '');
+
+  var hadLetters = /\D/.test(tail);           // есть ли нецифровые символы во введённом
+  var digitsOnly = tail.replace(/\D/g, '');    // оставляем только цифры
+  var overLimit = digitsOnly.length > PHONE_DIGITS_LIMIT;  // проверка лимита
+
+  if(overLimit){ digitsOnly = digitsOnly.slice(0, PHONE_DIGITS_LIMIT); } // обрезаем лишнее
+
+  this.value = PHONE_PREFIX + digitsOnly;
+  var pos = this.value.length;
+  this.setSelectionRange(pos, pos);
+
+  // показываем нужное сообщение об ошибке
+  if(hadLetters){
+    showPhoneError('Номер повинен містити лише цифри');
+  } else if(overLimit){
+    showPhoneError('Максимум 9 цифр після +380');
+  } else {
+    hidePhoneError();
+  }
+});
+
+  phoneInput.addEventListener('keydown', function(e){
+  // без изменений — запрет удалять префикс
+  var pos = this.selectionStart;
+  if((e.key === 'Backspace' && pos <= PHONE_PREFIX.length) ||
+     (e.key === 'Delete' && pos < PHONE_PREFIX.length)){
+    e.preventDefault();
+  }
+});
+
   // ---------- callback form ----------
   var form = document.getElementById('callbackForm');
   form.addEventListener('submit', function(e){
     e.preventDefault();
     var name = document.getElementById('cbName').value.trim();
     var phone = document.getElementById('cbPhone').value.trim();
-    if(!name || phone.replace(/\D/g,'').length < 9){
+    if(!name || phone.replace(/\D/g,'').length < 12){
       document.getElementById('cbPhone').focus();
       return;
     }

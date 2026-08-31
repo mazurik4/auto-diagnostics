@@ -261,6 +261,11 @@
   .form-note{font-size:.78rem;color:var(--steel);margin-top:10px;}
   .form-success{display:none;color:#3ddc6f;font-size:.88rem;margin-top:10px;}
 
+  /* Сообщение об ошибке */
+  .form-error{display:none;color:#ff6b5e;font-size:.82rem;margin-top:8px;font-weight:500;}
+  .form-error.show{display:block;}
+  .form-row input.input-error{border-color:#ff6b5e;}
+
   /* ---------- location / contacts ---------- */
   .loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
   @media (max-width:800px){.loc-grid{grid-template-columns:1fr;}}

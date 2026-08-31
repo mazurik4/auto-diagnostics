@@ -136,8 +136,9 @@
         <form id="callbackForm">
           <div class="form-row">
             <input type="text" id="cbName" placeholder="Ваше ім'я" required>
-            <input type="tel" id="cbPhone" placeholder="+380 __ ___ __ __" required>
+            <input type="tel" id="cbPhone" value="+380 " required> <!-- Поменял placeholder на value -->
           </div>
+          <div class="form-error" id="cbPhoneError"></div>
           <div class="form-row" style="margin-top:10px;">
             <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Замовити дзвінок</button>
           </div>
