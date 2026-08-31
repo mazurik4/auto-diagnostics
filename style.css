@@ -352,7 +352,26 @@
     /* Хедер — логотип и текст плотнее друг к другу */
     .brand-text{font-size:.85rem;}
     .brand-text span{font-size:.62rem;}
+     /* Фикс iOS: поля меньше 16px заставляют Safari зумить страницу при фокусе */
+    .form-row input{font-size:16px;}
   }
+
+    /* Отступы от вырезов/скруглений экрана (чёлка, жесты) — не привязано к ширине,   ← новый блок целиком
+    чтобы работать и в горизонтальной ориентации на iPhone */
+    header{
+    padding-top:env(safe-area-inset-top);
+  }
+  .fab-stack{
+    right:calc(20px + env(safe-area-inset-right));
+    bottom:calc(20px + env(safe-area-inset-bottom));
+  }
+  @media (max-width:640px){
+    .fab-stack{
+      right:calc(14px + env(safe-area-inset-right));
+      bottom:calc(14px + env(safe-area-inset-bottom));
+    }
+  }
+
  
   /* Совсем маленькие экраны (старые/узкие телефоны) */
   @media (max-width:380px){
