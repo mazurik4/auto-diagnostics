@@ -173,116 +173,116 @@
   }
   tick(); setInterval(tick, 1000);
 
+  // ---------- защита префикса +380 в поле телефона ----------
   // ---------- поле имени: только буквы и пробел ----------
-var nameInput = document.getElementById('cbName');
-var nameError = document.getElementById('cbNameError');
-var nameErrorTimeout;
+  var nameInput = document.getElementById('cbName');
+  var nameError = document.getElementById('cbNameError');
+  var nameErrorTimeout;
 
-function showNameError(msg){
-  nameError.textContent = msg;
-  nameError.classList.add('show');
-  nameInput.classList.add('input-error');
-  clearTimeout(nameErrorTimeout);
-  nameErrorTimeout = setTimeout(function(){
+  function showNameError(msg){
+    nameError.textContent = msg;
+    nameError.classList.add('show');
+    nameInput.classList.add('input-error');
+    clearTimeout(nameErrorTimeout);
+    nameErrorTimeout = setTimeout(function(){
+      nameError.classList.remove('show');
+      nameInput.classList.remove('input-error');
+    }, 2500);
+  }
+  function hideNameError(){
+    clearTimeout(nameErrorTimeout);
     nameError.classList.remove('show');
     nameInput.classList.remove('input-error');
-  }, 2500);
-}
-function hideNameError(){
-  clearTimeout(nameErrorTimeout);
-  nameError.classList.remove('show');
-  nameInput.classList.remove('input-error');
-}
-
-nameInput.addEventListener('input', function(){
-  var raw = this.value;
-  // разрешены только буквы (кириллица/латиница) и пробел
-  var hadInvalid = /[^\p{L}\s]/u.test(raw);
-  var cleaned = raw.replace(/[^\p{L}\s]/gu, '');
-
-  if(cleaned !== raw){
-    var pos = this.selectionStart - (raw.length - cleaned.length);
-    this.value = cleaned;
-    this.setSelectionRange(pos, pos);
   }
 
-  if(hadInvalid){
-    showNameError('Ім\'я повинно містити лише літери');
-  } else {
-    hideNameError();
-  }
-});
+  nameInput.addEventListener('input', function(){
+    var raw = this.value;
+    // разрешены только буквы (кириллица/латиница) и пробел
+    var hadInvalid = /[^\p{L}\s]/u.test(raw);
+    var cleaned = raw.replace(/[^\p{L}\s]/gu, '');
 
-  // ---------- защита префикса +380 в поле телефона --------
+    if(cleaned !== raw){
+      var pos = this.selectionStart - (raw.length - cleaned.length);
+      this.value = cleaned;
+      this.setSelectionRange(pos, pos);
+    }
+
+    if(hadInvalid){
+      showNameError('Ім\'я повинно містити лише літери');
+    } else {
+      hideNameError();
+    }
+  });
+
   var phoneInput = document.getElementById('cbPhone');
-  var phoneError = document.getElementById('cbPhoneError');   // ← НОВОЕ: ссылка на элемент ошибки
+  var phoneError = document.getElementById('cbPhoneError');
   var PHONE_PREFIX = '+380 ';
-  var PHONE_DIGITS_LIMIT = 9;                                  // ← НОВОЕ: лимит цифр
-  var phoneErrorTimeout;                                       // ← НОВОЕ: таймер для автоскрытия ошибки
+  var PHONE_DIGITS_LIMIT = 9;
+  var phoneErrorTimeout;
 
-  // ← НОВАЯ ФУНКЦИЯ: показать ошибку и подсветить поле
-  function showPhoneError(msg) {
-  phoneError.textContent = msg;
-  phoneError.classList.add('show');
-  phoneInput.classList.add('input-error');
+  function showPhoneError(msg){
+    phoneError.textContent = msg;
+    phoneError.classList.add('show');
+    phoneInput.classList.add('input-error');
     clearTimeout(phoneErrorTimeout);
-  phoneErrorTimeout = setTimeout(function(){
+    phoneErrorTimeout = setTimeout(function(){
+      phoneError.classList.remove('show');
+      phoneInput.classList.remove('input-error');
+    }, 2500);
+  }
+  function hidePhoneError(){
+    clearTimeout(phoneErrorTimeout);
     phoneError.classList.remove('show');
     phoneInput.classList.remove('input-error');
-  }, 2500);
-
-  }
-  // ← НОВАЯ ФУНКЦИЯ: скрыть ошибку
-  function hidePhoneError(){
-  clearTimeout(phoneErrorTimeout);
-  phoneError.classList.remove('show');
-  phoneInput.classList.remove('input-error');
   }
 
   phoneInput.addEventListener('focus', function(){
-  // без изменений — курсор в конец при пустом поле
-  if(this.value === PHONE_PREFIX){
+    // курсор сразу после префикса, если поле ещё пустое
+    if(this.value === PHONE_PREFIX){
+      var pos = this.value.length;
+      this.setSelectionRange(pos, pos);
+    }
+  });
+
+  phoneInput.addEventListener('input', function(){
+    // всё, что введено после префикса
+    var tail = this.value.indexOf(PHONE_PREFIX) === 0
+      ? this.value.slice(PHONE_PREFIX.length)
+      : this.value.replace(/^\+?3?8?0?\s?/, '');
+
+    var hadLetters = /\D/.test(tail);          // были нецифровые символы
+    var digitsOnly = tail.replace(/\D/g, '');   // только цифры
+    var overLimit = digitsOnly.length > PHONE_DIGITS_LIMIT;
+
+    if(overLimit){ digitsOnly = digitsOnly.slice(0, PHONE_DIGITS_LIMIT); }
+
+    this.value = PHONE_PREFIX + digitsOnly;
     var pos = this.value.length;
     this.setSelectionRange(pos, pos);
-  }
-});
 
-  // ← ОБРАБОТЧИК 'input' ПОЛНОСТЬЮ ПЕРЕПИСАН
-  phoneInput.addEventListener('input', function(){
-  var tail = this.value.indexOf(PHONE_PREFIX) === 0
-    ? this.value.slice(PHONE_PREFIX.length)
-    : this.value.replace(/^\+?3?8?0?\s?/, '');
-
-  var hadLetters = /\D/.test(tail);           // есть ли нецифровые символы во введённом
-  var digitsOnly = tail.replace(/\D/g, '');    // оставляем только цифры
-  var overLimit = digitsOnly.length > PHONE_DIGITS_LIMIT;  // проверка лимита
-
-  if(overLimit){ digitsOnly = digitsOnly.slice(0, PHONE_DIGITS_LIMIT); } // обрезаем лишнее
-
-  this.value = PHONE_PREFIX + digitsOnly;
-  var pos = this.value.length;
-  this.setSelectionRange(pos, pos);
-
-  // показываем нужное сообщение об ошибке
-  if(hadLetters){
-    showPhoneError('Номер повинен містити лише цифри');
-  } else if(overLimit){
-    showPhoneError('Максимум 9 цифр після +380');
-  } else {
-    hidePhoneError();
-  }
-});
+    if(hadLetters){
+      showPhoneError('Номер повинен містити лише цифри');
+    } else if(overLimit){
+      showPhoneError('Максимум 9 цифр після +380');
+    } else {
+      hidePhoneError();
+    }
+  });
 
   phoneInput.addEventListener('keydown', function(e){
-  // без изменений — запрет удалять префикс
-  var pos = this.selectionStart;
-  if((e.key === 'Backspace' && pos <= PHONE_PREFIX.length) ||
-     (e.key === 'Delete' && pos < PHONE_PREFIX.length)){
-    e.preventDefault();
-  }
-});
+    // запрещаем Backspace/Delete стирать сам префикс
+    var pos = this.selectionStart;
+    if((e.key === 'Backspace' && pos <= PHONE_PREFIX.length) ||
+       (e.key === 'Delete' && pos < PHONE_PREFIX.length)){
+      e.preventDefault();
+    }
+  });
 
   // ---------- callback form ----------
+  // Адрес бэкенда: пока используем прямой Render-адрес, после подключения
+  // домена к бэкенду поменяйте на https://api.autoworkshop.com.ua если поменяю поддомен на api.autoworkshop.com.ua
+  var API_URL = 'https://backend-cmr4.onrender.com';
+
   var form = document.getElementById('callbackForm');
   form.addEventListener('submit', function(e){
     e.preventDefault();
@@ -292,17 +292,25 @@ nameInput.addEventListener('input', function(){
       document.getElementById('cbPhone').focus();
       return;
     }
-    // Отправляем заявку на бэкенд, чтобы она сохранилась в базе данных.
-    // Даже если это не сработает (например, бэкенд не запущен),
-    // клиент всё равно попадёт в Telegram — форма не сломается.
-    fetch('/api/callback', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name, phone: phone })
-    }).catch(function(err){
-      console.error('Не вдалося зберегти заявку на сервері:', err);
-    });
 
+    var submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+
+    // 1) сохраняем заявку в базу данных на сервере
+    fetch(API_URL + '/api/callback', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({name: name, phone: phone})
+    })
+      .catch(function(err){
+        // если сервер недоступен — не страшно, заявка всё равно уйдёт в Telegram ниже
+        console.warn('Не вдалося зберегти заявку на сервері:', err);
+      })
+      .finally(function(){
+        submitBtn.disabled = false;
+      });
+
+    // 2) параллельно открываем Telegram — как и раньше, для мгновенного уведомления
     document.getElementById('cbSuccess').style.display = 'block';
     var text = encodeURIComponent('Замовлення дзвінка з сайту.\nІм\'я: '+name+'\nТелефон: '+phone);
     setTimeout(function(){
