@@ -112,7 +112,8 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <div class="status-pill"><span class="dot" id="heroDot"></span><span id="heroStatusText">Перевіряємо статус…</span></div>
+        <div class="status-pill"><span class="dot" id="heroDot"></span>
+          <span id="heroStatusText">Перевіряємо статус…</span></div>
         <h1>Знайдемо несправність.<br>Не вгадаємо — <em>виміряємо</em>.</h1>
         <p class="lede">Комп'ютерна діагностика та ремонт автоелектрики в Києві. Автосканер, осцилограф, ендоскоп і 10+ спеціалізованих перевірок — замість здогадок.</p>
         <div class="hero-actions">
@@ -124,7 +125,7 @@
         </div>
         <div class="hero-meta">
           <div><b>11+</b>видів діагностики</div>
-          <div><b>Пн–Сб</b>без запису</div>
+          <div><b>Пн–Сб</b>по запису</div>
           <div><b>Київ</b>вул. Гуцульська 97А</div>
         </div>
       </div>
@@ -198,7 +199,7 @@
   </section>
 
   <!-- CTA / CALLBACK -->
-  <section class="section-tight">
+  <section class="section-tight" id="callback">
     <div class="wrap">
       <div class="cta-band reveal">
         <div>
@@ -208,7 +209,7 @@
         <form id="callbackForm">
           <div class="form-row">
             <input type="text" id="cbName" placeholder="Ваше ім'я" required>
-            <input type="tel" id="cbPhone" value="+380 " required> <!-- Поменял placeholder на value -->
+            <input type="tel" id="cbPhone" placeholder="+380 " required>
           </div>
           <div class="form-error" id="cbNameError"></div>
           <div class="form-error" id="cbPhoneError"></div>
@@ -241,7 +242,12 @@
 
           <div class="info-row">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
-            <div><b>Telegram: @Autoworkshop_Alex</b><span>Швидкі питання та фото</span></div>
+            <div>
+              <b>
+                Telegram: <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener noreferrer">@Autoworkshop_Alex</a>
+              </b>
+              <span>Швидкі питання та фото</span>
+            </div>
           </div>
 
           <div class="info-row">
@@ -267,7 +273,7 @@
 
 <footer>
   <div class="wrap foot-row">
-    <span>© 2026 Автоелектрик Київ · ФОП «Лизюк Олександр Васильович»</span>
+    <span>© <span id="currentYear">2026</span> Автоелектрик Київ · ФОП «Лизюк Олександр Васильович»</span>
     <span><a href="tel:+380954851166">+38 (095) 485-11-66</a> · <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener">Telegram</a></span>
   </div>
 </footer>

@@ -1,6 +1,6 @@
 (function(){
   // ---------- data ----------
-  var services = [
+  let services = [
     ["Комп'ютерна діагностика","Зчитування кодів помилок і параметрів з блоку керування (ECU) та CAN-шини сучасним автосканером."],
     ["Відновлення сажових фільтрів","Регенерація та очищення сажового фільтра (DPF) дизельних двигунів без зняття або зі зняттям."],
     ["Діагностика датчиків","Перевірка сигналів датчиків двигуна в реальному часі осцилографом — точніше за просте зчитування коду."],
@@ -14,7 +14,7 @@
     ["Перевірка тиску оливи","Контроль тиску мастила в системі — індикатор зношеності двигуна."]
   ];
 
-  var process = [
+  let process = [
     ["Підключення обладнання","Автосканер та вимірювальні прилади підключаються до діагностичних роз'ємів автомобіля."],
     ["Зчитування параметрів","Знімаємо коди помилок та поточні показники систем із блоків керування."],
     ["Перевірка систем наживо","Дивимось на роботу вузлів у реальному часі, а не лише на збережені коди."],
@@ -22,7 +22,7 @@
     ["Рекомендації","Пояснюємо, що саме несправне, і що варто зробити далі, з фото та коментарями."]
   ];
 
-  var why = [
+  let why = [
     "Професійне діагностичне обладнання",
     "Реальний пошук несправностей, а не заміна навмання",
     "Досвід роботи з автоелектрикою",
@@ -31,14 +31,14 @@
     "Консультація перед ремонтом"
   ];
 
-  var checkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>';
+  let checkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>';
 
   // ---------- render services ----------
-  var grid = document.getElementById('svcGrid');
+  let grid = document.getElementById('svcGrid');
   services.forEach(function(s, i){
-    var card = document.createElement('div');
+    let card = document.createElement('div');
     card.className = 'svc-card';
-    var id = 'svc-desc-' + i;
+    let id = 'svc-desc-' + i;
     card.innerHTML =
       '<button class="svc-btn" aria-expanded="false" aria-controls="'+id+'">' +
         '<span class="svc-num">'+String(i+1).padStart(2,'0')+'</span>' +
@@ -48,18 +48,18 @@
     grid.appendChild(card);
   });
   grid.addEventListener('click', function(e){
-    var btn = e.target.closest('.svc-btn');
+    let btn = e.target.closest('.svc-btn');
     if(!btn) return;
-    var desc = btn.querySelector('.svc-desc');
-    var open = btn.getAttribute('aria-expanded') === 'true';
+    let desc = btn.querySelector('.svc-desc');
+    let open = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', String(!open));
     desc.style.maxHeight = open ? '0px' : desc.scrollHeight + 'px';
   });
 
   // ---------- render process ----------
-  var procList = document.getElementById('processList');
+  let procList = document.getElementById('processList');
   process.forEach(function(p, i){
-    var row = document.createElement('div');
+    let row = document.createElement('div');
     row.className = 'step';
     row.innerHTML =
       '<div class="step-num">'+String(i+1).padStart(2,'0')+'</div>' +
@@ -68,19 +68,19 @@
   });
 
   // ---------- render why-us ----------
-  var whyGrid = document.getElementById('whyGrid');
+  let whyGrid = document.getElementById('whyGrid');
   why.forEach(function(w){
-    var c = document.createElement('div');
+    let c = document.createElement('div');
     c.className = 'why-card';
     c.innerHTML = checkIcon + '<span>'+w+'</span>';
     whyGrid.appendChild(c);
   });
 
   // ---------- mobile nav ----------
-  var burger = document.getElementById('burgerBtn');
-  var navLinks = document.getElementById('navLinks');
+  let burger = document.getElementById('burgerBtn');
+  let navLinks = document.getElementById('navLinks');
   burger.addEventListener('click', function(){
-    var open = burger.getAttribute('aria-expanded') === 'true';
+    let open = burger.getAttribute('aria-expanded') === 'true';
     burger.setAttribute('aria-expanded', String(!open));
     navLinks.classList.toggle('open', !open);
   });
@@ -92,18 +92,18 @@
   });
 
   // ---------- active nav on scroll + scan progress bar ----------
-  var sections = ['about','services','process','contacts'].map(function(id){ return document.getElementById(id); });
-  var navA = document.querySelectorAll('[data-nav]');
+  let sections = ['about','services','process','contacts'].map(function(id){ return document.getElementById(id); });
+  let navA = document.querySelectorAll('[data-nav]');
   function onScroll(){
-    var scrollTop = window.scrollY;
-    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    let scrollTop = window.scrollY;
+    let docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    let pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
     document.getElementById('scanbar').style.width = pct + '%';
 
-    var current = null;
+    let current = null;
     sections.forEach(function(sec){
       if(!sec) return;
-      var rect = sec.getBoundingClientRect();
+      let rect = sec.getBoundingClientRect();
       if(rect.top < 120) current = sec.id;
     });
     navA.forEach(function(a){
@@ -116,8 +116,8 @@
   onScroll();
 
   // ---------- reveal on scroll ----------
-  var reveals = document.querySelectorAll('.reveal');
-  var io = new IntersectionObserver(function(entries){
+  let reveals = document.querySelectorAll('.reveal');
+  let io = new IntersectionObserver(function(entries){
     entries.forEach(function(en){
       if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
     });
@@ -126,35 +126,37 @@
 
   // ---------- open/closed status ----------
   function updateOpenStatus(){
-    var now = new Date();
-    var day = now.getDay(); // 0 Sun .. 6 Sat
-    var mins = now.getHours()*60 + now.getMinutes();
-    var open = false;
+    let now = new Date();
+    let day = now.getDay(); // 0 Sun .. 6 Sat
+    let mins = now.getHours()*60 + now.getMinutes();
+    let open = false;
     if(day >= 1 && day <= 5){ open = mins >= 10*60 && mins < 17*60; }
     else if(day === 6){ open = mins >= 10*60 && mins < 14*60; }
 
-    var badgeDot = document.getElementById('badgeDot');
-    var badgeText = document.getElementById('badgeText');
-    var heroDot = document.getElementById('heroDot');
-    var heroText = document.getElementById('heroStatusText');
+    let badgeDot = document.getElementById('badgeDot');
+    let badgeText = document.getElementById('badgeText');
+    let heroDot = document.getElementById('heroDot');
+    let heroText = document.getElementById('heroStatusText');
 
     badgeDot.classList.toggle('off', !open);
     heroDot.classList.toggle('off', !open);
-    var msg = open ? 'Зараз відкрито' : 'Зараз зачинено';
-    badgeText.textContent = msg;
-    heroText.textContent = open ? 'Майстерня зараз працює' : 'Поза графіком — залиште заявку';
+    let msg = open
+    ? 'Майстерня зараз працює'
+    : 'Поза графіком — <a href="#callback" class="cta-inline">залиште заявку</a>';
+    badgeText.innerHTML = msg;
+    heroText.innerHTML = msg;
   }
   updateOpenStatus();
   setInterval(updateOpenStatus, 60000);
 
   // ---------- scope waveform animation ----------
-  var path = document.getElementById('scopePath');
-  var t = 0;
+  let path = document.getElementById('scopePath');
+  let t = 0;
   function draw(){
     t += 0.045;
-    var d = 'M0,85 ';
-    for(var x = 0; x <= 400; x += 8){
-      var y = 85
+    let d = 'M0,85 ';
+    for(let x = 0; x <= 400; x += 8){
+      let y = 85
         + Math.sin(x*0.045 + t) * 22
         + Math.sin(x*0.11 + t*1.7) * 10
         + (Math.sin(t*3 + x*0.3) > 0.96 ? -14 : 0);
@@ -167,7 +169,7 @@
     requestAnimationFrame(draw);
   }
   function tick(){
-    var n = new Date();
+    let n = new Date();
     document.getElementById('scopeTime').textContent =
       String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
   }
@@ -175,9 +177,9 @@
 
   // ---------- защита префикса +380 в поле телефона ----------
   // ---------- поле имени: только буквы и пробел ----------
-  var nameInput = document.getElementById('cbName');
-  var nameError = document.getElementById('cbNameError');
-  var nameErrorTimeout;
+  let nameInput = document.getElementById('cbName');
+  let nameError = document.getElementById('cbNameError');
+  let nameErrorTimeout;
 
   function showNameError(msg){
     nameError.textContent = msg;
@@ -214,11 +216,11 @@
     }
   });
 
-  var phoneInput = document.getElementById('cbPhone');
-  var phoneError = document.getElementById('cbPhoneError');
-  var PHONE_PREFIX = '+380 ';
-  var PHONE_DIGITS_LIMIT = 9;
-  var phoneErrorTimeout;
+  let phoneInput = document.getElementById('cbPhone');
+  let phoneError = document.getElementById('cbPhoneError');
+  let PHONE_PREFIX = '+380 ';
+  let PHONE_DIGITS_LIMIT = 9;
+  let phoneErrorTimeout;
 
   function showPhoneError(msg){
     phoneError.textContent = msg;
@@ -237,6 +239,21 @@
   }
 
   phoneInput.addEventListener('focus', function(){
+  if(this.value === ''){
+    this.value = PHONE_PREFIX;   // вставляем "+380 " как настоящий текст при клике
+  }
+  var pos = this.value.length;
+  this.setSelectionRange(pos, pos);
+});
+
+phoneInput.addEventListener('blur', function(){
+  if(this.value.trim() === PHONE_PREFIX.trim()){
+    this.value = '';              // если ничего не ввели — возвращаем пустое поле (placeholder)
+    hidePhoneError();
+  }
+});
+
+  phoneInput.addEventListener('focus', function(){
     // курсор сразу после префикса, если поле ещё пустое
     if(this.value === PHONE_PREFIX){
       var pos = this.value.length;
@@ -246,18 +263,18 @@
 
   phoneInput.addEventListener('input', function(){
     // всё, что введено после префикса
-    var tail = this.value.indexOf(PHONE_PREFIX) === 0
+    let tail = this.value.indexOf(PHONE_PREFIX) === 0
       ? this.value.slice(PHONE_PREFIX.length)
       : this.value.replace(/^\+?3?8?0?\s?/, '');
 
-    var hadLetters = /\D/.test(tail);          // были нецифровые символы
-    var digitsOnly = tail.replace(/\D/g, '');   // только цифры
-    var overLimit = digitsOnly.length > PHONE_DIGITS_LIMIT;
+    let hadLetters = /\D/.test(tail);          // были нецифровые символы
+    let digitsOnly = tail.replace(/\D/g, '');   // только цифры
+    let overLimit = digitsOnly.length > PHONE_DIGITS_LIMIT;
 
     if(overLimit){ digitsOnly = digitsOnly.slice(0, PHONE_DIGITS_LIMIT); }
 
     this.value = PHONE_PREFIX + digitsOnly;
-    var pos = this.value.length;
+    let pos = this.value.length;
     this.setSelectionRange(pos, pos);
 
     if(hadLetters){
@@ -271,7 +288,7 @@
 
   phoneInput.addEventListener('keydown', function(e){
     // запрещаем Backspace/Delete стирать сам префикс
-    var pos = this.selectionStart;
+    let pos = this.selectionStart;
     if((e.key === 'Backspace' && pos <= PHONE_PREFIX.length) ||
        (e.key === 'Delete' && pos < PHONE_PREFIX.length)){
       e.preventDefault();
@@ -281,19 +298,19 @@
   // ---------- callback form ----------
   // Адрес бэкенда: пока используем прямой Render-адрес, после подключения
   // домена к бэкенду поменяйте на https://api.autoworkshop.com.ua если поменяю поддомен на api.autoworkshop.com.ua
-  var API_URL = 'https://backend-cmr4.onrender.com';
+  let API_URL = 'https://backend-cmr4.onrender.com';
 
-  var form = document.getElementById('callbackForm');
+  let form = document.getElementById('callbackForm');
   form.addEventListener('submit', function(e){
     e.preventDefault();
-    var name = document.getElementById('cbName').value.trim();
-    var phone = document.getElementById('cbPhone').value.trim();
+    let name = document.getElementById('cbName').value.trim();
+    let phone = document.getElementById('cbPhone').value.trim();
     if(!name || phone.replace(/\D/g,'').length < 12){
       document.getElementById('cbPhone').focus();
       return;
     }
 
-    var submitBtn = form.querySelector('button[type="submit"]');
+    let submitBtn = form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
 
     // 1) сохраняем заявку в базу данных на сервере
@@ -312,9 +329,15 @@
 
     // 2) параллельно открываем Telegram — как и раньше, для мгновенного уведомления
     document.getElementById('cbSuccess').style.display = 'block';
-    var text = encodeURIComponent('Замовлення дзвінка з сайту.\nІм\'я: '+name+'\nТелефон: '+phone);
+    let text = encodeURIComponent('Замовлення дзвінка з сайту.\nІм\'я: '+name+'\nТелефон: '+phone);
     setTimeout(function(){
       window.open('https://t.me/Autoworkshop_Alex?text=' + text, '_blank');
     }, 700);
   });
+
+  // ---------- год в футере — подставляется автоматически ----------
+  let yearEl = document.getElementById('currentYear');
+  if(yearEl){
+    yearEl.textContent = new Date().getFullYear();
+  }
 })();
