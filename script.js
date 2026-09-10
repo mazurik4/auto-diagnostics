@@ -1,4 +1,24 @@
 (function(){
+  // ---------- anchor links: smooth-scroll without changing the URL ----------
+  document.addEventListener('click', function(e){
+    let link = e.target.closest('a[href^="#"]');
+    if(!link) return;
+    let href = link.getAttribute('href');
+    if(!href || href === '#') return;
+    e.preventDefault();
+    let targetId = href.slice(1);
+    if(targetId === 'top'){
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    let target = document.getElementById(targetId);
+    if(!target) return;
+    let header = document.querySelector('header');
+    let headerHeight = header ? header.getBoundingClientRect().height : 0;
+    let top = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+  });
+
   // ---------- data ----------
   let services = [
     ["Комп'ютерна діагностика","Зчитування кодів помилок і параметрів з блоку керування (ECU) та CAN-шини сучасним автосканером."],
