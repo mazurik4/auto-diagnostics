@@ -2,348 +2,271 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#141312">
-<title>Флагман Мотор — СТО в Києві</title>
-<meta name="description" content="Флагман Мотор — автосервіс у Києві. Ремонт легкових і вантажних автомобілів, рихтувально-малярні роботи, розвал-сходження, продаж запчастин.">
+<!-- было
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+<!-- стало -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">  
+<title>Майстерня автодіагностики — Київ</title>
+<meta name="description" content="Професійна комп'ютерна діагностика та ремонт електрообладнання авто у Києві. Осцилограф, автосканер, ендоскопія циліндрів, перевірка датчиків.">
+
+<!-- Каноническая ссылка — говорит Google, какой адрес считать основным -->
+<link rel="canonical" href="https://autoworkshop.com.ua/">
+ 
+<!-- Open Graph — красивая карточка при шаринге в соцсетях/мессенджерах -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Автодіагностика — Київ">
+<meta property="og:title" content="Майстерня автодіагностики — Київ">
+<meta property="og:description" content="Професійна комп'ютерна діагностика та ремонт електрообладнання авто у Києві. Осцилограф, автосканер, ендоскопія циліндрів, перевірка датчиків.">
+<meta property="og:url" content="https://autoworkshop.com.ua/">
+<meta property="og:image" content="https://autoworkshop.com.ua/img/halfautoelectriklogo.png">
+<meta property="og:locale" content="uk_UA">
+
+<!-- Schema.org: структурированные данные для Google —
+     помогают показать адрес, часы работы, телефон и рейтинг прямо в выдаче поиска -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AutoRepair",
+  "name": "Автоелектрик Київ | Діагностика автомобілів",
+  "image": "https://autoworkshop.com.ua/img/halfautoelectriklogo.png",
+  "url": "https://autoworkshop.com.ua/",
+  "telephone": "+380954851166",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "вул. Гуцульська 97А",
+    "postalCode": "03193",
+    "addressLocality": "Київ",
+    "addressCountry": "UA"
+  },
+  "geo": {
+  "@type": "GeoCoordinates",
+  "latitude": 50.4000131,
+  "longitude": 30.4302686
+},
+"hasMap": "https://www.google.com/maps?cid=15792600053340114773",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "10:00",
+      "closes": "17:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Saturday",
+      "opens": "10:00",
+      "closes": "14:00"
+    }
+  ],
+  "sameAs": [
+    "https://t.me/Autoworkshop_Alex",
+    "https://www.google.com/maps?cid=15792600053340114773"
+  ]
+}
+</script>
+
+<!-- стало -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="icon" type="image/png" href="assets/favicon.png">
-<link rel="apple-touch-icon" href="assets/favicon.png">
 </head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KW7NEB3VGW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KW7NEB3VGW');
+</script>
 <body>
 
+<div id="scanbar"></div>
+
 <header>
-  <div class="wrap header-row">
-    <a href="#top" class="logo">
-      <span class="logo-plate">
-        <img src="assets/logo-flagman.png" alt="Флагман Мотор Україна" width="164" height="54">
-      </span>
+  <nav class="nav">
+    <a href="#top" class="brand">
+      <img class ="brand-mark" src="img/halfautoelectriklogo.png" alt="Логотип Майстерні">
+      <span class="brand-text">Автодіагностика<span>Майстерня · Київ</span></span>
     </a>
-    <nav class="main-nav">
-      <a href="#about">Про нас</a>
-      <a href="#services">Послуги</a>
-      <a href="#problems">Питання</a>
-      <a href="#contact">Контакти</a>
-    </nav>
-    <div class="header-phone">
-      <a class="tel" href="tel:+380674405658">
-        <svg class="tel-icon" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-        <span>Зателефонувати</span>
-      </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Меню"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-  <div class="mobile-nav" id="mobileNav">
-    <a href="#about">Про нас</a>
-    <a href="#services">Послуги</a>
-    <a href="#problems">Питання</a>
-    <a href="#contact">Контакти</a>
-    <a class="btn" href="#contact">Залишити заявку</a>
-  </div>
+    <button class="burger" aria-label="Меню" aria-expanded="false" id="burgerBtn">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about" data-nav>Про нас</a></li>
+      <li><a href="#services" data-nav>Послуги</a></li>
+      <li><a href="#process" data-nav>Процес</a></li>
+      <li><a href="#contacts" data-nav>Контакти</a></li>
+      <li><a class="nav-cta" href="tel:+380954851166">📞 Подзвонити</a></li>
+    </ul>
+  </nav>
 </header>
 
 <main id="top">
 
+  <!-- HERO -->
   <section class="hero">
-    <div class="hero-glow"></div>
     <div class="wrap hero-grid">
       <div>
-        <p class="hero-kicker">СТО в Києві</p>
-        <h1>Сервіс з ремонту автомобілів</h1>
-        <p class="hero-sub">Якість. Оперативність. Доступність. Ремонт легкових і вантажних авто, рихтування, фарбування та підбір запчастин — в одному місці.</p>
+        <div class="status-pill"><span class="dot" id="heroDot"></span>
+          <span id="heroStatusText">Перевіряємо статус…</span></div>
+        <h1>Знайдемо несправність.<br>Не вгадаємо — <em>виміряємо</em>.</h1>
+        <p class="lede">Комп'ютерна діагностика та ремонт автоелектрики в Києві. Автосканер, осцилограф, ендоскоп і 10+ спеціалізованих перевірок — замість здогадок.</p>
         <div class="hero-actions">
-          <a href="#contact" class="btn">Залишити заявку</a>
-          <a href="#services" class="btn btn-outline">Наші послуги</a>
+          <a href="tel:+380954851166" class="btn btn-primary">📞 +38 (095) 485-11-66</a>
+          <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" class="btn btn-ghost">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 2 11 13"/>
+                <path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg> Написати в Telegram</a>
         </div>
         <div class="hero-meta">
-          <div>
-            <p>Пн–Пт</p>
-            <p>9:00–18:00</p>
-          </div>
-          <div>
-            <p>вул. Льва Толстого, 63</p>
-            <p>м. Київ</p>
-          </div>
-          <div>
-            <p>До 5 тонн</p>
-            <p>вантажні та легкові авто</p>
-          </div>
+          <div><b>11+</b>видів діагностики</div>
+          <div><b>Пн–Сб</b>по запису</div>
+          <div><b>Київ</b>вул. Гуцульська 97А</div>
         </div>
       </div>
-      <div class="hero-emblem">
-        <svg class="hero-illustration" viewBox="0 0 480 480" fill="none">
-          <!-- corner frame -->
-          <g stroke="#8b8d8f" stroke-width="1.4" opacity="0.5">
-            <path d="M18 62V18H62"/>
-            <path d="M418 18H462V62"/>
-            <path d="M18 418V462H62"/>
-            <path d="M462 418V462H418"/>
-          </g>
 
-          <!-- orbit ring -->
-          <circle cx="330" cy="130" r="150" stroke="#8b8d8f" stroke-width="1" stroke-dasharray="2 8" opacity="0.4"/>
-
-          <!-- sweeping motion strokes, echoing the logo mark -->
-          <path d="M50 400C160 400 250 320 295 235C335 160 400 110 445 85" stroke="#5b5e60" stroke-width="15" stroke-linecap="round" opacity="0.45"/>
-          <path d="M70 355C165 355 245 280 285 205C320 138 380 95 430 65" stroke="#8b8d8f" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
-          <path d="M95 305C175 305 240 240 272 175C302 115 355 78 405 50" stroke="#c9c6c1" stroke-width="9" stroke-linecap="round" opacity="0.75"/>
-          <path d="M125 250C190 248 235 195 258 145C282 95 322 62 365 38" stroke="#c31f2e" stroke-width="6" stroke-linecap="round"/>
-
-          <!-- spark at convergence point -->
-          <circle cx="365" cy="38" r="26" fill="#c31f2e" opacity="0.16"/>
-          <circle cx="365" cy="38" r="10" fill="#c31f2e"/>
-          <circle cx="365" cy="38" r="17" stroke="#c31f2e" stroke-width="1.4" opacity="0.7"/>
-
-          <!-- grounding baseline -->
-          <line x1="60" y1="430" x2="300" y2="430" stroke="#8b8d8f" stroke-width="1" stroke-dasharray="2 7" opacity="0.5"/>
-        </svg>
+      <div class="scope reveal">
+        <div class="scope-head">
+          <span class="tag">Канал 1 · Сигнал датчика</span>
+          <span class="tag" id="scopeTime">00:00</span>
+        </div>
+        <div class="scope-screen">
+          <div class="grid-lines"></div>
+          <svg viewBox="0 0 400 170" preserveAspectRatio="none">
+            <path id="scopePath" class="scan-line" d="M0,85 L400,85"></path>
+          </svg>
+        </div>
+        <div class="scope-foot">
+          <span class="chip">OBD-II</span>
+          <span class="chip">CAN-BUS</span>
+          <span class="chip">ECU LIVE DATA</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="about" id="about">
+  <div class="stripe"></div>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
     <div class="wrap">
-      <div class="section-head">
+      <div class="eyebrow">Про майстерню</div>
+      <h2 class="reveal">Професійна діагностика електрообладнання авто</h2>
+      <p class="lede reveal">Спеціалізуємось на пошуку несправностей та обслуговуванні електрообладнання легкових і комерційних автомобілів у Києві. Для точного пошуку причин використовуємо сучасне діагностичне обладнання, автосканери та прилади для перевірки електронних систем — без зайвої заміни деталей навмання.</p>
+
+      <div class="eyebrow" style="margin-top:8px;">Коли варто звернутися</div>
+      <ul class="alert-list reveal">
+        <li><span class="flag">!</span><div>Загорівся індикатор <b>Check Engine</b>, <b>ABS</b>, <b>Airbag</b>, <b>ESP</b> або <b>DPF</b> на панелі приладів.</div></li>
+        <li><span class="flag">!</span><div>Автомобіль погано запускається або не заводиться взагалі.</div></li>
+        <li><span class="flag">!</span><div>Двигун працює нестабільно або втрачає потужність.</div></li>
+        <li><span class="flag">!</span><div>Швидко розряджається акумулятор або присутній витік струму.</div></li>
+        <li><span class="flag">!</span><div>Некоректно працюють системи комфорту та електросистеми.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" id="services" style="background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="wrap">
+      <div class="eyebrow">Що ми перевіряємо</div>
+      <h2 class="reveal">11 напрямків діагностики — натисніть, щоб розгорнути</h2>
+      <p class="lede reveal">Кожна перевірка виконується профільним обладнанням: автосканером, осцилографом, димогенератором або ендоскопом.</p>
+      <div class="svc-grid" id="svcGrid"></div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section" id="process">
+    <div class="wrap">
+      <div class="eyebrow">Як це працює</div>
+      <h2 class="reveal">Шлях від симптому до рішення</h2>
+      <div class="process reveal" id="processList"></div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="section" style="background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="wrap">
+      <div class="eyebrow">Чому саме ми</div>
+      <h2 class="reveal">Аргументи на користь звернення</h2>
+      <div class="why-grid reveal" id="whyGrid"></div>
+    </div>
+  </section>
+
+  <!-- CTA / CALLBACK -->
+  <section class="section-tight" id="callback">
+    <div class="wrap">
+      <div class="cta-band reveal">
         <div>
-          <p class="section-kicker">Хто ми</p>
-          <h2>Про нас</h2>
+          <h2 style="margin-bottom:12px;">Потрібна діагностика вже сьогодні?</h2>
+          <p class="lede" style="margin-bottom:0;">Залиште номер — передзвонимо і підкажемо, з чого почати, або одразу телефонуйте чи пишіть у Telegram.</p>
         </div>
-        <p class="lede"><b>«Флагман Мотор Україна»</b> — сервіс високого рівня з ремонту легкових і вантажних автомобілів, рихтувально-малярних робіт та продажу запчастин.</p>
-      </div>
-      <div class="about-grid about-frame">
-        <div class="about-text">
-          <p>Виконуємо рихтувальні та фарбувальні роботи будь-якої складності для вантажних і легкових автомобілів. Фарбу підбираємо безпосередньо на підприємстві — тому колір кузова завжди повністю збігається з оригіналом.</p>
-          <p>Працюємо як з плановим технічним обслуговуванням, так і з відновленням авто після ДТП: від діагностики до фінального полірування.</p>
-          <p>Для нас важливо не просто виконати свою роботу, а створити сервіс, до якого хочеться повертатися. Ми відкриті з клієнтами, дотримуємося домовленостей і прагнемо забезпечувати стабільно високий рівень обслуговування.</p>
-          <p>Ми цінуємо довіру наших клієнтів і відповідально ставимося до кожного автомобіля, який потрапляє до нас. У своїй роботі поєднуємо досвід, професійний підхід та сучасні технології.</p>
-        </div>
-        <div class="traits" id="advantages">
-          <div class="trait">
-            <span class="trait-icon"><svg viewBox="0 0 26 26" fill="none"><path d="M17 3.5a5 5 0 0 0-6.7 5.9L4 15.7v3.8h3.8l6.3-6.3a5 5 0 0 0 5.9-6.7l-3.1 3.1-2.6-.6-.6-2.6L17 3.5Z" stroke="#c31f2e" stroke-width="1.4" stroke-linejoin="round"/></svg></span>
-            <div>
-              <h3>Професіоналізм</h3>
-              <p>Висока якість робіт, сучасне обладнання та індивідуальний підхід до кожного автомобіля.</p>
-            </div>
+        <form id="callbackForm">
+          <div class="form-row">
+            <input type="text" id="cbName" placeholder="Ваше ім'я" required>
+            <input type="tel" id="cbPhone" placeholder="+380 " required>
           </div>
-          <div class="trait">
-            <span class="trait-icon"><svg viewBox="0 0 26 26" fill="none"><path d="M4 13 13 4l9 0 0 9-9 9-9-9Z" stroke="#c31f2e" stroke-width="1.4" stroke-linejoin="round"/><circle cx="16.5" cy="9.5" r="1.6" fill="#c31f2e"/></svg></span>
-            <div>
-              <h3>Приємні ціни</h3>
-              <p>Гнучка система знижок для постійних клієнтів автосервісу.</p>
-            </div>
+          <div class="form-error" id="cbNameError"></div>
+          <div class="form-error" id="cbPhoneError"></div>
+          <div class="form-row" style="margin-top:10px;">
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Замовити дзвінок</button>
           </div>
-          <div class="trait">
-            <span class="trait-icon"><svg viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="9.5" stroke="#c31f2e" stroke-width="1.4"/><path d="M13 7.5V13l4 2.4" stroke="#c31f2e" stroke-width="1.4" stroke-linecap="round"/></svg></span>
-            <div>
-              <h3>Пунктуальність</h3>
-              <p>Швидке та якісне обслуговування — вкладаємось в обумовлені терміни.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <section class="services on-dark" id="services">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Наші послуги</h2>
-        <p class="lede">Повний комплекс робіт з ремонту та обслуговування — від діагностики до фарбування кузова.</p>
-      </div>
-      <div class="services-list">
-        <div class="service-row">
-          <span class="service-index">01</span>
-          <div class="service-info"><span class="service-tag">Легкові авто</span><h3>Легковий сервіс</h3></div>
-          <div class="service-icon"><svg viewBox="0 0 40 40" fill="none"><path d="M6 29V23L11 15H27L34 21L36 25V29Z"/><path d="M6 29H36"/><path d="M9 23H32"/><path d="M18 15L20 23"/><circle cx="13" cy="29" r="2.6"/><circle cx="13" cy="29" r="0.8" fill="#c31f2e"/><circle cx="29" cy="29" r="2.6"/><circle cx="29" cy="29" r="0.8" fill="#c31f2e"/></svg></div>
-          <div class="service-desc">
-            <p>Ремонт легкових автомобілів, діагностика та регулярний технічний огляд.</p>
-            <ul class="service-list">
-              <li>Комп'ютерна діагностика двигуна та електроніки</li>
-              <li>Заміна масла, фільтрів, гальмівних колодок і дисків</li>
-              <li>Ремонт підвіски та ходової частини</li>
-            </ul>
-          </div>
-        </div>
-        <div class="service-row">
-          <span class="service-index">02</span>
-          <div class="service-info"><span class="service-tag">До 5 тонн</span><h3>Вантажний сервіс</h3></div>
-          <div class="service-icon"><svg viewBox="0 0 40 40" fill="none"><rect x="5" y="15" width="17" height="14"/><path d="M22 19H27L34 25V29H22Z"/><path d="M11 15V29M17 15V29"/><rect x="28" y="20.5" width="4" height="3"/><circle cx="12" cy="29.5" r="2.6"/><circle cx="12" cy="29.5" r="0.8" fill="#c31f2e"/><circle cx="30" cy="29.5" r="2.6"/><circle cx="30" cy="29.5" r="0.8" fill="#c31f2e"/></svg></div>
-          <div class="service-desc">
-            <p>Ремонт, виявлення та усунення несправностей малотоннажного вантажного транспорту.</p>
-            <ul class="service-list">
-              <li>Діагностика двигуна та трансмісії</li>
-              <li>Ремонт гальмівної системи та зчеплення</li>
-              <li>Обслуговування ходової частини вантажівок</li>
-            </ul>
-          </div>
-        </div>
-        <div class="service-row">
-          <span class="service-index">03</span>
-          <div class="service-info"><span class="service-tag">Кузов</span><h3>Рихтувальні роботи</h3></div>
-          <div class="service-icon"><svg viewBox="0 0 40 40" fill="none"><rect x="6" y="9" width="22" height="22" rx="2"/><path d="M11 18c3 5 11 5 14 0"/><path d="M26 5 32 11 27 16 21 10Z"/><path d="M22 11 14 19"/><path d="M17 17.5l1.6 1.6M20 15l1.6 1.6"/></svg></div>
-          <div class="service-desc">
-            <p>Відновлення автомобіля після ДТП, ремонт кузовів, зварювальні роботи.</p>
-            <ul class="service-list">
-              <li>Усунення вм'ятин і деформацій кузова</li>
-              <li>Заміна пошкоджених елементів кузова</li>
-              <li>Зварювальні та жерстяницькі роботи</li>
-            </ul>
-          </div>
-        </div>
-        <div class="service-row">
-          <span class="service-index">04</span>
-          <div class="service-info"><span class="service-tag">Фарбування</span><h3>Малярні роботи</h3></div>
-          <div class="service-icon"><svg viewBox="0 0 40 40" fill="none"><path d="M10.5 14C10.4 12 10 10.6 11.2 9.1C12.1 8 13.5 7.3 15.5 7.3C17.5 7.3 18.9 8 19.8 9.1C21 10.6 20.6 12 20.5 14Z"/><path d="M11 10.6H20"/><path d="M10.7 12.4H20.3"/><path d="M14 7.3V5.6H17V7.3"/><rect x="9" y="14" width="13" height="6" rx="1"/><path d="M22 15 27 12.5 27 21.5 22 19Z"/><path d="M12 20 10 31 16 31 17 20Z"/><path d="M17 23c-1.8 0-3 1.3-3 3"/><path d="M11 31c0 2.4-1 3.6-3 4.5"/><circle cx="7" cy="36.3" r="1.1" fill="#c31f2e"/><path d="M30 14 34.5 12"/><path d="M31 17.5 35.5 17.5"/><path d="M30 21 34.5 23"/></svg></div>
-          <div class="service-desc">
-            <p>Фарбування та полірування кузова з підбором кольору безпосередньо на підприємстві.</p>
-            <ul class="service-list">
-              <li>Підбір кольору на фарбозмішувальній станції</li>
-              <li>Фарбування в камері з підготовкою поверхні</li>
-              <li>Полірування та захисне покриття</li>
-            </ul>
-          </div>
-        </div>
-        <div class="service-row">
-          <span class="service-index">05</span>
-          <div class="service-info"><span class="service-tag">Ходова</span><h3>Розвал-сходження</h3></div>
-          <div class="service-icon"><svg viewBox="0 0 40 40" fill="none"><rect x="8" y="9" width="8" height="20" rx="4" transform="rotate(-12 12 19)"/><rect x="24" y="9" width="8" height="20" rx="4" transform="rotate(12 28 19)"/><path d="M20 6V30" stroke-dasharray="2 3.5"/><path d="M5 33H35"/></svg></div>
-          <div class="service-desc">
-            <p>Регулювання кутів нахилу коліс — покращуємо керованість і стійкість автомобіля.</p>
-            <ul class="service-list">
-              <li>Комп'ютерна перевірка кутів установки коліс</li>
-              <li>Регулювання розвалу та сходження</li>
-              <li>Балансування коліс</li>
-            </ul>
-          </div>
-        </div>
-        <div class="service-row">
-          <span class="service-index">06</span>
-          <div class="service-info"><span class="service-tag">Запчастини</span><h3>Продаж автозапчастин</h3></div>
-          <div class="service-icon"><svg viewBox="0 0 40 40" fill="none"><path d="M29.0 20.0L31.9 21.4L31.5 23.3L28.3 23.4L26.4 26.4L27.4 29.4L25.9 30.5L23.4 28.3L20.0 29.0L18.6 31.9L16.7 31.5L16.6 28.3L13.6 26.4L10.6 27.4L9.5 25.9L11.7 23.4L11.0 20.0L8.1 18.6L8.5 16.7L11.7 16.6L13.6 13.6L12.6 10.6L14.1 9.5L16.6 11.7L20.0 11.0L21.4 8.1L23.3 8.5L23.4 11.7L26.4 13.6L29.4 12.6L30.5 14.1L28.3 16.6Z"/><circle cx="20" cy="20" r="4.5"/></svg></div>
-          <div class="service-desc">
-            <p>Широкий вибір запчастин та їх замовлення під ваш автомобіль.</p>
-            <ul class="service-list">
-              <li>Підбір запчастин під конкретну модель</li>
-              <li>Оригінальні деталі та перевірені аналоги</li>
-              <li>Замовлення дефіцитних позицій</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="problems" id="problems">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <p class="section-kicker">Типові звернення</p>
-          <h2>З якими проблемами до нас звертаються</h2>
-        </div>
-        <p class="lede">Впізнаєте свою ситуацію? Ми стикаємось із цим щодня — і знаємо, як вирішити швидко та без зайвих витрат.</p>
-      </div>
-      <div class="problems-grid">
-        <div class="problem-card">
-          <span class="service-tag">№01</span>
-          <p class="problem-text">«Стукає підвіска на нерівностях»</p>
-          <p class="problem-solution">Діагностика ходової частини, заміна опор, сайлентблоків і стійок стабілізатора.</p>
-        </div>
-        <div class="problem-card">
-          <span class="service-tag">№02</span>
-          <p class="problem-text">«Авто тягне вбік або кермо стоїть криво»</p>
-          <p class="problem-solution">Комп'ютерна перевірка розвалу-сходження, ремонт елементів рульового керування.</p>
-        </div>
-        <div class="problem-card">
-          <span class="service-tag">№03</span>
-          <p class="problem-text">«Потрапив у ДТП, потрібно відновити кузов»</p>
-          <p class="problem-solution">Рихтування пошкоджених панелей, заміна елементів кузова, фарбування з підбором кольору в тон.</p>
-        </div>
-        <div class="problem-card">
-          <span class="service-tag">№04</span>
-          <p class="problem-text">«На порогах і арках з'явилася іржа»</p>
-          <p class="problem-solution">Видалення корозії, антикорозійна обробка, локальний ремонт та фарбування кузова.</p>
-        </div>
-        <div class="problem-card">
-          <span class="service-tag">№05</span>
-          <p class="problem-text">«Гальма скриплять, вібрують або тягнуть»</p>
-          <p class="problem-solution">Заміна колодок і дисків, діагностика та прокачування гальмівної системи.</p>
-        </div>
-        <div class="problem-card">
-          <span class="service-tag">№06</span>
-          <p class="problem-text">«Двигун втратив тягу, зросла витрата палива»</p>
-          <p class="problem-solution">Комп'ютерна діагностика двигуна та електроніки, усунення несправностей.</p>
-        </div>
-        <div class="problem-card">
-          <span class="service-tag">№07</span>
-          <p class="problem-text">«Не можу знайти потрібні запчастини»</p>
-          <p class="problem-solution">Підбір оригінальних деталей або перевірених аналогів під конкретну модель авто.</p>
-        </div>
-        <div class="problem-card">
-          <span class="service-tag">№08</span>
-          <p class="problem-text">«Готую автомобіль до продажу чи огляду»</p>
-          <p class="problem-solution">Передпродажна підготовка: полірування, усунення дрібних дефектів, детейлінг кузова.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="contact" id="contact">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Залишити заявку</h2>
-        <p class="lede">Опишіть проблему коротко — передзвонимо і домовимось про зручний час.</p>
-      </div>
-      <div class="contact-grid">
-        <form class="form-card" id="leadForm" novalidate>
-          <div class="field">
-            <label for="name">Ім'я</label>
-            <input type="text" id="name" name="name" placeholder="Ваше ім'я" pattern="[A-Za-zА-ЯЁІЇЄҐа-яёіїєґ'\s-]+" title="Тільки літери" required>
-            <span class="field-error" id="name-error"></span>
-          </div>
-          <div class="field">
-            <label for="phone">Телефон</label>
-            <input type="tel" id="phone" name="phone" placeholder="+380 ХХ ХХХ ХХ ХХ" inputmode="numeric" maxlength="17" required>
-            <span class="field-error" id="phone-error"></span>
-          </div>
-          <div class="field">
-            <label for="message">Коментар</label>
-            <textarea id="message" name="message" placeholder="Що потрібно зробити з автомобілем?"></textarea>
-          </div>
-          <button type="submit" class="btn" style="width:100%; justify-content:center;">Надіслати заявку</button>
-          <p class="form-note">Передзвонимо протягом робочого дня.</p>
+          <div class="form-note">Заявка одразу зберігається на сервері та дублюється в Telegram.</div>
+          <div class="form-success" id="cbSuccess">✓ Дякуємо! Відкриваємо канал зв'язку…</div>
         </form>
-        <div>
-          <div class="info-block">
-            <h3>Адреса</h3>
-            <p>м. Київ, вул. Льва Толстого, 63</p>
-            <a class="route-link" href="https://www.google.com/maps/dir/?api=1&destination=50.4361565,30.4965286" target="_blank" rel="noopener">
-              <span>Прокласти маршрут</span>
-              <span class="route-arrow">→</span>
-            </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION + CONTACTS -->
+  <section class="section" id="contacts">
+    <div class="wrap">
+      <div class="eyebrow">Як нас знайти</div>
+      <h2 class="reveal">Контакти та адреса</h2>
+      <div class="loc-grid reveal">
+        <div class="loc-map">
+          <iframe src="https://www.google.com/maps?cid=15792600053340114773&hl=uk&z=15&output=embed" loading="lazy" title="Карта — вул. Гуцульська 97А, Київ"></iframe>
+        </div>
+        <div class="loc-info">
+          <div class="open-badge"><span class="dot" id="badgeDot"></span><span id="badgeText">—</span></div>
+
+          <div class="info-row">
+            <svg ievwBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <div><b>+38 (095) 485-11-66</b><span>Дзвінки Пн–Сб</span></div>
           </div>
-          <div class="info-block">
-            <h3>Графік роботи</h3>
-            <p>Понеділок – П'ятниця: 9:00 – 18:00<br>Субота – Неділя: вихідний</p>
-          </div>
-          <div class="info-block">
-            <h3>Контакти</h3>
-            <p><a href="tel:+380674405658">+380 67 440 56 58</a><br><a href="mailto:stoflag@gmail.com">stoflag@gmail.com</a></p>
-            <div class="social-row">
-              <a href="https://instagram.com/flagman_motor_ukraina" aria-label="Instagram" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M12 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2Zm0 1.8a1.8 1.8 0 1 1 0 3.6 1.8 1.8 0 0 1 0-3.6ZM16.4 6.6a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8ZM7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4Zm0 1.8A2.2 2.2 0 0 0 4.8 7v10A2.2 2.2 0 0 0 7 19.2h10a2.2 2.2 0 0 0 2.2-2.2V7A2.2 2.2 0 0 0 17 4.8H7Z" fill="#211f1d"/></svg>
-              </a>
-              <a href="https://t.me/san4kkk_13" aria-label="Telegram" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M2 12.3 21 3.4c.9-.4 1.7.3 1.4 1.3l-3.4 16c-.2 1-1 1.2-1.7.7l-4.7-3.5-2.4 2.3c-.3.3-.5.4-.9.4l.3-4.3 8-7.4c.3-.3-.1-.4-.5-.2L7 13.9l-4.3-1.3c-1-.3-1-1 .3-1.3Z" fill="#211f1d"/></svg>
-              </a>
+
+          <div class="info-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+            <div>
+              <b>
+                Telegram: <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener noreferrer">@Autoworkshop_Alex</a>
+              </b>
+              <span>Швидкі питання та фото</span>
             </div>
           </div>
-          <div class="map-frame">
-            <iframe title="Карта" loading="lazy" src="https://www.google.com/maps?cid=8679430056289549917&output=embed"></iframe>
+
+          <div class="info-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><b>вул. Гуцульська 97А</b><span>Київ, Україна</span></div>
           </div>
+
+          <div class="info-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <div>
+              <b>Графік роботи</b>
+              <span>Пн–Пт: 10:00–17:00 · Сб: 10:00–14:00 · Нд: вихідний</span>
+            </div>
+          </div>
+
+          <a href="https://www.google.com/maps/dir/?api=1&destination=50.400036,30.430157" target="_blank" rel="noopener" class="btn btn-ghost" style="align-self:flex-start;">📍 Побудувати маршрут</a>
         </div>
       </div>
     </div>
@@ -352,22 +275,21 @@
 </main>
 
 <footer>
-  <div class="wrap footer-row">
-    <span>© <span id="currentYear">2026</span> Флагман Мотор Україна · ФОП Бурда Євген Олександрович</span>
-    <span><a href="tel:+380674405658">+380 67 440 56 58</a> · <a href="mailto:stoflag@gmail.com">stoflag@gmail.com</a></span>
+  <div class="wrap foot-row">
+    <span>© <span id="currentYear">2026</span> Автоелектрик Київ · ФОП «Лизюк Олександр Васильович»</span>
+    <span><a href="tel:+380954851166">+38 (095) 485-11-66</a> · <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener">Telegram</a></span>
   </div>
 </footer>
 
 <div class="fab-stack">
-  <a href="#top" class="fab fab-top" id="fabTop" aria-label="Нагору">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M6 15 12 9 18 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </a>
-  <a href="https://t.me/san4kkk_13" target="_blank" rel="noopener" class="fab" aria-label="Telegram">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M3 11 21 4l-3 16-6-5-3 3-1-5-5-2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>
-  </a>
-  <a href="tel:+380674405658" class="fab fab-call" aria-label="Зателефонувати">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-  </a>
+  <a href="#top" class="fab fab-top" id="fabTop" aria-label="Нагору">↑</a>
+  <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" class="fab fab-tg" aria-label="Telegram">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 2 11 13"/>
+    <path d="M22 2 15 22l-4-9-9-4 20-7z"/>
+  </svg>
+</a>
+  <a href="tel:+380954851166" class="fab fab-call" aria-label="Подзвонити">📞</a>
 </div>
 
 <script src="script.js"></script>
