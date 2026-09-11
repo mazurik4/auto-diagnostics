@@ -2,16 +2,13 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<!-- было
-<meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-<!-- стало -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Майстерня автодіагностики — Київ</title>
 <meta name="description" content="Професійна комп'ютерна діагностика та ремонт електрообладнання авто у Києві. Осцилограф, автосканер, ендоскопія циліндрів, перевірка датчиків.">
 
 <!-- Каноническая ссылка — говорит Google, какой адрес считать основным -->
 <link rel="canonical" href="https://autoworkshop.com.ua/">
- 
+
 <!-- Open Graph — красивая карточка при шаринге в соцсетях/мессенджерах -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Автодіагностика — Київ">
@@ -20,6 +17,12 @@
 <meta property="og:url" content="https://autoworkshop.com.ua/">
 <meta property="og:image" content="https://autoworkshop.com.ua/img/halfautoelectriklogo.png">
 <meta property="og:locale" content="uk_UA">
+
+<!-- Twitter Card — та же карточка для X/Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Майстерня автодіагностики — Київ">
+<meta name="twitter:description" content="Професійна комп'ютерна діагностика та ремонт електрообладнання авто у Києві.">
+<meta name="twitter:image" content="https://autoworkshop.com.ua/img/halfautoelectriklogo.png">
 
 <!-- Schema.org: структурированные данные для Google —
      помогают показать адрес, часы работы, телефон и рейтинг прямо в выдаче поиска -->
@@ -35,16 +38,16 @@
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "вул. Гуцульська 97А",
-    "postalCode": "03193",
     "addressLocality": "Київ",
+    "postalCode": "03193",
     "addressCountry": "UA"
   },
   "geo": {
-  "@type": "GeoCoordinates",
-  "latitude": 50.4000131,
-  "longitude": 30.4302686
-},
-"hasMap": "https://www.google.com/maps?cid=15792600053340114773",
+    "@type": "GeoCoordinates",
+    "latitude": 50.4000131,
+    "longitude": 30.4302686
+  },
+  "hasMap": "https://www.google.com/maps?cid=15792600053340114773",
   "openingHoursSpecification": [
     {
       "@type": "OpeningHoursSpecification",
@@ -65,8 +68,6 @@
   ]
 }
 </script>
-
-<!-- стало -->
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
@@ -76,16 +77,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KW7NEB3VGW"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-KW7NEB3VGW');
-</script>
 <body>
 
 <div id="scanbar"></div>
@@ -104,7 +95,7 @@
       <li><a href="#services" data-nav>Послуги</a></li>
       <li><a href="#process" data-nav>Процес</a></li>
       <li><a href="#contacts" data-nav>Контакти</a></li>
-      <li><a class="nav-cta" href="tel:+380954851166">📞 Подзвонити</a></li>
+      <li><a class="nav-cta" href="tel:+380954851166"><svg class="tel-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Подзвонити</a></li>
     </ul>
   </nav>
 </header>
@@ -115,20 +106,22 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <div class="status-pill"><span class="dot" id="heroDot"></span>
-          <span id="heroStatusText">Перевіряємо статус…</span></div>
+        <div class="status-pill"><span class="dot" id="heroDot"></span><span id="heroStatusText">Перевіряємо статус…</span></div>
         <h1>Знайдемо несправність.<br>Не вгадаємо — <em>виміряємо</em>.</h1>
         <p class="lede">Комп'ютерна діагностика та ремонт автоелектрики в Києві. Автосканер, осцилограф, ендоскоп і 10+ спеціалізованих перевірок — замість здогадок.</p>
         <div class="hero-actions">
-          <a href="tel:+380954851166" class="btn btn-primary">📞 +38 (095) 485-11-66</a>
-          <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" class="btn btn-ghost">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22 2 11 13"/>
-                <path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg> Написати в Telegram</a>
+          <a href="tel:+380954851166" class="btn btn-primary"><svg class="tel-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> +38 (095) 485-11-66</a>
+          <a href="https://t.me/" target="_blank" rel="noopener" class="btn btn-ghost">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 2 11 13"/>
+              <path d="M22 2 15 22l-4-9-9-4 20-7z"/>
+            </svg>
+            Написати в Telegram
+          </a>
         </div>
         <div class="hero-meta">
           <div><b>11+</b>видів діагностики</div>
-          <div><b>Пн–Сб</b>по запису</div>
+          <div><b>Пн–Сб</b>без запису</div>
           <div><b>Київ</b>вул. Гуцульська 97А</div>
         </div>
       </div>
@@ -202,7 +195,7 @@
   </section>
 
   <!-- CTA / CALLBACK -->
-  <section class="section-tight" id="callback">
+  <section class="section-tight">
     <div class="wrap">
       <div class="cta-band reveal">
         <div>
@@ -212,14 +205,14 @@
         <form id="callbackForm">
           <div class="form-row">
             <input type="text" id="cbName" placeholder="Ваше ім'я" required>
-            <input type="tel" id="cbPhone" placeholder="+380 " required>
+            <input type="tel" id="cbPhone" placeholder="+380" required>
           </div>
           <div class="form-error" id="cbNameError"></div>
           <div class="form-error" id="cbPhoneError"></div>
           <div class="form-row" style="margin-top:10px;">
             <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Замовити дзвінок</button>
           </div>
-          <div class="form-note">Заявка одразу зберігається на сервері та дублюється в Telegram.</div>
+          <div class="form-note">Немає бекенду — форма підготує повідомлення в Telegram/дзвінок для вашого зручного каналу зв'язку.</div>
           <div class="form-success" id="cbSuccess">✓ Дякуємо! Відкриваємо канал зв'язку…</div>
         </form>
       </div>
@@ -233,24 +226,19 @@
       <h2 class="reveal">Контакти та адреса</h2>
       <div class="loc-grid reveal">
         <div class="loc-map">
-          <iframe src="https://www.google.com/maps?cid=15792600053340114773&hl=uk&z=15&output=embed" loading="lazy" title="Карта — вул. Гуцульська 97А, Київ"></iframe>
+          <iframe src="https://www.google.com/maps?cid=15792600053340114773&hl=uk&output=embed" loading="lazy" title="Карта — вул. Гуцульська 97А, Київ"></iframe>
         </div>
         <div class="loc-info">
           <div class="open-badge"><span class="dot" id="badgeDot"></span><span id="badgeText">—</span></div>
 
           <div class="info-row">
-            <svg ievwBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <svg class="tel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             <div><b>+38 (095) 485-11-66</b><span>Дзвінки Пн–Сб</span></div>
           </div>
 
           <div class="info-row">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
-            <div>
-              <b>
-                Telegram: <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener noreferrer">@Autoworkshop_Alex</a>
-              </b>
-              <span>Швидкі питання та фото</span>
-            </div>
+            <div><b>Telegram: @Autoworkshop_Alex</b><span>Швидкі питання та фото</span></div>
           </div>
 
           <div class="info-row">
@@ -266,7 +254,7 @@
             </div>
           </div>
 
-          <a href="https://www.google.com/maps/dir/?api=1&destination=50.400036,30.430157" target="_blank" rel="noopener" class="btn btn-ghost" style="align-self:flex-start;">📍 Побудувати маршрут</a>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=50.400036,30.430157" target="_blank" rel="noopener" class="btn btn-ghost" style="align-self:flex-start;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Побудувати маршрут</a>
         </div>
       </div>
     </div>
@@ -285,11 +273,11 @@
   <a href="#top" class="fab fab-top" id="fabTop" aria-label="Нагору">↑</a>
   <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" class="fab fab-tg" aria-label="Telegram">
     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-    <path d="M22 2 11 13"/>
-    <path d="M22 2 15 22l-4-9-9-4 20-7z"/>
-  </svg>
-</a>
-  <a href="tel:+380954851166" class="fab fab-call" aria-label="Подзвонити">📞</a>
+      <path d="M22 2 11 13"/>
+      <path d="M22 2 15 22l-4-9-9-4 20-7z"/>
+    </svg>
+  </a>
+  <a href="tel:+380954851166" class="fab fab-call" aria-label="Подзвонити"><svg class="tel-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
 </div>
 
 <script src="script.js"></script>
