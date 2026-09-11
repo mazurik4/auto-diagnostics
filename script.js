@@ -160,11 +160,11 @@
 
     badgeDot.classList.toggle('off', !open);
     heroDot.classList.toggle('off', !open);
-    let msg = open
+    let statusMsg = open
     ? 'Майстерня зараз працює'
     : 'Поза графіком — <a href="#callback" class="cta-inline">залиште заявку</a>';
-    badgeText.innerHTML = msg;
-    heroText.innerHTML = msg;
+    badgeText.innerHTML = statusMsg;
+    heroText.innerHTML = statusMsg;
   }
   updateOpenStatus();
   setInterval(updateOpenStatus, 60000);
