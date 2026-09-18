@@ -112,7 +112,7 @@
   });
 
   // ---------- active nav on scroll + scan progress bar ----------
-  let sections = ['about','services','process','contacts'].map(function(id){ return document.getElementById(id); });
+  let sections = ['about','services','process','news','contacts'].map(function(id){ return document.getElementById(id); });
   let navA = document.querySelectorAll('[data-nav]');
   function onScroll(){
     let scrollTop = window.scrollY;
@@ -122,7 +122,7 @@
 
     let current = null;
     sections.forEach(function(sec){
-      if(!sec) return;
+      if(!sec || !sec.offsetParent) return; // пропускаємо приховані секції (напр. #news без новин)
       let rect = sec.getBoundingClientRect();
       if(rect.top < 120) current = sec.id;
     });
@@ -354,6 +354,158 @@ phoneInput.addEventListener('blur', function(){
       window.open('https://t.me/Autoworkshop_Alex?text=' + text, '_blank');
     }, 700);
   });
+
+  // ---------- news carousel (новини з Google-профілю, додаються через адмінку) ----------
+  (function(){
+    let section = document.getElementById('news');
+    let track = document.getElementById('newsTrack');
+    let dotsWrap = document.getElementById('newsDots');
+    let prevBtn = document.querySelector('.news-arrow-prev');
+    let nextBtn = document.querySelector('.news-arrow-next');
+    if(!section || !track) return;
+
+    let GBP_URL = 'https://www.google.com/maps?cid=15792600053340114773';
+
+    fetch(API_URL + '/api/news')
+      .then(function(r){ return r.ok ? r.json() : []; })
+      .then(renderNews)
+      .catch(function(){});
+
+    function renderNews(items){
+      if(!items || !items.length) return;
+
+      items.forEach(function(item){
+        let a = document.createElement('a');
+        a.className = 'news-card';
+        a.href = GBP_URL;
+        a.target = '_blank';
+        a.rel = 'noopener';
+
+        let imgWrap = document.createElement('div');
+        imgWrap.className = 'news-card-img';
+        let imgEl = document.createElement('img');
+        imgEl.src = item.image_url.indexOf('/') === 0 ? API_URL + item.image_url : item.image_url;
+        imgEl.alt = '';
+        imgEl.loading = 'lazy';
+        imgWrap.appendChild(imgEl);
+
+        let body = document.createElement('div');
+        body.className = 'news-card-body';
+
+        let date = document.createElement('span');
+        date.className = 'news-card-date';
+        date.textContent = formatDate(item.created_at);
+
+        let text = document.createElement('p');
+        text.className = 'news-card-text';
+        text.textContent = item.text;
+
+        let link = document.createElement('span');
+        link.className = 'news-card-link';
+        link.textContent = 'Читати в Google Профілі →';
+
+        body.appendChild(date);
+        body.appendChild(text);
+        body.appendChild(link);
+        a.appendChild(imgWrap);
+        a.appendChild(body);
+        track.appendChild(a);
+      });
+
+      section.classList.add('has-items');
+      let navItem = document.querySelector('.nav-news-item');
+      if(navItem) navItem.style.display = '';
+
+      buildDots();
+      initAutoplay();
+    }
+
+    function formatDate(iso){
+      let d = new Date(iso);
+      if(isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('uk-UA', {day:'numeric', month:'long'});
+    }
+
+    function cardWidth(){
+      let card = track.querySelector('.news-card');
+      if(!card) return 0;
+      let style = getComputedStyle(track);
+      let gap = parseFloat(style.columnGap || style.gap) || 18;
+      return card.getBoundingClientRect().width + gap;
+    }
+    function cardCount(){
+      return track.querySelectorAll('.news-card').length;
+    }
+    // скільки карток одночасно вміщається у видиму область
+    function visibleCount(){
+      let w = cardWidth();
+      return w ? Math.max(1, Math.round(track.clientWidth / w)) : 1;
+    }
+    // останній індекс, до якого реально можна доскролити (щоб точки не "залипали" на кінці)
+    function maxIndex(){
+      return Math.max(0, cardCount() - visibleCount());
+    }
+    function currentIndex(){
+      let w = cardWidth();
+      let idx = w ? Math.round(track.scrollLeft / w) : 0;
+      return Math.min(idx, maxIndex());
+    }
+    function scrollToIndex(i){
+      let w = cardWidth();
+      let clamped = Math.max(0, Math.min(i, maxIndex()));
+      track.scrollTo({ left: clamped * w, behavior: 'smooth' });
+    }
+    function updateDots(){
+      let idx = currentIndex();
+      dotsWrap.querySelectorAll('.news-dot').forEach(function(d, i){
+        d.classList.toggle('active', i === idx);
+      });
+    }
+    function buildDots(){
+      dotsWrap.innerHTML = '';
+      let n = maxIndex() + 1;
+      for(let i = 0; i < n; i++){
+        let b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'news-dot' + (i === 0 ? ' active' : '');
+        b.setAttribute('aria-label', 'Позиція ' + (i + 1));
+        b.addEventListener('click', function(){ scrollToIndex(i); });
+        dotsWrap.appendChild(b);
+      }
+      updateDots();
+    }
+
+    let scrollTimer;
+    track.addEventListener('scroll', function(){
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(updateDots, 80);
+    });
+    let resizeTimer;
+    window.addEventListener('resize', function(){
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(buildDots, 150);
+    });
+
+    prevBtn.addEventListener('click', function(){ scrollToIndex(currentIndex() - 1); });
+    nextBtn.addEventListener('click', function(){ scrollToIndex(currentIndex() + 1); });
+
+    let autoplayTimer = null;
+    function initAutoplay(){
+      stopAutoplay();
+      autoplayTimer = setInterval(function(){
+        let next = currentIndex() + 1;
+        scrollToIndex(next > maxIndex() ? 0 : next);
+      }, 4500);
+    }
+    function stopAutoplay(){
+      if(autoplayTimer) clearInterval(autoplayTimer);
+    }
+    [track, prevBtn, nextBtn].forEach(function(el){
+      el.addEventListener('mouseenter', stopAutoplay);
+      el.addEventListener('mouseleave', initAutoplay);
+      el.addEventListener('touchstart', stopAutoplay, {passive:true});
+    });
+  })();
 
   // ---------- год в футере — подставляется автоматически ----------
   let yearEl = document.getElementById('currentYear');
