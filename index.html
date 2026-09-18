@@ -68,6 +68,18 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Як записатися на діагностику?","acceptedAnswer":{"@type":"Answer","text":"Запис — за домовленістю. Зателефонуйте, напишіть у Telegram або залиште номер у формі — ми передзвонимо та узгодимо зручний час."}},
+    {"@type":"Question","name":"Чи потрібно знати, що саме зламалося?","acceptedAnswer":{"@type":"Answer","text":"Ні. Опишіть симптоми — ми підберемо потрібні перевірки й знайдемо першопричину."}},
+    {"@type":"Question","name":"Ви замінюєте деталі навмання?","acceptedAnswer":{"@type":"Answer","text":"Ні. Ми вимірюємо автосканером, осцилографом, ендоскопом і димогенератором та даємо рекомендації після пошуку реальної причини."}},
+    {"@type":"Question","name":"Коли ви працюєте?","acceptedAnswer":{"@type":"Answer","text":"Пн–Пт: 10:00–17:00, Сб: 10:00–14:00, Нд — вихідний."}}
+  ]
+}
+</script>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
@@ -112,7 +124,7 @@
         <p class="lede">Комп'ютерна діагностика та ремонт автоелектрики в Києві. Автосканер, осцилограф, ендоскоп і 10+ спеціалізованих перевірок — замість здогадок.</p>
         <div class="hero-actions">
           <a href="tel:+380954851166" class="btn btn-primary"><svg class="tel-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> +38 (095) 485-11-66</a>
-          <a href="https://t.me/" target="_blank" rel="noopener" class="btn btn-ghost">
+          <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" class="btn btn-ghost">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
               <path d="M22 2 11 13"/>
               <path d="M22 2 15 22l-4-9-9-4 20-7z"/>
@@ -167,6 +179,25 @@
     </div>
   </section>
 
+  <!-- SYMPTOM PICKER -->
+  <section class="section-tight symptom-section" id="symptom">
+    <div class="wrap">
+      <div class="eyebrow">Підбір за симптомом</div>
+      <h2 class="reveal">Що відбувається з авто?</h2>
+      <p class="lede reveal" style="margin-bottom:26px;">Оберіть симптом — підкажемо, які перевірки потрібні, і одразу запишемо на діагностику.</p>
+      <div class="sym-chips reveal" id="symChips" role="tablist" aria-label="Симптоми"></div>
+      <div class="sym-result" id="symResult" aria-live="polite" hidden>
+        <div class="sym-result-title" id="symTitle"></div>
+        <p class="sym-result-note" id="symNote"></p>
+        <div class="sym-tags" id="symTags"></div>
+        <div class="sym-actions">
+          <a class="btn btn-primary" href="tel:+380954851166"><svg class="tel-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Подзвонити</a>
+          <a class="btn btn-ghost" href="#callback" id="symBook">Залишити заявку з цим симптомом</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- SERVICES -->
   <section class="section" id="services" style="background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
     <div class="wrap">
@@ -195,6 +226,22 @@
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="wrap">
+      <div class="eyebrow">Часті питання</div>
+      <h2 class="reveal">Швидкі відповіді</h2>
+      <div class="faq reveal">
+        <details><summary>Як записатися на діагностику?</summary><p>Запис — за домовленістю. Зателефонуйте, напишіть у Telegram або залиште номер у формі нижче — ми передзвонимо та узгодимо зручний час.</p></details>
+        <details><summary>Чи потрібно знати, що саме зламалося?</summary><p>Ні. Опишіть симптоми — що і коли відбувається. Ми підберемо потрібні перевірки й знайдемо першопричину.</p></details>
+        <details><summary>Ви замінюєте деталі навмання?</summary><p>Ні. Ми вимірюємо: автосканер, осцилограф, ендоскоп, димогенератор. Рекомендації даємо лише після того, як знайдемо реальну причину.</p></details>
+        <details><summary>Що я отримаю після діагностики?</summary><p>Пояснення, що саме несправне і що варто зробити далі — з фото та коментарями.</p></details>
+        <details><summary>Коли ви працюєте?</summary><p>Пн–Пт: 10:00–17:00, Сб: 10:00–14:00, Нд — вихідний.</p></details>
+        <details><summary>Де вас знайти?</summary><p>Київ, вул. Гуцульська 97А. Маршрут можна побудувати кнопкою в розділі «Контакти».</p></details>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA / CALLBACK -->
   <section class="section-tight" id="callback">
     <div class="wrap">
@@ -204,6 +251,7 @@
           <p class="lede" style="margin-bottom:0;">Залиште номер — передзвонимо і підкажемо, з чого почати, або одразу телефонуйте чи пишіть у Telegram.</p>
         </div>
         <form id="callbackForm">
+          <div class="sym-picked" id="symPicked" hidden><span id="symPickedText"></span><button type="button" id="symPickedClear" aria-label="Прибрати симптом">×</button></div>
           <div class="form-row">
             <input type="text" id="cbName" placeholder="Ваше ім'я" required>
             <input type="tel" id="cbPhone" placeholder="+380" required>
@@ -288,6 +336,12 @@
   </div>
 </footer>
 
+<!-- мобільна панель швидких дій -->
+<div class="mobile-bar">
+  <a href="tel:+380954851166" class="mb-call"><svg class="tel-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Подзвонити</a>
+  <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" class="mb-tg"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg> Telegram</a>
+</div>
+
 <div class="fab-stack">
   <a href="#top" class="fab fab-top" id="fabTop" aria-label="Нагору">↑</a>
   <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" class="fab fab-tg" aria-label="Telegram">
@@ -299,6 +353,7 @@
   <a href="tel:+380954851166" class="fab fab-call" aria-label="Подзвонити"><svg class="tel-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
 </div>
 
+<noscript><p style="text-align:center;color:#c3c5cc;padding:20px;">Для повної версії сайту увімкніть JavaScript. Телефон: <a href="tel:+380954851166">+38 (095) 485-11-66</a></p></noscript>
 <script src="script.js"></script>
 
 </body>

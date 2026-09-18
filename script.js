@@ -53,6 +53,21 @@
 
   let checkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>';
 
+  let svcIcons = [
+    '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>',
+    '<path d="M3 4h18l-7 8v7l-4 2v-9z"/>',
+    '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+    '<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
+    '<path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>',
+    '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+    '<rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2M6 10v4"/>',
+    '<path d="M9.6 4.6A2 2 0 1 1 11 8H2M12.6 19.4A2 2 0 1 0 14 16H2M17.5 8a2.5 2.5 0 1 1 2 4H2"/>',
+    '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>',
+    '<path d="m12 14 4-4"/><path d="M3.3 17a10 10 0 1 1 17.4 0"/>',
+    '<path d="M12 2.7s7 7.2 7 12a7 7 0 0 1-14 0c0-4.8 7-12 7-12z"/>'
+  ];
+  function svgIcon(path){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>'; }
+
   // ---------- render services ----------
   let grid = document.getElementById('svcGrid');
   services.forEach(function(s, i){
@@ -61,7 +76,7 @@
     let id = 'svc-desc-' + i;
     card.innerHTML =
       '<button class="svc-btn" aria-expanded="false" aria-controls="'+id+'">' +
-        '<span class="svc-num">'+String(i+1).padStart(2,'0')+'</span>' +
+        '<span class="svc-top"><span class="svc-ico">'+svgIcon(svcIcons[i])+'</span><span class="svc-num">'+String(i+1).padStart(2,'0')+'</span></span>' +
         '<span class="svc-title">'+s[0]+'<span class="plus">+</span></span>' +
         '<span class="svc-desc" id="'+id+'"><p>'+s[1]+'</p></span>' +
       '</button>';
@@ -86,6 +101,13 @@
       '<div><div class="step-title">'+p[0]+'</div><div class="step-desc">'+p[1]+'</div></div>';
     procList.appendChild(row);
   });
+  // таймлайн "загоряється" по мірі прокрутки
+  let stepIO = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('lit'); stepIO.unobserve(en.target); }
+    });
+  }, {threshold:.6});
+  procList.querySelectorAll('.step').forEach(function(s){ stepIO.observe(s); });
 
   // ---------- render why-us ----------
   let whyGrid = document.getElementById('whyGrid');
@@ -146,9 +168,11 @@
 
   // ---------- open/closed status ----------
   function updateOpenStatus(){
-    let now = new Date();
-    let day = now.getDay(); // 0 Sun .. 6 Sat
-    let mins = now.getHours()*60 + now.getMinutes();
+    // рахуємо за київським часом, а не за часом браузера відвідувача
+    let parts = new Intl.DateTimeFormat('en-GB', {timeZone:'Europe/Kyiv', weekday:'short', hour:'2-digit', minute:'2-digit', hour12:false}).formatToParts(new Date());
+    let pick = function(t){ let p = parts.find(function(x){ return x.type === t; }); return p ? p.value : ''; };
+    let day = {Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}[pick('weekday')];
+    let mins = (parseInt(pick('hour'),10) % 24)*60 + parseInt(pick('minute'),10);
     let open = false;
     if(day >= 1 && day <= 5){ open = mins >= 10*60 && mins < 17*60; }
     else if(day === 6){ open = mins >= 10*60 && mins < 14*60; }
@@ -172,7 +196,13 @@
   // ---------- scope waveform animation ----------
   let path = document.getElementById('scopePath');
   let t = 0;
+  let scopeVisible = true;
+  let scopeEl = document.querySelector('.scope');
+  if(scopeEl && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(en){ scopeVisible = en[0].isIntersecting; }, {threshold:0}).observe(scopeEl);
+  }
   function draw(){
+    if(!scopeVisible){ requestAnimationFrame(draw); return; } // не малюємо, поки осцилограф поза екраном
     t += 0.045;
     let d = 'M0,85 ';
     for(let x = 0; x <= 400; x += 8){
@@ -347,13 +377,62 @@ phoneInput.addEventListener('blur', function(){
         submitBtn.disabled = false;
       });
 
-    // 2) параллельно открываем Telegram — как и раньше, для мгновенного уведомления
+    // 2) параллельно открываем Telegram — для мгновенного уведомления.
+    // Открываем сразу в обработчике клика: с задержкой setTimeout браузеры часто блокируют такое окно.
     document.getElementById('cbSuccess').style.display = 'block';
-    let text = encodeURIComponent('Замовлення дзвінка з сайту.\nІм\'я: '+name+'\nТелефон: '+phone);
-    setTimeout(function(){
-      window.open('https://t.me/Autoworkshop_Alex?text=' + text, '_blank');
-    }, 700);
+    let text = encodeURIComponent('Замовлення дзвінка з сайту.\nІм\'я: '+name+'\nТелефон: '+phone + (selectedSymptom ? '\nСимптом: '+selectedSymptom : ''));
+    window.open('https://t.me/Autoworkshop_Alex?text=' + text, '_blank');
   });
+
+  // ---------- підбір за симптомом ----------
+  let selectedSymptom = '';
+  let symptoms = [
+    {label:'Не заводиться', icon:'<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>', note:'Причин може бути кілька: живлення, запалювання, паливо або датчики. Перевіряємо по черзі, а не наосліп.', checks:[0,3,9,6]},
+    {label:'Горить індикатор', icon:'<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/>', note:'Check Engine, ABS, Airbag, ESP або DPF — зчитуємо коди та дивимось живі дані, щоб знайти справжню причину.', checks:[0,2,1]},
+    {label:'Розряджається акумулятор', icon:'<rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2M6 10v4"/>', note:'Часто це паразитний струм у стоянці. Знаходимо, який саме вузол «їсть» заряд.', checks:[6,0]},
+    {label:'Двигун працює нестабільно', icon:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>', note:'Троїть, «плаває» холостий хід або смикається? Перевіряємо запалювання, паливо, підсмоктування повітря та датчики.', checks:[3,2,7,9,5]},
+    {label:'Втрата потужності', icon:'<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>', note:'Авто не тягне або дим з вихлопу — дивимось фільтри, тиск палива та герметичність системи.', checks:[1,9,7,2]},
+    {label:'Перегрів двигуна', icon:'<path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>', note:'Перевіряємо термостат, помпу, вентилятор і герметичність контуру охолодження.', checks:[4,0]},
+    {label:'Перед купівлею авто', icon:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>', note:'Огляд «зсередини»: помилки в ECU, стан циліндрів, тиск оливи та мітки ГРМ — щоб не купити проблеми.', checks:[0,5,10,8]},
+    {label:'Не знаю, що саме', icon:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17v.5"/>', note:'Нічого страшного — опишіть, що помітили, і ми підберемо перевірки. Почнемо з комп\'ютерної діагностики.', checks:[0,2]}
+  ];
+  let symChips = document.getElementById('symChips');
+  let symResult = document.getElementById('symResult');
+  let symPicked = document.getElementById('symPicked');
+  function setSymptom(label){
+    selectedSymptom = label;
+    document.getElementById('symPickedText').textContent = label ? 'Симптом: ' + label : '';
+    symPicked.hidden = !label;
+  }
+  if(symChips){
+    symptoms.forEach(function(s){
+      let b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sym-chip';
+      b.setAttribute('role','tab');
+      b.setAttribute('aria-selected','false');
+      b.innerHTML = svgIcon(s.icon) + '<span></span>';
+      b.querySelector('span').textContent = s.label;
+      b.addEventListener('click', function(){
+        symChips.querySelectorAll('.sym-chip').forEach(function(x){ x.setAttribute('aria-selected', String(x === b)); });
+        document.getElementById('symTitle').textContent = s.label;
+        document.getElementById('symNote').textContent = s.note;
+        let tags = document.getElementById('symTags');
+        tags.innerHTML = '';
+        s.checks.forEach(function(i){
+          let t = document.createElement('span');
+          t.className = 'sym-tag';
+          t.textContent = services[i][0];
+          tags.appendChild(t);
+        });
+        symResult.hidden = false;
+        symResult.style.animation = 'none'; void symResult.offsetWidth; symResult.style.animation = '';
+        setSymptom(s.label);
+      });
+      symChips.appendChild(b);
+    });
+  }
+  document.getElementById('symPickedClear').addEventListener('click', function(){ setSymptom(''); });
 
   // ---------- news carousel (новини з Google-профілю, додаються через адмінку) ----------
   (function(){
@@ -504,6 +583,8 @@ phoneInput.addEventListener('blur', function(){
       el.addEventListener('mouseenter', stopAutoplay);
       el.addEventListener('mouseleave', initAutoplay);
       el.addEventListener('touchstart', stopAutoplay, {passive:true});
+      // на телефоні після дотику відновлюємо автоплей із паузою (mouseleave там не спрацьовує)
+      el.addEventListener('touchend', function(){ stopAutoplay(); setTimeout(initAutoplay, 8000); }, {passive:true});
     });
   })();
 
