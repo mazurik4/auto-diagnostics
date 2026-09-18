@@ -367,7 +367,7 @@ phoneInput.addEventListener('blur', function(){
     fetch(API_URL + '/api/callback', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({name: name, phone: phone})
+      body: JSON.stringify({name: name, phone: phone, symptom: selectedSymptom})
     })
       .catch(function(err){
         // если сервер недоступен — не страшно, заявка всё равно уйдёт в Telegram ниже
