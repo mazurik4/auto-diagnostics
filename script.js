@@ -439,19 +439,73 @@ phoneInput.addEventListener('blur', function(){
     let section = document.getElementById('news');
     let track = document.getElementById('newsTrack');
     let dotsWrap = document.getElementById('newsDots');
+    let carousel = document.querySelector('.news-carousel');
     let prevBtn = document.querySelector('.news-arrow-prev');
     let nextBtn = document.querySelector('.news-arrow-next');
     if(!section || !track) return;
 
     let GBP_URL = 'https://www.google.com/maps?cid=15792600053340114773';
+    let CACHE_KEY = 'newsCacheV1';
+
+    // ---------- кеш у браузері: новини зʼявляються миттєво при повторному заході ----------
+    function readCache(){
+      try{
+        let parsed = JSON.parse(localStorage.getItem(CACHE_KEY));
+        return Array.isArray(parsed) && parsed.length ? parsed : null;
+      }catch(e){ return null; }
+    }
+    function writeCache(items){
+      try{ localStorage.setItem(CACHE_KEY, JSON.stringify(items)); }catch(e){}
+    }
+
+    let cached = readCache();
+    if(cached){
+      renderNews(cached);
+    } else {
+      showSkeleton();
+      // якщо бекенд зовсім не відповість (напр. "заснув" і не прокинувся) — не тримаємо заглушку вічно
+      setTimeout(function(){
+        if(carousel.classList.contains('is-loading')){
+          section.classList.remove('has-items');
+          track.innerHTML = '';
+        }
+      }, 25000);
+    }
 
     fetch(API_URL + '/api/news')
-      .then(function(r){ return r.ok ? r.json() : []; })
-      .then(renderNews)
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(items){
+        if(items === null) return; // сервер не відповів — лишаємо те, що вже показано
+        if(!items.length){
+          if(!cached){ section.classList.remove('has-items'); track.innerHTML = ''; }
+          return;
+        }
+        if(JSON.stringify(items) !== JSON.stringify(cached)) renderNews(items);
+        writeCache(items);
+      })
       .catch(function(){});
 
+    function showSkeleton(){
+      section.classList.add('has-items');
+      carousel.classList.add('is-loading');
+      track.innerHTML = '';
+      for(let i = 0; i < 3; i++){
+        let card = document.createElement('div');
+        card.className = 'news-card skeleton';
+        card.innerHTML =
+          '<div class="news-card-img"></div>' +
+          '<div class="news-card-body">' +
+            '<div class="news-skel-line" style="width:40%;height:10px;"></div>' +
+            '<div class="news-skel-line" style="width:90%;"></div>' +
+            '<div class="news-skel-line" style="width:70%;"></div>' +
+          '</div>';
+        track.appendChild(card);
+      }
+    }
+
     function renderNews(items){
-      if(!items || !items.length) return;
+      carousel.classList.remove('is-loading');
+      track.innerHTML = '';
 
       items.forEach(function(item){
         let a = document.createElement('a');

@@ -313,10 +313,27 @@
     border:none;cursor:pointer;transition:width .25s ease,background .25s ease;
   }
   .news-dot.active{width:22px;background:var(--signal);}
+  .news-carousel.is-loading .news-arrow{opacity:.35;pointer-events:none;}
   @media (max-width:800px){
     .news-arrow{display:none;}
     .news-track{scroll-padding-left:4px;}
   }
+
+  /* ---------- news skeleton (поки новини ще завантажуються) ---------- */
+  @keyframes newsShimmer{
+    0%{background-position:-200% 0;}
+    100%{background-position:200% 0;}
+  }
+  .news-card.skeleton{cursor:default;}
+  .news-card.skeleton:hover{transform:none;box-shadow:none;border-color:var(--line);}
+  .news-card.skeleton .news-card-img,
+  .news-skel-line{
+    background-image:linear-gradient(90deg,var(--ink-2) 25%,var(--surface-2) 50%,var(--ink-2) 75%);
+    background-size:200% 100%;
+    animation:newsShimmer 1.6s ease-in-out infinite;
+  }
+  .news-skel-line{height:12px;border-radius:4px;}
+  .news-skel-line + .news-skel-line{margin-top:8px;}
 
   /* ---------- location / contacts ---------- */
   .loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
