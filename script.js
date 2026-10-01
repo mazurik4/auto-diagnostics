@@ -446,6 +446,9 @@ phoneInput.addEventListener('blur', function(){
 
     let GBP_URL = 'https://www.google.com/maps?cid=15792600053340114773';
     let CACHE_KEY = 'newsCacheV1';
+    // оголошено тут заздалегідь: renderNews() може викликатись одразу (з кешу),
+    // ще до того, як виконання дійде до initAutoplay/stopAutoplay нижче за текстом
+    let autoplayTimer = null;
 
     // ---------- кеш у браузері: новини зʼявляються миттєво при повторному заході ----------
     function readCache(){
@@ -622,7 +625,6 @@ phoneInput.addEventListener('blur', function(){
     prevBtn.addEventListener('click', function(){ scrollToIndex(currentIndex() - 1); });
     nextBtn.addEventListener('click', function(){ scrollToIndex(currentIndex() + 1); });
 
-    let autoplayTimer = null;
     function initAutoplay(){
       stopAutoplay();
       autoplayTimer = setInterval(function(){
