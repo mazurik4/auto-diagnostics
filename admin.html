@@ -101,9 +101,29 @@
   gateBtn.addEventListener('click', function(){
     let key = gateKey.value.trim();
     if(!key) return;
-    sessionStorage.setItem(KEY_STORAGE, key);
     gateMsg.style.display = 'none';
-    showAdmin();
+    gateBtn.disabled = true;
+    gateBtn.textContent = 'Перевіряємо…';
+    // перевіряємо ключ одразу, а не після натискання на «Синхронізувати»
+    fetch(API_URL + '/api/admin/check', { headers: { 'X-Admin-Key': key } })
+      .then(function(r){
+        if(r.status === 401){
+          gateMsg.textContent = 'Невірний ключ доступу';
+          gateMsg.style.display = 'block';
+          return;
+        }
+        if(!r.ok) throw new Error('server');
+        sessionStorage.setItem(KEY_STORAGE, key);
+        showAdmin();
+      })
+      .catch(function(){
+        gateMsg.textContent = 'Сервер не відповідає (він може прокидатися до хвилини). Спробуйте ще раз.';
+        gateMsg.style.display = 'block';
+      })
+      .finally(function(){
+        gateBtn.disabled = false;
+        gateBtn.textContent = 'Увійти';
+      });
   });
   gateKey.addEventListener('keydown', function(e){
     if(e.key === 'Enter') gateBtn.click();
