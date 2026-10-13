@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Адмінка новин — Автодіагностика Київ</title>
+<title>Новини з Google — Автодіагностика Київ</title>
 <meta name="robots" content="noindex, nofollow">
 
 <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -53,7 +53,7 @@
 
   <!-- ЕКРАН ВХОДУ -->
   <div class="admin-card" id="gateCard">
-    <h1 class="admin-title">Адмінка новин</h1>
+    <h1 class="admin-title">Новини з Google</h1>
     <p class="admin-sub">Введіть ключ доступу (той самий ADMIN_KEY, що й для заявок).</p>
     <label class="admin-field">
       <span>Ключ доступу</span>
@@ -67,29 +67,12 @@
   <div id="adminArea" hidden>
 
     <div class="admin-card">
-      <h1 class="admin-title">Додати новину</h1>
-      <p class="admin-sub">Фото + короткий текст. Публікується одразу на сайт, найстаріша новина понад ліміт (5) видаляється автоматично.</p>
-
-      <label class="admin-field">
-        <span>Фото</span>
-        <input type="file" id="newsImage" accept="image/*">
-        <div class="admin-preview" id="newsPreview"><img id="newsPreviewImg" alt=""></div>
-      </label>
-
-      <label class="admin-field">
-        <span>Текст новини</span>
-        <textarea id="newsText" rows="4" maxlength="300" placeholder="Що зробили, що сталось цікавого..."></textarea>
-        <div class="admin-counter"><span id="newsTextCount">0</span>/300</div>
-      </label>
-
-      <button type="button" class="btn btn-primary btn-block" id="publishBtn">Опублікувати</button>
-      <div class="admin-msg" id="publishMsg"></div>
-    </div>
-
-    <div class="admin-card">
-      <h1 class="admin-title">Поточні новини</h1>
+      <h1 class="admin-title">Новини на сайті</h1>
+      <p class="admin-sub">Пости з вашого Google-профілю (з фото і текстом) підтягуються автоматично, раз на ~30 хв при відвідуваннях сайту. Щоб одразу — натисніть кнопку. Зайвий пост можна сховати кнопкою «Сховати».</p>
+      <button type="button" class="btn btn-ghost btn-block" id="syncBtn" style="margin-bottom:12px;">Синхронізувати з Google зараз</button>
+      <div class="admin-msg" id="syncMsg" style="margin:0 0 16px;"></div>
       <div class="admin-list" id="newsList"></div>
-      <div class="admin-empty" id="newsEmpty" hidden>Новин ще немає — додайте першу вище.</div>
+      <div class="admin-empty" id="newsEmpty" hidden>Новин ще немає. Опублікуйте пост із фото в Google-профілі й натисніть «Синхронізувати».</div>
     </div>
 
   </div>
@@ -134,73 +117,32 @@
     gateMsg.style.display = 'block';
   }
 
-  // ---------- превью фото ----------
-  let imageInput = document.getElementById('newsImage');
-  let preview = document.getElementById('newsPreview');
-  let previewImg = document.getElementById('newsPreviewImg');
-  imageInput.addEventListener('change', function(){
-    let file = imageInput.files[0];
-    if(!file){ preview.style.display = 'none'; return; }
-    previewImg.src = URL.createObjectURL(file);
-    preview.style.display = 'block';
-  });
-
-  // ---------- лічильник тексту ----------
-  let textArea = document.getElementById('newsText');
-  let textCount = document.getElementById('newsTextCount');
-  textArea.addEventListener('input', function(){
-    textCount.textContent = textArea.value.length;
-  });
-
-  // ---------- публікація ----------
-  let publishBtn = document.getElementById('publishBtn');
-  let publishMsg = document.getElementById('publishMsg');
-
-  publishBtn.addEventListener('click', function(){
-    let text = textArea.value.trim();
-    let file = imageInput.files[0];
-    publishMsg.className = 'admin-msg';
-    publishMsg.style.display = 'none';
-
-    if(!text){ showMsg(publishMsg, 'Додайте текст новини', 'err'); return; }
-    if(!file){ showMsg(publishMsg, 'Додайте фото', 'err'); return; }
-
-    let fd = new FormData();
-    fd.append('text', text);
-    fd.append('image', file);
-
-    publishBtn.disabled = true;
-    fetch(API_URL + '/api/news', {
-      method: 'POST',
-      headers: { 'X-Admin-Key': adminKey() },
-      body: fd
-    })
-      .then(function(r){
-        if(r.status === 401){ handleAuthError(); throw new Error('auth'); }
-        if(!r.ok) return r.json().then(function(d){ throw new Error(d.detail || 'Помилка'); });
-        return r.json();
-      })
-      .then(function(){
-        textArea.value = '';
-        textCount.textContent = '0';
-        imageInput.value = '';
-        preview.style.display = 'none';
-        showMsg(publishMsg, '✓ Новину опубліковано', 'ok');
-        loadNews();
-      })
-      .catch(function(err){
-        if(err.message !== 'auth') showMsg(publishMsg, err.message, 'err');
-      })
-      .finally(function(){
-        publishBtn.disabled = false;
-      });
-  });
-
   function showMsg(el, text, kind){
     el.textContent = text;
     el.className = 'admin-msg ' + kind;
     el.style.display = 'block';
   }
+
+  // ---------- синхронізація з Google ----------
+  let syncBtn = document.getElementById('syncBtn');
+  let syncMsg = document.getElementById('syncMsg');
+  syncBtn.addEventListener('click', function(){
+    syncMsg.style.display = 'none';
+    syncBtn.disabled = true;
+    fetch(API_URL + '/api/news/sync', { method: 'POST', headers: { 'X-Admin-Key': adminKey() } })
+      .then(function(r){
+        if(r.status === 401){ handleAuthError(); throw new Error('auth'); }
+        return r.json();
+      })
+      .then(function(d){
+        showMsg(syncMsg, d.message || 'Готово', d.ok ? 'ok' : 'err');
+        loadNews();
+      })
+      .catch(function(err){
+        if(err.message !== 'auth') showMsg(syncMsg, 'Не вдалося звʼязатися з сервером', 'err');
+      })
+      .finally(function(){ syncBtn.disabled = false; });
+  });
 
   // ---------- список новин ----------
   let listEl = document.getElementById('newsList');
@@ -229,16 +171,16 @@
       let p = document.createElement('p');
       let date = document.createElement('span');
       date.className = 'admin-date';
-      date.textContent = new Date(item.created_at).toLocaleString('uk-UA');
+      date.textContent = new Date(item.created_at).toLocaleString('uk-UA') + (item.source === 'google' ? ' · Google' : '');
       p.appendChild(date);
       p.appendChild(document.createTextNode(item.text));
 
       let del = document.createElement('button');
       del.type = 'button';
       del.className = 'admin-del';
-      del.textContent = 'Видалити';
+      del.textContent = 'Сховати';
       del.addEventListener('click', function(){
-        if(!confirm('Видалити цю новину?')) return;
+        if(!confirm('Сховати цю новину на сайті? Назад вона не повернеться.')) return;
         fetch(API_URL + '/api/news/' + item.id, {
           method: 'DELETE',
           headers: { 'X-Admin-Key': adminKey() }

@@ -513,7 +513,8 @@ phoneInput.addEventListener('blur', function(){
       items.forEach(function(item){
         let a = document.createElement('a');
         a.className = 'news-card';
-        a.href = GBP_URL;
+        // пост з Google веде прямо на себе; ручна новина — на профіль компанії
+        a.href = (typeof item.url === 'string' && item.url.indexOf('https://') === 0) ? item.url : GBP_URL;
         a.target = '_blank';
         a.rel = 'noopener';
 
