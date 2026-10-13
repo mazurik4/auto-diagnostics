@@ -70,6 +70,7 @@
       <h1 class="admin-title">Новини на сайті</h1>
       <p class="admin-sub">Пости з вашого Google-профілю (з фото і текстом) підтягуються автоматично, раз на ~30 хв при відвідуваннях сайту. Щоб одразу — натисніть кнопку. Зайвий пост можна сховати кнопкою «Сховати».</p>
       <button type="button" class="btn btn-ghost btn-block" id="syncBtn" style="margin-bottom:12px;">Синхронізувати з Google зараз</button>
+      <button type="button" class="admin-del" id="unhideBtn" style="width:100%;margin-bottom:12px;color:var(--paper-dim);">Показати приховані пости знову</button>
       <div class="admin-msg" id="syncMsg" style="margin:0 0 16px;"></div>
       <div class="admin-list" id="newsList"></div>
       <div class="admin-empty" id="newsEmpty" hidden>Новин ще немає. Опублікуйте пост із фото в Google-профілі й натисніть «Синхронізувати».</div>
@@ -162,6 +163,24 @@
         if(err.message !== 'auth') showMsg(syncMsg, 'Не вдалося звʼязатися з сервером', 'err');
       })
       .finally(function(){ syncBtn.disabled = false; });
+  });
+
+  // ---------- повернути приховані пости ----------
+  let unhideBtn = document.getElementById('unhideBtn');
+  unhideBtn.addEventListener('click', function(){
+    if(!confirm('Повернути всі приховані пости? Наступна синхронізація додасть їх на сайт знову.')) return;
+    syncMsg.style.display = 'none';
+    unhideBtn.disabled = true;
+    fetch(API_URL + '/api/news/unhide', { method: 'POST', headers: { 'X-Admin-Key': adminKey() } })
+      .then(function(r){
+        if(r.status === 401){ handleAuthError(); throw new Error('auth'); }
+        return r.json();
+      })
+      .then(function(d){ showMsg(syncMsg, d.message || 'Готово', d.ok ? 'ok' : 'err'); })
+      .catch(function(err){
+        if(err.message !== 'auth') showMsg(syncMsg, 'Не вдалося звʼязатися з сервером', 'err');
+      })
+      .finally(function(){ unhideBtn.disabled = false; });
   });
 
   // ---------- список новин ----------
