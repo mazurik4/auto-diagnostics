@@ -44,6 +44,17 @@
   }
   .admin-del:hover{background:rgba(255,107,94,.1);}
   .btn-block{width:100%;justify-content:center;}
+  .admin-select{flex:1;background:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:10px 12px;color:var(--paper);font-family:inherit;font-size:.9rem;}
+  .stat-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;}
+  .stat-tile{background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .stat-tile b{display:block;font-family:'Oswald',sans-serif;font-size:1.5rem;color:var(--paper);font-weight:600;line-height:1.2;}
+  .stat-tile span{font-size:.76rem;color:var(--steel);}
+  .stat-block{margin:0 0 20px;}
+  .stat-block h2{font-size:.95rem;margin:0 0 8px;color:var(--paper);}
+  .stat-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:.86rem;color:var(--paper-dim);}
+  .stat-row b{color:var(--paper);font-weight:600;flex:none;}
+  .stat-empty{color:var(--steel);font-size:.84rem;}
+  code{font-family:'Space Mono',monospace;font-size:.82em;color:var(--paper);}
   [hidden]{display:none !important;}
 </style>
 </head>
@@ -76,6 +87,22 @@
       <div class="admin-empty" id="newsEmpty" hidden>Новин ще немає. Опублікуйте пост із фото в Google-профілі й натисніть «Синхронізувати».</div>
     </div>
 
+    <div class="admin-card">
+      <h1 class="admin-title">Статистика сайту</h1>
+      <p class="admin-sub">Анонімно: без cookie, IP та особистих даних. Свої візити не рахуються, якщо хоч раз відкрити сайт з <code>#notrack</code> в адресі.</p>
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <select id="statsDays" class="admin-select">
+          <option value="7">Останні 7 днів</option>
+          <option value="30" selected>Останні 30 днів</option>
+          <option value="90">Останні 90 днів</option>
+          <option value="365">Останній рік</option>
+        </select>
+        <button type="button" class="btn btn-ghost" id="statsBtn" style="padding:10px 18px;">Оновити</button>
+      </div>
+      <div class="admin-msg" id="statsMsg"></div>
+      <div id="statsBody"></div>
+    </div>
+
   </div>
 
 </div>
@@ -97,6 +124,7 @@
     gateCard.hidden = true;
     adminArea.hidden = false;
     loadNews();
+    loadStats();
   }
 
   gateBtn.addEventListener('click', function(){
@@ -164,6 +192,85 @@
       })
       .finally(function(){ syncBtn.disabled = false; });
   });
+
+  // ---------- статистика ----------
+  let statsDays = document.getElementById('statsDays');
+  let statsBtn = document.getElementById('statsBtn');
+  let statsMsg = document.getElementById('statsMsg');
+  let statsBody = document.getElementById('statsBody');
+
+  let EVENT_TITLES = {
+    call_click: 'Натискання «Подзвонити» (де саме)',
+    tg_click: 'Натискання Telegram (де саме)',
+    route_click: 'Натискання «Побудувати маршрут»',
+    form_submit: 'Надіслані заявки (обраний симптом)',
+    symptom_pick: 'Обрані симптоми',
+    service_open: 'Розгорнуті послуги',
+    faq_open: 'Відкриті питання FAQ',
+    news_click: 'Кліки по новинах',
+    nav_click: 'Кліки по меню'
+  };
+
+  function statTile(value, label){
+    let t = document.createElement('div'); t.className = 'stat-tile';
+    let b = document.createElement('b'); b.textContent = value;
+    let s = document.createElement('span'); s.textContent = label;
+    t.appendChild(b); t.appendChild(s);
+    return t;
+  }
+  function statBlock(title, rows){
+    let box = document.createElement('div'); box.className = 'stat-block';
+    let h = document.createElement('h2'); h.textContent = title; box.appendChild(h);
+    if(!rows || !rows.length){
+      let e = document.createElement('div'); e.className = 'stat-empty'; e.textContent = 'Поки немає даних';
+      box.appendChild(e); return box;
+    }
+    rows.forEach(function(r){
+      let row = document.createElement('div'); row.className = 'stat-row';
+      let l = document.createElement('span'); l.textContent = r.label || '—';
+      let c = document.createElement('b'); c.textContent = r.count;
+      row.appendChild(l); row.appendChild(c); box.appendChild(row);
+    });
+    return box;
+  }
+
+  function loadStats(){
+    statsMsg.style.display = 'none';
+    statsBtn.disabled = true;
+    fetch(API_URL + '/api/stats?days=' + encodeURIComponent(statsDays.value), { headers: { 'X-Admin-Key': adminKey() } })
+      .then(function(r){
+        if(r.status === 401){ handleAuthError(); throw new Error('auth'); }
+        if(!r.ok) throw new Error('server');
+        return r.json();
+      })
+      .then(function(d){
+        statsBody.innerHTML = '';
+        let ev = d.events || {};
+        let sum = function(name){ return (ev[name] || []).reduce(function(a, x){ return a + x.count; }, 0); };
+        let tiles = document.createElement('div'); tiles.className = 'stat-tiles';
+        tiles.appendChild(statTile(d.totals.sessions, 'Відвідування'));
+        tiles.appendChild(statTile(d.totals.views, 'Перегляди сторінки'));
+        tiles.appendChild(statTile(sum('call_click'), 'Натискань «Подзвонити»'));
+        tiles.appendChild(statTile(sum('tg_click'), 'Натискань Telegram'));
+        tiles.appendChild(statTile(sum('form_submit'), 'Заявок з форми'));
+        statsBody.appendChild(tiles);
+
+        statsBody.appendChild(statBlock('Звідки приходять', d.sources));
+        statsBody.appendChild(statBlock('Пристрої', d.devices));
+        Object.keys(EVENT_TITLES).forEach(function(name){
+          if(ev[name] && ev[name].length) statsBody.appendChild(statBlock(EVENT_TITLES[name], ev[name]));
+        });
+        statsBody.appendChild(statBlock('Відвідування по днях', (d.daily || []).slice().reverse().map(function(x){
+          return { label: x.day, count: x.sessions + ' (переглядів: ' + x.views + ')' };
+        })));
+      })
+      .catch(function(err){
+        if(err.message !== 'auth') showMsg(statsMsg, 'Не вдалося завантажити статистику', 'err');
+      })
+      .finally(function(){ statsBtn.disabled = false; });
+  }
+  statsBtn.addEventListener('click', loadStats);
+  statsDays.addEventListener('change', loadStats);
 
   // ---------- повернути приховані пости ----------
   let unhideBtn = document.getElementById('unhideBtn');

@@ -350,6 +350,94 @@ phoneInput.addEventListener('blur', function(){
   // домена к бэкенду поменяйте на https://api.autoworkshop.com.ua если поменяю поддомен на api.autoworkshop.com.ua
   let API_URL = 'https://backend-cmr4.onrender.com';
 
+  // ---------- анонімна статистика ----------
+  // Рахуємо перегляди та натискання кнопок. Без cookie, без IP, без імені/телефону.
+  // Вимкнути для себе: відкрийте сайт з #notrack в адресі. Також поважаємо "Не відстежувати".
+  let trackingOff = false;
+  try {
+    if(location.hash === '#notrack') localStorage.setItem('notrack', '1');
+    trackingOff = localStorage.getItem('notrack') === '1' || navigator.doNotTrack === '1';
+  } catch(e){}
+
+  function track(name, label, extra){
+    if(trackingOff) return;
+    let payload = {
+      name: name,
+      label: String(label || '').replace(/\s+/g, ' ').trim().slice(0, 60),
+      device: window.innerWidth < 800 ? 'mobile' : 'desktop'
+    };
+    if(extra){ for(let k in extra){ payload[k] = extra[k]; } }
+    try {
+      fetch(API_URL + '/api/event', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(function(){});
+    } catch(e){}
+  }
+
+  // звідки прийшов відвідувач: utm_source або домен сторінки-джерела
+  function referrerSource(){
+    try {
+      let utm = new URLSearchParams(location.search).get('utm_source');
+      if(utm) return 'utm:' + utm.slice(0, 40);
+      if(document.referrer){
+        let host = new URL(document.referrer).hostname.replace(/^www\./, '');
+        if(host && host !== location.hostname.replace(/^www\./, '')) return host;
+      }
+    } catch(e){}
+    return '';
+  }
+
+  (function(){
+    let isNewSession = true;
+    try {
+      isNewSession = !sessionStorage.getItem('sv');
+      sessionStorage.setItem('sv', '1');
+    } catch(e){}
+    track('view', location.pathname, { ref: isNewSession ? referrerSource() : '', new_session: isNewSession });
+  })();
+
+  // де саме на сторінці натиснули (для підпису події)
+  function clickPlace(el){
+    if(el.closest('.hero-actions')) return 'головний екран';
+    if(el.closest('header')) return 'шапка';
+    if(el.closest('.mobile-bar')) return 'мобільна панель';
+    if(el.closest('.fab-stack')) return 'плаваюча кнопка';
+    if(el.closest('.sym-actions')) return 'підбір симптому';
+    if(el.closest('#contacts')) return 'контакти';
+    if(el.closest('footer')) return 'підвал';
+    return 'інше';
+  }
+
+  document.addEventListener('click', function(e){
+    let a = e.target.closest('a');
+    if(a){
+      let href = a.getAttribute('href') || '';
+      if(href.indexOf('tel:') === 0) track('call_click', clickPlace(a));
+      else if(href.indexOf('t.me/') !== -1) track('tg_click', clickPlace(a));
+      else if(href.indexOf('maps/dir') !== -1) track('route_click', clickPlace(a));
+      else if(a.classList.contains('news-card')) track('news_click', (a.querySelector('.news-card-text') || {}).textContent);
+      else if(a.hasAttribute('data-nav')) track('nav_click', href);
+      return;
+    }
+    let chip = e.target.closest('.sym-chip');
+    if(chip){ track('symptom_pick', chip.textContent); return; }
+    let svc = e.target.closest('.svc-btn');
+    // вищі за document обробники вже перемкнули aria-expanded: рахуємо лише розгортання
+    if(svc && svc.getAttribute('aria-expanded') === 'true'){
+      track('service_open', (svc.querySelector('.svc-title') || {}).textContent);
+    }
+  });
+
+  document.addEventListener('toggle', function(e){
+    let d = e.target;
+    if(d && d.matches && d.matches('.faq details') && d.open){
+      track('faq_open', (d.querySelector('summary') || {}).textContent);
+    }
+  }, true);
+
   let form = document.getElementById('callbackForm');
   form.addEventListener('submit', function(e){
     e.preventDefault();
@@ -360,6 +448,7 @@ phoneInput.addEventListener('blur', function(){
       return;
     }
 
+    track('form_submit', selectedSymptom);
     let submitBtn = form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
 
