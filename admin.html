@@ -45,6 +45,20 @@
   .admin-del:hover{background:rgba(255,107,94,.1);}
   .btn-block{width:100%;justify-content:center;}
   .admin-select{flex:1;background:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:10px 12px;color:var(--paper);font-family:inherit;font-size:.9rem;}
+  .gal-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+  .gal-bar input{flex:1;min-width:200px;background:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:11px 14px;color:var(--paper);font-family:inherit;font-size:.9rem;}
+  .gal-bar input:focus{border-color:var(--signal);outline:none;}
+  .gal-bar .btn{padding:11px 18px;}
+  .gal-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;}
+  .gal-count-label{margin-left:auto;font-size:.82rem;color:var(--steel);}
+  .gal-admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;}
+  .gal-pick{position:relative;border:2px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;background:var(--ink);padding:0;color:inherit;font:inherit;text-align:left;}
+  .gal-pick img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;}
+  .gal-pick.sel{border-color:var(--signal);box-shadow:0 0 0 2px rgba(47,184,94,.3);}
+  .gal-pick .tick{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:rgba(35,38,43,.8);border:1px solid var(--line-strong);display:grid;place-items:center;font-size:.7rem;color:transparent;}
+  .gal-pick.sel .tick{background:var(--signal);border-color:var(--signal);color:var(--signal-ink);}
+  .gal-pick .cap{display:block;padding:5px 7px 6px;font-size:.7rem;line-height:1.25;color:var(--paper-dim);}
+  .gal-pick .cap b{display:block;color:var(--paper);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .stat-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;}
   .stat-tile{background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
   .stat-tile b{display:block;font-family:'Oswald',sans-serif;font-size:1.5rem;color:var(--paper);font-weight:600;line-height:1.2;}
@@ -89,6 +103,25 @@
     </div>
 
     <div class="admin-card">
+      <h1 class="admin-title">Керування галереєю</h1>
+      <p class="admin-sub">Позначте фото (клік по картинці), введіть назву розділу й натисніть «Призначити». Нові розділи створюються просто назвою. Зайві фото можна сховати.</p>
+      <div class="gal-bar">
+        <input type="text" id="galSection" list="galSections" maxlength="40" placeholder="Назва розділу, напр. Електропроводка" autocomplete="off">
+        <datalist id="galSections"></datalist>
+        <button type="button" class="btn btn-primary" id="galAssign">Призначити вибраним</button>
+      </div>
+      <div class="gal-tools">
+        <button type="button" class="admin-del" id="galSelAll" style="color:var(--paper-dim);">Вибрати всі</button>
+        <button type="button" class="admin-del" id="galSelNone" style="color:var(--paper-dim);">Зняти вибір</button>
+        <button type="button" class="admin-del" id="galHide">Сховати вибрані</button>
+        <button type="button" class="admin-del" id="galUnhide" style="color:var(--paper-dim);">Показати приховані знову</button>
+        <span id="galSelCount" class="gal-count-label"></span>
+      </div>
+      <div class="admin-msg" id="galAdminMsg" style="margin:0 0 14px;"></div>
+      <div class="gal-admin-grid" id="galAdminGrid"></div>
+    </div>
+
+    <div class="admin-card">
       <h1 class="admin-title">Статистика сайту</h1>
       <p class="admin-sub">Анонімно: без cookie, IP та особистих даних. Свої візити не рахуються, якщо хоч раз відкрити сайт з <code>#notrack</code> в адресі.</p>
       <div style="display:flex;gap:10px;margin-bottom:16px;">
@@ -125,6 +158,7 @@
     gateCard.hidden = true;
     adminArea.hidden = false;
     loadNews();
+    loadGalleryAdmin();
     loadStats();
   }
 
@@ -287,7 +321,7 @@
         if(r.status === 401){ handleAuthError(); throw new Error('auth'); }
         return r.json();
       })
-      .then(function(d){ showMsg(syncMsg, d.message || 'Готово', d.ok ? 'ok' : 'err'); })
+      .then(function(d){ showMsg(syncMsg, d.message || 'Готово', d.ok ? 'ok' : 'err'); loadGalleryAdmin(); })
       .catch(function(err){
         if(err.message !== 'auth') showMsg(syncMsg, 'Не вдалося звʼязатися з сервером', 'err');
       })
@@ -295,6 +329,99 @@
         galleryBtn.disabled = false;
         galleryBtn.textContent = 'Синхронізувати галерею (фото й відео) з Google';
       });
+  });
+
+  // ---------- керування галереєю ----------
+  let galGrid = document.getElementById('galAdminGrid');
+  let galMsg = document.getElementById('galAdminMsg');
+  let galSelected = {};
+  let galItems = [];
+
+  function galCountLabel(){
+    let n = Object.keys(galSelected).length;
+    document.getElementById('galSelCount').textContent = n ? ('Вибрано: ' + n + ' з ' + galItems.length) : ('Фото: ' + galItems.length);
+  }
+
+  function loadGalleryAdmin(){
+    fetch(API_URL + '/api/gallery')
+      .then(function(r){ return r.ok ? r.json() : { items: [] }; })
+      .then(function(d){
+        galItems = (d.items || []).filter(function(i){ return i.type === 'PHOTO'; });
+        galSelected = {};
+        renderGalleryAdmin();
+        let list = document.getElementById('galSections');
+        list.innerHTML = '';
+        (d.categories || []).forEach(function(c){
+          let o = document.createElement('option'); o.value = c.title; list.appendChild(o);
+        });
+      })
+      .catch(function(){});
+  }
+
+  function renderGalleryAdmin(){
+    galGrid.innerHTML = '';
+    galItems.forEach(function(item){
+      let b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'gal-pick' + (galSelected[item.id] ? ' sel' : '');
+      let img = document.createElement('img');
+      img.src = API_URL + item.thumb_url; img.alt = ''; img.loading = 'lazy';
+      let tick = document.createElement('span'); tick.className = 'tick'; tick.textContent = '✓';
+      let cap = document.createElement('span'); cap.className = 'cap';
+      let t = document.createElement('b'); t.textContent = item.category;
+      cap.appendChild(t);
+      cap.appendChild(document.createTextNode('#' + item.id + ' · ' + (item.created_at || '').slice(0, 10)));
+      b.appendChild(img); b.appendChild(tick); b.appendChild(cap);
+      b.addEventListener('click', function(){
+        if(galSelected[item.id]) delete galSelected[item.id]; else galSelected[item.id] = true;
+        b.classList.toggle('sel', !!galSelected[item.id]);
+        galCountLabel();
+      });
+      galGrid.appendChild(b);
+    });
+    galCountLabel();
+  }
+
+  function galPost(path, body, okRefresh){
+    galMsg.style.display = 'none';
+    return fetch(API_URL + path, {
+      method: 'POST',
+      headers: { 'X-Admin-Key': adminKey(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body || {})
+    })
+      .then(function(r){
+        if(r.status === 401){ handleAuthError(); throw new Error('auth'); }
+        return r.json().then(function(d){ return { ok: r.ok, d: d }; });
+      })
+      .then(function(res){
+        let text = res.ok ? (res.d.message || 'Готово') : (res.d.detail || 'Помилка');
+        showMsg(galMsg, text, res.ok ? 'ok' : 'err');
+        if(res.ok && okRefresh) loadGalleryAdmin();
+      })
+      .catch(function(err){
+        if(err.message !== 'auth') showMsg(galMsg, 'Не вдалося звʼязатися з сервером', 'err');
+      });
+  }
+  function galIds(){ return Object.keys(galSelected).map(Number); }
+
+  document.getElementById('galAssign').addEventListener('click', function(){
+    if(!galIds().length){ showMsg(galMsg, 'Спочатку позначте фото', 'err'); return; }
+    galPost('/api/gallery/assign', { ids: galIds(), section: document.getElementById('galSection').value }, true);
+  });
+  document.getElementById('galHide').addEventListener('click', function(){
+    if(!galIds().length){ showMsg(galMsg, 'Спочатку позначте фото', 'err'); return; }
+    if(!confirm('Сховати вибрані фото на сайті (' + galIds().length + ')?')) return;
+    galPost('/api/gallery/hide', { ids: galIds() }, true);
+  });
+  document.getElementById('galUnhide').addEventListener('click', function(){
+    if(!confirm('Повернути всі приховані фото? Наступна синхронізація додасть їх на сайт знову.')) return;
+    galPost('/api/gallery/unhide', {}, false);
+  });
+  document.getElementById('galSelAll').addEventListener('click', function(){
+    galItems.forEach(function(i){ galSelected[i.id] = true; }); renderGalleryAdmin();
+  });
+  document.getElementById('galSelNone').addEventListener('click', function(){
+    galSelected = {}; renderGalleryAdmin();
   });
 
   // ---------- повернути приховані пости ----------
