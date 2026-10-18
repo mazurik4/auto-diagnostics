@@ -82,6 +82,7 @@
       <p class="admin-sub">Пости з вашого Google-профілю (з фото і текстом) підтягуються автоматично, раз на ~30 хв при відвідуваннях сайту. Щоб одразу — натисніть кнопку. Зайвий пост можна сховати кнопкою «Сховати».</p>
       <button type="button" class="btn btn-ghost btn-block" id="syncBtn" style="margin-bottom:12px;">Синхронізувати з Google зараз</button>
       <button type="button" class="admin-del" id="unhideBtn" style="width:100%;margin-bottom:12px;color:var(--paper-dim);">Показати приховані пости знову</button>
+      <button type="button" class="btn btn-ghost btn-block" id="galleryBtn" style="margin-bottom:12px;">Синхронізувати галерею (фото й відео) з Google</button>
       <div class="admin-msg" id="syncMsg" style="margin:0 0 16px;"></div>
       <div class="admin-list" id="newsList"></div>
       <div class="admin-empty" id="newsEmpty" hidden>Новин ще немає. Опублікуйте пост із фото в Google-профілі й натисніть «Синхронізувати».</div>
@@ -208,7 +209,9 @@
     service_open: 'Розгорнуті послуги',
     faq_open: 'Відкриті питання FAQ',
     news_click: 'Кліки по новинах',
-    nav_click: 'Кліки по меню'
+    nav_click: 'Кліки по меню',
+    gallery_tab: 'Галерея: відкриті розділи',
+    gallery_open: 'Галерея: відкриті фото (розділ)'
   };
 
   function statTile(value, label){
@@ -255,6 +258,7 @@
         tiles.appendChild(statTile(sum('form_submit'), 'Заявок з форми'));
         statsBody.appendChild(tiles);
 
+        statsBody.appendChild(statBlock('Сторінки', d.pages));
         statsBody.appendChild(statBlock('Звідки приходять', d.sources));
         statsBody.appendChild(statBlock('Пристрої', d.devices));
         Object.keys(EVENT_TITLES).forEach(function(name){
@@ -271,6 +275,27 @@
   }
   statsBtn.addEventListener('click', loadStats);
   statsDays.addEventListener('change', loadStats);
+
+  // ---------- синхронізація галереї ----------
+  let galleryBtn = document.getElementById('galleryBtn');
+  galleryBtn.addEventListener('click', function(){
+    syncMsg.style.display = 'none';
+    galleryBtn.disabled = true;
+    galleryBtn.textContent = 'Завантажуємо фото… (може тривати до хвилини)';
+    fetch(API_URL + '/api/gallery/sync', { method: 'POST', headers: { 'X-Admin-Key': adminKey() } })
+      .then(function(r){
+        if(r.status === 401){ handleAuthError(); throw new Error('auth'); }
+        return r.json();
+      })
+      .then(function(d){ showMsg(syncMsg, d.message || 'Готово', d.ok ? 'ok' : 'err'); })
+      .catch(function(err){
+        if(err.message !== 'auth') showMsg(syncMsg, 'Не вдалося звʼязатися з сервером', 'err');
+      })
+      .finally(function(){
+        galleryBtn.disabled = false;
+        galleryBtn.textContent = 'Синхронізувати галерею (фото й відео) з Google';
+      });
+  });
 
   // ---------- повернути приховані пости ----------
   let unhideBtn = document.getElementById('unhideBtn');

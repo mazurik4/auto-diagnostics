@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Наша галерея — Автодіагностика Київ</title>
+<meta name="description" content="Фото та відео з нашої майстерні: діагностика, ремонт автоелектрики, обладнання та команда. Автоелектрик Київ, вул. Гуцульська 97А.">
+<link rel="canonical" href="https://autoworkshop.com.ua/gallery.html">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Автодіагностика — Київ">
+<meta property="og:title" content="Наша галерея — Автодіагностика Київ">
+<meta property="og:description" content="Фото та відео з нашої майстерні: діагностика, ремонт автоелектрики, обладнання та команда.">
+<meta property="og:url" content="https://autoworkshop.com.ua/gallery.html">
+<meta property="og:image" content="https://autoworkshop.com.ua/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Наша галерея — Автодіагностика Київ">
+<meta name="twitter:description" content="Фото та відео з нашої майстерні: діагностика, ремонт автоелектрики, обладнання та команда.">
+<meta name="twitter:image" content="https://autoworkshop.com.ua/img/og-image.jpg">
+
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+
+<div id="scanbar"></div>
+
+<header>
+  <nav class="nav">
+    <a href="index.html" class="brand">
+      <img class="brand-mark" src="img/halfautoelectriklogo.png" alt="Логотип Майстерні">
+      <span class="brand-text">Автодіагностика<span>Майстерня · Київ</span></span>
+    </a>
+    <button class="burger" aria-label="Меню" aria-expanded="false" id="burgerBtn">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#about">Про нас</a></li>
+      <li><a href="index.html#services">Послуги</a></li>
+      <li><a href="index.html#process">Процес</a></li>
+      <li><a href="index.html#news">Новини</a></li>
+      <li><a href="gallery.html" class="active" aria-current="page">Галерея</a></li>
+      <li><a href="index.html#contacts">Контакти</a></li>
+      <li><a class="nav-cta" href="tel:+380954851166"><svg class="tel-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Подзвонити</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ЗАГОЛОВОК -->
+  <section class="gal-hero">
+    <div class="wrap">
+      <div class="eyebrow">Фото та відео</div>
+      <h1>Наша галерея</h1>
+      <p class="lede">Живі кадри з майстерні: як ми шукаємо несправності, з чим працюємо і хто це робить. Усе — з нашого профілю Google, без постановочних картинок.</p>
+      <div class="gal-counts" id="galCounts" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- СЛАЙДЕР З АВТОПРОКРУТКОЮ -->
+  <section class="gal-slider-section" id="galSliderSection" hidden>
+    <div class="wrap">
+      <div class="gal-slider" id="galSlider" aria-roledescription="карусель" aria-label="Найновіші фото">
+        <button class="gal-arrow gal-arrow-prev" type="button" aria-label="Попереднє фото" id="galPrev">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="gal-track" id="galTrack"></div>
+        <button class="gal-arrow gal-arrow-next" type="button" aria-label="Наступне фото" id="galNext">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div class="gal-slider-foot">
+        <div class="gal-dots" id="galDots"></div>
+        <div class="gal-progress" id="galProgress" aria-hidden="true"><i></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- РОЗДІЛИ -->
+  <section class="gal-browse" id="galBrowse">
+    <div class="gal-tabs-wrap" id="galTabsWrap" hidden>
+      <div class="gal-tabs" id="galTabs" role="tablist" aria-label="Розділи галереї"></div>
+    </div>
+    <div class="wrap">
+      <div class="gal-content" id="galContent" aria-live="polite">
+        <div class="gal-grid" id="galSkeleton">
+          <div class="gal-skel"></div><div class="gal-skel"></div><div class="gal-skel"></div>
+          <div class="gal-skel"></div><div class="gal-skel"></div><div class="gal-skel"></div>
+        </div>
+        <p class="gal-wake" id="galWake" hidden>Сервер прокидається — це може зайняти до хвилини…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЗАКЛИК -->
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="cta-band gal-cta">
+        <div>
+          <h2 style="margin-bottom:12px;">Потрібна діагностика вже сьогодні?</h2>
+          <p class="lede" style="margin-bottom:0;">Зателефонуйте або напишіть у Telegram — підкажемо, з чого почати. Запис за домовленістю.</p>
+        </div>
+        <div class="gal-cta-actions">
+          <a href="tel:+380954851166" class="btn btn-primary"><svg class="tel-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> +38 (095) 485-11-66</a>
+          <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" class="btn btn-ghost">Написати в Telegram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>© <span id="currentYear">2026</span> Автоелектрик Київ · ФОП «Лизюк Олександр Васильович»</span>
+    <span><a href="index.html">Головна</a> · <a href="tel:+380954851166">+38 (095) 485-11-66</a> · <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener">Telegram</a> · <a href="privacy.html">Політика конфіденційності</a></span>
+  </div>
+</footer>
+
+<!-- ПЕРЕГЛЯД ФОТО НА ВЕСЬ ЕКРАН -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Перегляд фото">
+  <div class="lb-stage" id="lbStage">
+    <button class="lb-btn lb-close" type="button" id="lbClose" aria-label="Закрити">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <button class="lb-btn lb-prev" type="button" id="lbPrev" aria-label="Попереднє фото">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <img class="lb-img" id="lbImg" alt="">
+    <button class="lb-btn lb-next" type="button" id="lbNext" aria-label="Наступне фото">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </div>
+  <div class="lb-info"><span id="lbCaption"></span><span id="lbCounter"></span></div>
+</div>
+
+<div class="mobile-bar">
+  <a href="tel:+380954851166" class="mb-call"><svg class="tel-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Подзвонити</a>
+  <a href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" class="mb-tg"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg> Telegram</a>
+</div>
+
+<div class="fab-stack">
+  <a href="#top" class="fab fab-top" id="fabTop" aria-label="Нагору">↑</a>
+</div>
+
+<noscript><p style="text-align:center;color:#c3c5cc;padding:20px;">Для перегляду галереї увімкніть JavaScript. Телефон: <a href="tel:+380954851166">+38 (095) 485-11-66</a></p></noscript>
+<script src="gallery.js"></script>
+
+</body>
+</html>
