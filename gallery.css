@@ -75,8 +75,22 @@
   background:rgba(35,38,43,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-top:1px solid var(--line);border-bottom:1px solid var(--line);
 }
-.gal-tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 24px;max-width:var(--container);margin:0 auto;scrollbar-width:none;scroll-behavior:smooth;}
+.gal-tabs-inner{position:relative;max-width:var(--container);margin:0 auto;}
+.gal-tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 24px;scrollbar-width:none;scroll-behavior:smooth;}
 .gal-tabs::-webkit-scrollbar{display:none;}
+/* м'яке затухання біля країв, коли є куди листати */
+.gal-tabs.can-left{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 56px);mask-image:linear-gradient(to right,transparent 0,#000 56px);}
+.gal-tabs.can-right{-webkit-mask-image:linear-gradient(to left,transparent 0,#000 56px);mask-image:linear-gradient(to left,transparent 0,#000 56px);}
+.gal-tabs.can-left.can-right{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 56px,#000 calc(100% - 56px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 56px,#000 calc(100% - 56px),transparent 100%);}
+.gal-tabs-arrow{
+  position:absolute;top:50%;translate:0 -50%;z-index:2;width:34px;height:34px;border-radius:50%;
+  background:var(--surface-2);border:1px solid var(--line-strong);color:var(--paper);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s,color .15s;
+}
+.gal-tabs-arrow:hover{background:var(--signal);border-color:var(--signal);color:var(--signal-ink);}
+.gal-tabs-arrow-prev{left:6px;}
+.gal-tabs-arrow-next{right:6px;}
+@media (hover:none){.gal-tabs-arrow{display:none;}}
 .gal-tab{
   flex:none;display:inline-flex;align-items:center;gap:9px;
   background:var(--surface);border:1px solid var(--line-strong);color:var(--paper-dim);

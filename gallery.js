@@ -199,7 +199,42 @@
       tabsBox.appendChild(b);
     });
     tabsWrap.hidden = false;
+    updateTabsArrows();
   }
+
+  // стрілки та затухання по краях панелі розділів: показуємо лише там, куди ще можна листати
+  const tabsPrev = $('#galTabsPrev');
+  const tabsNext = $('#galTabsNext');
+  function updateTabsArrows(){
+    const max = tabsBox.scrollWidth - tabsBox.clientWidth;
+    const left = tabsBox.scrollLeft > 4;
+    const right = tabsBox.scrollLeft < max - 4;
+    tabsBox.classList.toggle('can-left', left);
+    tabsBox.classList.toggle('can-right', right);
+    tabsPrev.hidden = !left;
+    tabsNext.hidden = !right;
+  }
+  function scrollTabs(dir){
+    tabsBox.scrollBy({left: dir * Math.max(160, tabsBox.clientWidth * 0.6), behavior: reduceMotion ? 'auto' : 'smooth'});
+  }
+  tabsPrev.addEventListener('click', function(){ scrollTabs(-1); });
+  tabsNext.addEventListener('click', function(){ scrollTabs(1); });
+  tabsBox.addEventListener('scroll', function(){ updateTabsArrows(); }, {passive:true});
+  window.addEventListener('resize', updateTabsArrows);
+  // клавіатура: ← → переходять між розділами, Home/End — на перший/останній
+  tabsBox.addEventListener('keydown', function(e){
+    const tabs = Array.prototype.slice.call(tabsBox.querySelectorAll('.gal-tab'));
+    const cur = tabs.findIndex(function(t){ return t.getAttribute('aria-selected') === 'true'; });
+    let next = -1;
+    if(e.key === 'ArrowRight') next = Math.min(tabs.length - 1, cur + 1);
+    else if(e.key === 'ArrowLeft') next = Math.max(0, cur - 1);
+    else if(e.key === 'Home') next = 0;
+    else if(e.key === 'End') next = tabs.length - 1;
+    if(next < 0 || next === cur) return;
+    e.preventDefault();
+    tabs[next].focus();
+    tabs[next].click();
+  });
 
   function setView(key, fromUser){
     if(key === view) return;

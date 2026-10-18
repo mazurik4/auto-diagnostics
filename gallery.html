@@ -90,7 +90,15 @@
   <!-- РОЗДІЛИ -->
   <section class="gal-browse" id="galBrowse">
     <div class="gal-tabs-wrap" id="galTabsWrap" hidden>
-      <div class="gal-tabs" id="galTabs" role="tablist" aria-label="Розділи галереї"></div>
+      <div class="gal-tabs-inner">
+        <button class="gal-tabs-arrow gal-tabs-arrow-prev" type="button" id="galTabsPrev" aria-label="Попередні розділи" hidden>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="gal-tabs" id="galTabs" role="tablist" aria-label="Розділи галереї"></div>
+        <button class="gal-tabs-arrow gal-tabs-arrow-next" type="button" id="galTabsNext" aria-label="Наступні розділи" hidden>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
     </div>
     <div class="wrap">
       <div class="gal-content" id="galContent" aria-live="polite">
