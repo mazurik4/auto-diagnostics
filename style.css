@@ -605,3 +605,18 @@
   }
   .hero-actions .btn-primary{animation:btn-breathe 3.8s ease-out infinite;}
   .hero-actions .btn-primary:hover{animation:none;}
+/* ---------- підпис розробника у футері ---------- */
+.foot-credit{display:flex;justify-content:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
+.credit-link{
+  display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+  color:var(--steel);font-size:.8rem;padding:7px 13px 7px 11px;
+  border:1px solid var(--line);border-radius:999px;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.credit-link svg{width:16px;height:16px;flex:none;}
+.credit-link b{color:var(--paper-dim);font-weight:700;font-family:'Space Mono',monospace;font-size:.78rem;transition:color .2s;}
+.credit-link .arr{width:14px;height:14px;transition:transform .2s;}
+.credit-link:hover,.credit-link:focus-visible{color:var(--paper);border-color:var(--signal);background:rgba(47,184,94,.08);}
+.credit-link:hover b,.credit-link:focus-visible b{color:var(--signal);}
+.credit-link:hover .arr,.credit-link:focus-visible .arr{transform:translate(2px,-2px);}
+@media (max-width:640px){.foot-credit{justify-content:center;}}
