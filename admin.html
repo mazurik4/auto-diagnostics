@@ -45,6 +45,13 @@
   .admin-del:hover{background:rgba(255,107,94,.1);}
   .btn-block{width:100%;justify-content:center;}
   .admin-select{flex:1;background:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:10px 12px;color:var(--paper);font-family:inherit;font-size:.9rem;}
+  .gal-sections{margin-bottom:16px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .gal-sections:empty{display:none;}
+  .sec-row{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--ink);border-bottom:1px solid var(--line);font-size:.86rem;}
+  .sec-row:last-child{border-bottom:none;}
+  .sec-name{flex:1;color:var(--paper);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sec-count{flex:none;font-family:'Space Mono',monospace;font-size:.74rem;color:var(--steel);margin-right:6px;}
+  .sec-row .admin-del{padding:6px 10px;font-size:.76rem;}
   .gal-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
   .gal-bar input{flex:1;min-width:200px;background:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:11px 14px;color:var(--paper);font-family:inherit;font-size:.9rem;}
   .gal-bar input:focus{border-color:var(--signal);outline:none;}
@@ -105,6 +112,7 @@
     <div class="admin-card">
       <h1 class="admin-title">Керування галереєю</h1>
       <p class="admin-sub">Позначте фото (клік по картинці), введіть назву розділу й натисніть «Призначити». Нові розділи створюються просто назвою. Зайві фото можна сховати.</p>
+      <div class="gal-sections" id="galSectionsList"></div>
       <div class="gal-bar">
         <input type="text" id="galSection" list="galSections" maxlength="40" placeholder="Назва розділу, напр. Електропроводка" autocomplete="off">
         <datalist id="galSections"></datalist>
@@ -354,8 +362,40 @@
         (d.categories || []).forEach(function(c){
           let o = document.createElement('option'); o.value = c.title; list.appendChild(o);
         });
+        renderSectionsList(d.categories || []);
       })
       .catch(function(){});
+  }
+
+  // список розділів з кнопками «Перейменувати» і «Видалити розділ»
+  function renderSectionsList(cats){
+    let box = document.getElementById('galSectionsList');
+    box.innerHTML = '';
+    cats.forEach(function(c){
+      let row = document.createElement('div'); row.className = 'sec-row';
+      let name = document.createElement('span'); name.className = 'sec-name'; name.textContent = c.title;
+      let cnt = document.createElement('span'); cnt.className = 'sec-count'; cnt.textContent = c.count + ' фото';
+      row.appendChild(name); row.appendChild(cnt);
+      if(c.title !== 'Інше'){ // «Інше» — службовий розділ для фото без розділу
+        let ren = document.createElement('button'); ren.type = 'button'; ren.className = 'admin-del';
+        ren.style.color = 'var(--paper-dim)'; ren.textContent = 'Перейменувати';
+        ren.addEventListener('click', function(){
+          let nv = prompt('Нова назва розділу «' + c.title + '» (якщо така назва вже є — розділи обʼєднаються):', c.title);
+          if(nv === null) return;
+          nv = nv.trim();
+          if(!nv || nv === c.title) return;
+          galPost('/api/gallery/rename', { old: c.title, new: nv }, true);
+        });
+        let del = document.createElement('button'); del.type = 'button'; del.className = 'admin-del';
+        del.textContent = 'Видалити розділ';
+        del.addEventListener('click', function(){
+          if(!confirm('Видалити розділ «' + c.title + '»? Його фото (' + c.count + ') не видаляються, а переходять у розділ «Інше».')) return;
+          galPost('/api/gallery/delete-section', { name: c.title }, true);
+        });
+        row.appendChild(ren); row.appendChild(del);
+      }
+      box.appendChild(row);
+    });
   }
 
   function renderGalleryAdmin(){
