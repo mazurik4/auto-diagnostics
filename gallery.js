@@ -16,6 +16,23 @@
     return n;
   }
   function imgUrl(path){ return path && path.indexOf('/') === 0 ? API_URL + path : path; }
+
+  // Фото приходять з бекенда на Render: якщо він саме прокидається або зайнятий,
+  // браузер отримує помилку й малює «?» (особливо Firefox і старі iPhone).
+  // Тому поки фото не завантажилось — воно прозоре, а при помилці пробуємо ще раз.
+  function loadImg(img, src){
+    let tries = 0;
+    img.classList.add('img-wait');
+    img.addEventListener('load', function(){ img.classList.remove('img-wait'); });
+    img.addEventListener('error', function(){
+      if(tries >= 5) return;
+      tries++;
+      setTimeout(function(){
+        img.src = src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + tries;
+      }, 1200 * tries);
+    });
+    img.src = src;
+  }
   function fmtDate(iso){
     const d = new Date(iso);
     return isNaN(d.getTime()) ? '' : d.toLocaleDateString('uk-UA', {day:'numeric', month:'long', year:'numeric'});
@@ -347,10 +364,10 @@
       node.addEventListener('click', function(){ openLightbox(currentPhotos(), item.id); });
     }
     const img = el('img');
-    img.src = imgUrl(item.thumb_url);
     img.alt = title + (isVideo ? ' — відео з майстерні' : ' — фото з майстерні');
     img.loading = 'lazy';
     img.decoding = 'async';
+    loadImg(img, imgUrl(item.thumb_url));
     node.appendChild(img);
     if(isVideo){
       const b = el('span', 'gal-badge', 'Відео · Google');
@@ -381,10 +398,10 @@
       s.type = 'button';
       s.setAttribute('aria-label', catTitle(item.category) + ' — відкрити фото ' + (i + 1) + ' з ' + list.length);
       const img = el('img');
-      img.src = imgUrl(item.image_url);
       img.alt = catTitle(item.category) + ' — фото з майстерні';
       img.decoding = 'async';
       if(i > 1) img.loading = 'lazy';
+      loadImg(img, imgUrl(item.image_url));
       s.appendChild(img);
       const cap = el('div', 'gal-slide-cap');
       cap.appendChild(el('span', 'gal-tag', catTitle(item.category)));
@@ -527,10 +544,19 @@
     lbImg.classList.add('loading');
     const full = imgUrl(item.image_url);
     const pre = new Image();
+    let preTries = 0;
     pre.onload = function(){
-      if(lbList[lbIndex] === item){ lbImg.src = full; lbImg.classList.remove('loading'); }
+      if(lbList[lbIndex] === item){ lbImg.src = pre.src; lbImg.classList.remove('loading'); }
     };
-    pre.onerror = function(){ lbImg.classList.remove('loading'); };
+    // повна якість не прийшла — пробуємо ще двічі, а поки лишаємо превʼю
+    pre.onerror = function(){
+      if(preTries < 2 && lbList[lbIndex] === item){
+        preTries++;
+        setTimeout(function(){ pre.src = full + '?retry=' + preTries; }, 1500 * preTries);
+      } else {
+        lbImg.classList.remove('loading');
+      }
+    };
     pre.src = full;
     $('#lbCaption').textContent = catTitle(item.category) + (item.created_at ? ' · ' + fmtDate(item.created_at) : '');
     $('#lbCounter').textContent = (lbIndex + 1) + ' / ' + lbList.length;

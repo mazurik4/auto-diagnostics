@@ -350,6 +350,23 @@ phoneInput.addEventListener('blur', function(){
   // домена к бэкенду поменяйте на https://api.autoworkshop.com.ua если поменяю поддомен на api.autoworkshop.com.ua
   let API_URL = 'https://backend-cmr4.onrender.com';
 
+  // Фото приходять з бекенда на Render: якщо він саме прокидається або зайнятий,
+  // браузер отримує помилку й малює «?» (особливо Firefox і старі iPhone).
+  // Тому поки фото не завантажилось — воно прозоре, а при помилці пробуємо ще раз.
+  function loadImg(img, src){
+    let tries = 0;
+    img.classList.add('img-wait');
+    img.addEventListener('load', function(){ img.classList.remove('img-wait'); });
+    img.addEventListener('error', function(){
+      if(tries >= 5) return;
+      tries++;
+      setTimeout(function(){
+        img.src = src + (src.indexOf('?') < 0 ? '?' : '&') + 'retry=' + tries;
+      }, 1200 * tries);
+    });
+    img.src = src;
+  }
+
   // ---------- анонімна статистика ----------
   // Рахуємо перегляди та натискання кнопок. Без cookie, без IP, без імені/телефону.
   // Вимкнути для себе: відкрийте сайт з #notrack в адресі. Також поважаємо "Не відстежувати".
@@ -610,9 +627,9 @@ phoneInput.addEventListener('blur', function(){
         let imgWrap = document.createElement('div');
         imgWrap.className = 'news-card-img';
         let imgEl = document.createElement('img');
-        imgEl.src = item.image_url.indexOf('/') === 0 ? API_URL + item.image_url : item.image_url;
         imgEl.alt = '';
         imgEl.loading = 'lazy';
+        loadImg(imgEl, item.image_url.indexOf('/') === 0 ? API_URL + item.image_url : item.image_url);
         imgWrap.appendChild(imgEl);
 
         let body = document.createElement('div');

@@ -620,3 +620,5 @@
 .credit-link:hover b,.credit-link:focus-visible b{color:var(--signal);}
 .credit-link:hover .arr,.credit-link:focus-visible .arr{transform:translate(2px,-2px);}
 @media (max-width:640px){.foot-credit{justify-content:center;}}
+/* фото ще вантажиться або сервер не відповів — не показуємо значок «?» */
+img.img-wait{opacity:0;}
