@@ -648,7 +648,10 @@ phoneInput.addEventListener('blur', function(){
         let imgEl = document.createElement('img');
         imgEl.alt = '';
         imgEl.loading = 'lazy';
-        loadImg(imgEl, item.image_url.indexOf('/') === 0 ? API_URL + item.image_url : item.image_url);
+        // у картці досить зменшеної копії (640 px): повне фото важить у десятки разів більше
+        let src = item.image_url.indexOf('/') === 0 ? API_URL + item.image_url : item.image_url;
+        if(src.indexOf(API_URL) === 0) src += (src.indexOf('?') < 0 ? '?' : '&') + 'w=640';
+        loadImg(imgEl, src);
         imgWrap.appendChild(imgEl);
 
         let body = document.createElement('div');
@@ -675,6 +678,8 @@ phoneInput.addEventListener('blur', function(){
       });
 
       section.classList.add('has-items');
+      let navItem = document.querySelector('.nav-news-item');
+      if(navItem) navItem.style.display = '';
       applyNewsLinks();
 
       buildDots();

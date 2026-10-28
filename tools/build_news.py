@@ -104,14 +104,28 @@ def page(ctx, *, title, description, canonical, body, og_image, jsonld, nav_acti
 def card(post, href_prefix) -> str:
     return render(
         "card.html",
-        href=esc(href_prefix + post["file"]), img=esc(post["img_src"]), alt=esc(post["alt"]),
+        href=esc(href_prefix + post["file"]), img=esc(post["thumb_src"]), alt=esc(post["alt"]),
         date_iso=post["created_at"][:10], date=esc(post["date"]), title=esc(post["title"]),
         excerpt=esc(cut_words(post["body"], 170)),
     )
 
 
-def build(posts, out_dir: Path, ctx):
-    out_dir.mkdir(parents=True, exist_ok=True)
+def jpeg_size(data: bytes):
+    """Ширина й висота JPEG без сторонніх бібліотек (читаємо заголовок SOF)."""
+    i = 2
+    while i + 9 < len(data):
+        if data[i] != 0xFF:
+            i += 1
+            continue
+        marker = data[i + 1]
+        if 0xC0 <= marker <= 0xCF and marker not in (0xC4, 0xC8, 0xCC):
+            return int.from_bytes(data[i + 7:i + 9], "big"), int.from_bytes(data[i + 5:i + 7], "big")
+        i += 2 + int.from_bytes(data[i + 2:i + 4], "big")
+    return 0, 0
+
+
+def prepare(posts, ctx):
+    """Заголовок, текст, адреса сторінки й фото для кожного поста."""
     used = set()
     for p in posts:
         p["title"], p["body"] = split_post(p["text"])
@@ -123,6 +137,13 @@ def build(posts, out_dir: Path, ctx):
         p["date"] = human_date(p["created_at"])
         p["alt"] = cut_words(p["title"], 110)
         p["img_src"] = ctx["img_src"](p)
+        p["thumb_src"] = ctx["thumb_src"](p)
+
+
+def build(posts, out_dir: Path, ctx):
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if "slug" not in posts[0]:
+        prepare(posts, ctx)
 
     # --- сторінка кожної роботи ---
     for i, p in enumerate(posts):
@@ -152,6 +173,7 @@ def build(posts, out_dir: Path, ctx):
             "post.html",
             site=ctx["site"], archive=ctx["archive_href"], title=esc(p["title"]),
             date_iso=p["created_at"][:10], date=esc(p["date"]), img=esc(p["img_src"]), alt=esc(p["alt"]),
+            img_w=str(p.get("img_w") or 1200), img_h=str(p.get("img_h") or 900),
             text=paragraphs(p["body"]), gbp=esc(p.get("url") or GBP_URL),
             others="\n".join(card(q, "") for q in others),
         )
@@ -192,13 +214,21 @@ def fetch(url: str, timeout: int = 90) -> bytes:
 
 
 def save_images(posts, out_dir: Path, fetcher):
-    """Фото кладемо на сам сайт: так вони швидкі й індексуються Google разом зі сторінкою."""
+    """
+    Фото кладемо на сам сайт: так вони швидкі й індексуються Google разом зі сторінкою.
+    Щоразу звіряємо з бекендом і перезаписуємо лише змінені (напр. фото перекачане в кращій якості).
+    """
     img_dir = out_dir / "img"
-    img_dir.mkdir(parents=True, exist_ok=True)
+    (img_dir / "thumb").mkdir(parents=True, exist_ok=True)
     for p in posts:
-        target = img_dir / f"{p['slug']}.jpg"
-        if not target.exists():
-            target.write_bytes(fetcher(p))
+        # повне фото — для сторінки роботи, зменшена копія 640 px — для карток
+        for target, data in (
+            (img_dir / f"{p['slug']}.jpg", fetcher(p, "")),
+            (img_dir / "thumb" / f"{p['slug']}.jpg", fetcher(p, "640")),
+        ):
+            if not target.exists() or target.read_bytes() != data:
+                target.write_bytes(data)
+        p["img_w"], p["img_h"] = jpeg_size((img_dir / f"{p['slug']}.jpg").read_bytes())
 
 
 def remove_stale(posts, out_dir: Path, archive_file: str):
@@ -208,7 +238,7 @@ def remove_stale(posts, out_dir: Path, archive_file: str):
     for f in out_dir.glob("*.html"):
         if f.name not in pages:
             f.unlink()
-    for f in (out_dir / "img").glob("*.jpg"):
+    for f in list((out_dir / "img").glob("*.jpg")) + list((out_dir / "img" / "thumb").glob("*.jpg")):
         if f.name not in images:
             f.unlink()
 
@@ -255,10 +285,15 @@ def main():
         "site": "../", "assets": "../", "archive_href": "./", "archive_file": "index.html",
         "page_name": lambda slug: f"{slug}.html",
         "img_src": lambda p: f"img/{p['slug']}.jpg",
+        "thumb_src": lambda p: f"img/thumb/{p['slug']}.jpg",
         "extra_head": (TEMPLATES / "analytics.html").read_text(encoding="utf-8"),
     }
+    prepare(posts, ctx)
+    def photo(p, width):
+        url = API_URL + p["image_url"]
+        return fetch(url + ("&" if "?" in url else "?") + f"w={width}" if width else url)
+    save_images(posts, out, photo)
     build(posts, out, ctx)
-    save_images(posts, out, lambda p: fetch(API_URL + p["image_url"]))
     remove_stale(posts, out, ctx["archive_file"])
     write_links(posts, out)
     update_sitemap(posts, ROOT / "sitemap.xml")
