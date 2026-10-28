@@ -551,6 +551,24 @@ phoneInput.addEventListener('blur', function(){
     if(!section || !track) return;
 
     let GBP_URL = 'https://www.google.com/maps?cid=15792600053340114773';
+    // id новини -> її сторінка в розділі «Наші роботи» (файл створює tools/build_news.py).
+    // Поки сторінки для новини ще немає (свіжий пост), картка веде в Google, як раніше.
+    let newsLinks = {};
+    fetch('roboty/links.json')
+      .then(function(r){ return r.ok ? r.json() : {}; })
+      .then(function(l){ newsLinks = l || {}; applyNewsLinks(); })
+      .catch(function(){});
+    function applyNewsLinks(){
+      track.querySelectorAll('.news-card[data-id]').forEach(function(a){
+        let page = newsLinks[a.getAttribute('data-id')];
+        if(!page) return;
+        a.href = page;
+        a.removeAttribute('target');
+        a.removeAttribute('rel');
+        let link = a.querySelector('.news-card-link');
+        if(link) link.textContent = 'Читати повністю →';
+      });
+    }
     let CACHE_KEY = 'newsCacheV1';
     // оголошено тут заздалегідь: renderNews() може викликатись одразу (з кешу),
     // ще до того, як виконання дійде до initAutoplay/stopAutoplay нижче за текстом
@@ -619,6 +637,7 @@ phoneInput.addEventListener('blur', function(){
       items.forEach(function(item){
         let a = document.createElement('a');
         a.className = 'news-card';
+        a.setAttribute('data-id', item.id);
         // пост з Google веде прямо на себе; ручна новина — на профіль компанії
         a.href = (typeof item.url === 'string' && item.url.indexOf('https://') === 0) ? item.url : GBP_URL;
         a.target = '_blank';
@@ -656,8 +675,7 @@ phoneInput.addEventListener('blur', function(){
       });
 
       section.classList.add('has-items');
-      let navItem = document.querySelector('.nav-news-item');
-      if(navItem) navItem.style.display = '';
+      applyNewsLinks();
 
       buildDots();
       initAutoplay();

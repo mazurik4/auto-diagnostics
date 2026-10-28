@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<link rel="canonical" href="{{canonical}}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Автодіагностика — Київ">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="{{canonical}}">
+<meta property="og:image" content="{{og_image}}">
+<meta property="og:locale" content="uk_UA">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/x-icon" href="{{assets}}favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="{{assets}}img/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="{{assets}}img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{assets}}style.css">
+<link rel="stylesheet" href="{{assets}}pages.css">
+<script type="application/ld+json">
+{{jsonld}}
+</script>
+{{extra_head}}
+</head>
+<body>
+
+<div id="scanbar"></div>
+
+{{header}}
+
+<main id="top">
+{{body}}
+</main>
+
+{{footer}}
+
+<script src="{{assets}}site.js"></script>
+</body>
+</html>

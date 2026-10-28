@@ -1,0 +1,51 @@
+/* Спільні стилі внутрішніх сторінок (Наші роботи та майбутні сторінки сайту).
+   Кольори, шрифти, шапка, підвал і кнопки — з style.css. */
+
+.page-hero{
+  position:relative;overflow:hidden;padding:72px 0 40px;
+  background:radial-gradient(ellipse 900px 420px at 85% -25%, rgba(244,180,0,.12), transparent 60%), var(--ink);
+  border-bottom:1px solid var(--line);
+}
+.page-hero h1{font-size:clamp(2.3rem,5.4vw,3.8rem);font-weight:700;color:var(--paper);line-height:1.05;margin-bottom:16px;}
+.page-hero .lede{margin-bottom:26px;}
+.page-counts{display:flex;flex-wrap:wrap;gap:12px;}
+.page-count{
+  display:inline-flex;align-items:baseline;gap:9px;
+  border:1px solid var(--line-strong);border-radius:999px;padding:8px 18px;
+  font-family:'Space Mono',monospace;font-size:.76rem;letter-spacing:.04em;color:var(--paper-dim);text-transform:uppercase;
+}
+.page-count b{font-family:'Oswald',sans-serif;font-size:1.3rem;color:var(--paper);font-weight:600;letter-spacing:0;}
+
+/* ---------- картки робіт (та сама картка, що в каруселі, але в сітці) ---------- */
+.work-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;}
+.work-card{flex:none;}
+.work-card-title{
+  font-family:'Oswald',sans-serif;font-size:1.15rem;font-weight:600;line-height:1.25;color:var(--paper);margin:0;
+  text-wrap:balance;
+}
+.work-card .news-card-text{-webkit-line-clamp:3;}
+
+/* ---------- сторінка однієї роботи ---------- */
+.post{padding:40px 0 24px;}
+.post-wrap{max-width:820px;}
+.crumbs{display:flex;flex-wrap:wrap;gap:8px;font-size:.85rem;color:var(--steel);margin-bottom:28px;}
+.crumbs a{color:var(--paper-dim);text-decoration:none;}
+.crumbs a:hover{color:var(--signal);}
+.post-head{display:flex;flex-direction:column;gap:12px;margin-bottom:26px;}
+.post-head h1{font-size:clamp(1.9rem,4.4vw,3rem);font-weight:700;line-height:1.1;color:var(--paper);text-wrap:balance;margin:0;}
+.post-photo{margin:0 0 30px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--ink-2);}
+.post-photo img{display:block;width:100%;height:auto;max-height:620px;object-fit:cover;}
+.post-text{font-size:1.06rem;line-height:1.75;color:var(--paper-dim);max-width:68ch;}
+.post-text p{margin:0 0 18px;}
+.post-source{margin-top:26px;padding-top:18px;border-top:1px solid var(--line);color:var(--steel);font-size:.9rem;}
+.post-source a{color:var(--signal);}
+.post-cta-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+.post-more{padding-top:24px;}
+.post-more-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:22px;}
+.post-more-head h2{margin:0;}
+.post-more-all{color:var(--signal);text-decoration:none;font-weight:600;}
+@media (max-width:640px){
+  .page-hero{padding:52px 0 30px;}
+  .post{padding-top:28px;}
+  .post-cta-actions .btn{width:100%;justify-content:center;}
+}

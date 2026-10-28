@@ -313,6 +313,7 @@
     border:none;cursor:pointer;transition:width .25s ease,background .25s ease;
   }
   .news-dot.active{width:22px;background:var(--signal);}
+  .news-all{display:flex;justify-content:center;margin-top:24px;}
   .news-carousel.is-loading .news-arrow{opacity:.35;pointer-events:none;}
   @media (max-width:800px){
     .news-arrow{display:none;}
