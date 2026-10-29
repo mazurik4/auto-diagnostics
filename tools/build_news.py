@@ -24,6 +24,8 @@ import urllib.request
 from datetime import datetime
 from pathlib import Path
 
+from site_chrome import footer, header, replace_block
+
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES = ROOT / "tools" / "templates"
 API_URL = "https://backend-cmr4.onrender.com"
@@ -91,8 +93,8 @@ def render(name: str, **values) -> str:
 
 def page(ctx, *, title, description, canonical, body, og_image, jsonld, nav_active=""):
     """Загальний каркас сторінки: head + спільна шапка + вміст + спільний підвал."""
-    nav = render("header.html", site=ctx["site"], active_roboty=' class="active" aria-current="page"' if nav_active == "roboty" else "")
-    foot = render("footer.html", site=ctx["site"], year=str(datetime.now().year))
+    nav = header(ctx["site"], nav_active)
+    foot = footer(ctx["site"])
     return render(
         "layout.html",
         title=esc(title), description=esc(description), canonical=esc(canonical),
@@ -249,6 +251,20 @@ def write_links(posts, out_dir: Path):
     (out_dir / "links.json").write_text(json.dumps(links, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
 
+def update_home(posts, index: Path, ctx):
+    """3 найновіші роботи на головній (між мітками <!-- works:latest -->)."""
+    if not index.exists() or "<!-- works:latest -->" not in index.read_text(encoding="utf-8"):
+        return
+    cards = []
+    for p in posts[:3]:
+        q = dict(p, thumb_src=f"{SECTION}/{p['thumb_src']}")
+        cards.append(card(q, f"{SECTION}/"))
+    text = index.read_text(encoding="utf-8")
+    new = replace_block(text, "works:latest", "\n".join(cards))
+    if new != text:
+        index.write_text(new, encoding="utf-8")
+
+
 def update_sitemap(posts, sitemap: Path):
     """Залишає в sitemap.xml усі інші сторінки як є і заново дописує сторінки розділу."""
     text = sitemap.read_text(encoding="utf-8")
@@ -296,6 +312,7 @@ def main():
     build(posts, out, ctx)
     remove_stale(posts, out, ctx["archive_file"])
     write_links(posts, out)
+    update_home(posts, ROOT / "index.html", ctx)
     update_sitemap(posts, ROOT / "sitemap.xml")
     print(f"Готово: {len(posts)} робіт у {out}")
 

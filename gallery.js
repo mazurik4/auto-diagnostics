@@ -38,29 +38,7 @@
     return isNaN(d.getTime()) ? '' : d.toLocaleDateString('uk-UA', {day:'numeric', month:'long', year:'numeric'});
   }
 
-  // ---------- меню, прогрес-смуга, кнопка «нагору» ----------
-  const burger = $('#burgerBtn');
-  const navLinks = $('#navLinks');
-  burger.addEventListener('click', function(){
-    const open = burger.getAttribute('aria-expanded') === 'true';
-    burger.setAttribute('aria-expanded', String(!open));
-    navLinks.classList.toggle('open', !open);
-  });
-  navLinks.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){
-      burger.setAttribute('aria-expanded', 'false');
-      navLinks.classList.remove('open');
-    });
-  });
-  function onScroll(){
-    const top = window.scrollY;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    $('#scanbar').style.width = (max > 0 ? top / max * 100 : 0) + '%';
-    $('#fabTop').classList.toggle('show', top > 500);
-  }
-  document.addEventListener('scroll', onScroll, {passive:true});
-  onScroll();
-  $('#currentYear').textContent = new Date().getFullYear();
+  // меню, статус і кнопки «нагору»/Telegram тепер у спільному site.js (шапка «Острів»)
 
   // ---------- анонімна статистика (ті самі правила, що на головній) ----------
   let trackingOff = false;

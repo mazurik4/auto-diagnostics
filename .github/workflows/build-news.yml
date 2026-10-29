@@ -1,7 +1,8 @@
 name: Build «Наші роботи»
 
 # Раз на кілька годин збирає сторінки розділу «Наші роботи» з постів Google-профілю
-# (через бекенд) і, якщо щось змінилось, комітить їх — GitHub Pages сам викладе сайт.
+# (через бекенд), оновлює 3 останні роботи на головній і, якщо щось змінилось,
+# комітить — GitHub Pages сам викладе сайт.
 on:
   schedule:
     - cron: "17 */3 * * *"   # кожні 3 години (GitHub може запускати із затримкою)
@@ -19,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -30,7 +31,7 @@ jobs:
 
       - name: Commit changes
         run: |
-          git add roboty sitemap.xml
+          git add roboty sitemap.xml index.html
           if git diff --cached --quiet; then
             echo "Змін немає."
             exit 0

@@ -1,0 +1,115 @@
+/* Шапка «Острів» і навігація багатосторінкового сайту.
+   Комп'ютер: плаваюча капсула з «пігулкою» під пунктом меню; назва біля лого ховається при прокрутці.
+   Телефон (до 900px): верхня смужка з логотипом і статусом + нижня панель вкладок з кнопкою дзвінка.
+   Кольори, шрифти й кнопки — зі style.css. Розмітка — tools/templates/header.html і footer.html. */
+
+/* ---------- комп'ютер: капсула ---------- */
+.isle{position:fixed;top:14px;left:0;right:0;z-index:900;display:flex;justify-content:center;pointer-events:none;
+  padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));}
+.isle-cap{pointer-events:auto;display:flex;align-items:center;gap:6px;height:58px;padding:7px 7px 7px 10px;
+  background:rgba(30,32,36,.72);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);
+  border:1px solid var(--line-strong);border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.35);}
+.isle .brand{display:flex;align-items:center;gap:0;margin-right:6px;text-decoration:none;color:var(--paper);flex:none}
+.isle .brand img{width:38px;height:38px;object-fit:contain;transition:transform .6s cubic-bezier(.65,0,.35,1)}
+.isle .brand .t{display:grid;grid-template-columns:1fr;margin-left:9px;
+  transition:grid-template-columns .6s cubic-bezier(.65,0,.35,1),margin-left .6s cubic-bezier(.65,0,.35,1)}
+.isle .brand .t > span{min-width:0;overflow:hidden;white-space:nowrap;
+  transition:opacity .45s ease .28s,transform .6s cubic-bezier(.22,1,.36,1) .22s,filter .45s ease .28s}
+.isle .brand b{display:block;font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.92rem;line-height:1.1}
+.isle .brand small{display:block;font-size:.64rem;letter-spacing:.14em;color:var(--steel);text-transform:uppercase}
+.isle.compact .brand img{transform:scale(.9)}
+.isle.compact .brand .t{grid-template-columns:0fr;margin-left:0;transition-delay:.14s}
+.isle.compact .brand .t > span{opacity:0;transform:translateX(-12px);filter:blur(4px);transition-duration:.26s,.34s,.26s;transition-delay:0s}
+.isle nav{position:relative;display:flex}
+.isle nav a{position:relative;z-index:1;text-decoration:none;color:var(--paper-dim);font-size:.88rem;font-weight:500;
+  padding:9px 14px;border-radius:999px;white-space:nowrap;transition:color .2s}
+.isle nav a:hover,.isle nav a[aria-current="page"]{color:var(--paper)}
+.isle nav a:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.isle .pill{position:absolute;top:0;left:0;width:0;height:100%;border-radius:999px;background:rgba(255,255,255,.09);
+  transition:left .35s cubic-bezier(.3,1.3,.5,1),width .35s cubic-bezier(.3,1.3,.5,1),opacity .2s;pointer-events:none;opacity:0}
+.isle .pill.on{opacity:1}
+.isle .call{display:inline-flex;align-items:center;gap:8px;margin-left:6px;background:var(--signal);color:var(--signal-ink);
+  font-weight:700;font-size:.88rem;border-radius:999px;padding:11px 18px;text-decoration:none;white-space:nowrap;transition:transform .2s,box-shadow .2s}
+.isle .call:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(47,184,94,.28)}
+.isle .call svg{width:17px;height:17px}
+/* на вузьких ноутбуках назва біля лого схована одразу, щоб капсула вмістилась */
+@media (max-width:1120px){
+  .isle .brand .t{grid-template-columns:0fr;margin-left:0}
+  .isle .brand .t > span{opacity:0}
+}
+/* перший блок кожної сторінки відсувається з-під капсули */
+.page-first{padding-top:128px !important}
+
+/* ---------- телефон: верхня смужка + нижні вкладки ---------- */
+.topbar,.tabbar{display:none}
+@media (max-width:900px){
+  .isle{display:none}
+  .page-first{padding-top:36px !important}
+  body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+  .topbar{display:flex;position:sticky;top:0;z-index:900;height:56px;align-items:center;justify-content:space-between;
+    padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));
+    background:rgba(27,29,33,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .topbar .brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--paper)}
+  .topbar .brand img{width:34px;height:34px;object-fit:contain}
+  .topbar .brand b{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.9rem}
+  .topbar .st{display:flex;align-items:center;font-size:.75rem;color:var(--paper-dim)}
+  .tabbar{display:grid;position:fixed;left:0;right:0;bottom:0;z-index:900;grid-template-columns:repeat(5,1fr);align-items:end;
+    height:calc(74px + env(safe-area-inset-bottom,0px));
+    padding:0 max(6px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));
+    background:rgba(22,24,27,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+  .tabbar a{color:var(--steel);font:600 .66rem 'Inter',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;gap:4px;
+    padding:8px 0 0;text-decoration:none;position:relative;transition:color .2s}
+  .tabbar a svg{width:22px;height:22px}
+  .tabbar a[aria-current="page"]{color:var(--paper)}
+  .tabbar a[aria-current="page"]::before{content:"";position:absolute;top:0;width:22px;height:3px;border-radius:3px;background:var(--signal)}
+  .tabbar .mid{align-self:start}
+  .tabbar .mid .ring{width:56px;height:56px;border-radius:50%;background:var(--signal);color:var(--signal-ink);display:grid;place-items:center;margin-top:-22px;
+    box-shadow:0 0 0 6px rgba(22,24,27,.94);animation:tabPulse 2.6s ease-in-out infinite}
+  .tabbar .mid span{color:var(--signal)}
+  @keyframes tabPulse{0%,100%{box-shadow:0 0 0 6px rgba(22,24,27,.94),0 0 0 6px rgba(47,184,94,0)}50%{box-shadow:0 0 0 6px rgba(22,24,27,.94),0 0 0 14px rgba(47,184,94,.16)}}
+}
+
+/* статус у смужці: лише мигаюча точка, доки видно значок у першому екрані; потім текст «витікає» з точки */
+.st .dot{animation:stBlink 1.8s ease-in-out infinite}
+.st.show .dot{animation:stPop .55s cubic-bezier(.3,1.6,.5,1),stBlink 1.8s ease-in-out .55s infinite}
+.st .stt{display:grid;grid-template-columns:0fr;margin-left:0;transition:grid-template-columns .55s cubic-bezier(.65,0,.35,1),margin-left .55s cubic-bezier(.65,0,.35,1)}
+.st .stt > span{min-width:0;overflow:hidden;white-space:nowrap;opacity:0;clip-path:inset(0 100% 0 0);filter:blur(3px);
+  transition:opacity .25s ease,clip-path .35s ease,filter .25s ease}
+.st.show .stt{grid-template-columns:1fr;margin-left:8px}
+.st.show .stt > span{opacity:1;clip-path:inset(0 0 0 0);filter:blur(0);transition:opacity .4s ease .15s,clip-path .6s cubic-bezier(.22,1,.36,1) .1s,filter .4s ease .15s}
+@keyframes stBlink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes stPop{0%{transform:scale(1)}45%{transform:scale(1.7)}100%{transform:scale(1)}}
+
+/* ---------- підвал ---------- */
+.foot2{border-top:1px solid var(--line);padding:36px 0 40px;color:var(--steel);font-size:.85rem}
+.foot2 .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px 32px}
+.foot2 nav{display:flex;flex-wrap:wrap;gap:6px 18px}
+.foot2 a{color:var(--paper-dim);text-decoration:none}
+.foot2 a:hover{color:var(--signal)}
+
+@media (prefers-reduced-motion:reduce){
+  .isle *, .st *, .tabbar *{transition:none !important;animation:none !important}
+}
+
+/* ---------- кружечки справа внизу: Telegram і «нагору» ---------- */
+.fabs{position:fixed;z-index:850;display:flex;flex-direction:column;align-items:center;gap:10px;
+  right:max(20px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.fabs a{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;text-decoration:none;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);transition:transform .2s ease,box-shadow .2s ease}
+.fabs a:hover{transform:translateY(-3px)}
+.fabs a:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.fabs svg{width:22px;height:22px}
+.fab-tg2{background:#29a9eb;color:#fff}
+.fab-up{background:var(--ink-2);color:var(--paper-dim);border:1px solid var(--line-strong);
+  opacity:0;transform:translateY(10px) scale(.85);pointer-events:none;
+  transition:opacity .3s ease,transform .35s cubic-bezier(.3,1.4,.5,1),box-shadow .2s ease}
+.fab-up.show{opacity:1;transform:none;pointer-events:auto}
+.fab-up.show:hover{transform:translateY(-3px)}
+/* при наведенні стрілка «нагору» підсвічується зеленим */
+.fab-up:hover,.fab-up:focus-visible{background:var(--signal);border-color:var(--signal);color:var(--signal-ink);box-shadow:0 8px 22px rgba(47,184,94,.35)}
+.fab-up{transition:opacity .3s ease,transform .35s cubic-bezier(.3,1.4,.5,1),box-shadow .2s ease,background .2s ease,border-color .2s ease,color .2s ease}
+@media (max-width:900px){
+  /* на телефоні — над нижньою панеллю, трохи менші */
+  .fabs{right:max(14px,env(safe-area-inset-right,0px));bottom:calc(88px + env(safe-area-inset-bottom,0px));gap:8px}
+  .fabs a{width:46px;height:46px}
+}

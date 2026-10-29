@@ -50,3 +50,87 @@
   .post{padding-top:28px;}
   .post-cta-actions .btn{width:100%;justify-content:center;}
 }
+
+/* ==================== Блоки сторінок Головна, Послуги, Про нас, Контакти ====================
+   Спокійніше за старий лендінг: менше рамок і «бирок», більше повітря. */
+
+.blk{padding:84px 0}
+.blk-tight{padding:56px 0}
+.blk-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.blk-head h2{margin:0}
+.blk-head p{margin:8px 0 0;color:var(--paper-dim);max-width:560px}
+.more{color:var(--signal);text-decoration:none;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
+.more:hover{gap:10px}
+@media (max-width:640px){ .blk{padding:56px 0} .blk-tight{padding:40px 0} }
+
+/* ---------- Головна: «Чим допоможемо» ---------- */
+.help{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:860px){ .help{grid-template-columns:1fr} }
+.help a{display:flex;flex-direction:column;gap:10px;padding:24px;border-radius:16px;background:var(--surface);border:1px solid var(--line);
+  text-decoration:none;color:inherit;transition:transform .25s ease,border-color .25s ease,background .25s ease}
+.help a:hover{transform:translateY(-4px);border-color:var(--line-strong);background:var(--surface-2)}
+.help svg{width:30px;height:30px;color:var(--signal)}
+.help b{font-family:'Oswald',sans-serif;font-size:1.3rem;font-weight:600;color:var(--paper)}
+.help span{color:var(--paper-dim);font-size:.94rem;line-height:1.55}
+.help em{margin-top:auto;padding-top:6px;font-style:normal;color:var(--signal);font-weight:600;font-size:.88rem}
+
+/* ---------- Головна: «Чому нам довіряють» ---------- */
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 32px;margin:0;padding:0;list-style:none}
+@media (max-width:860px){ .trust{grid-template-columns:1fr 1fr} }
+@media (max-width:520px){ .trust{grid-template-columns:1fr} }
+.trust li{display:flex;gap:12px;align-items:flex-start;color:var(--paper-dim);font-size:.98rem}
+.trust svg{width:22px;height:22px;flex:none;color:var(--signal);margin-top:1px}
+
+/* ---------- Головна: «Як нас знайти» ---------- */
+.visit{display:grid;grid-template-columns:1fr 1.2fr;gap:28px;align-items:stretch}
+@media (max-width:860px){ .visit{grid-template-columns:1fr} }
+.visit-info{display:flex;flex-direction:column;gap:18px}
+.visit-info dl{margin:0;display:grid;gap:16px}
+.visit-info dt{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin-bottom:2px}
+.visit-info dd{margin:0;color:var(--paper);font-size:1.02rem}
+.visit-info dd a{color:var(--paper);text-decoration:none}
+.visit-info dd a:hover{color:var(--signal)}
+.visit-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+.visit-map{border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--surface);min-height:300px}
+.visit-map iframe{display:block;width:100%;height:100%;min-height:300px;border:0;filter:grayscale(.3) contrast(1.05)}
+
+/* ---------- Послуги ---------- */
+.sym-wrap{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:28px}
+@media (max-width:640px){ .sym-wrap{padding:20px} }
+.sym-out{margin-top:20px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;color:var(--paper-dim);min-height:24px}
+.sym-out b{color:var(--paper)}
+.svc2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.svc2 article{position:relative;padding:22px 22px 24px;border-radius:16px;background:var(--surface);border:1px solid var(--line);
+  transition:border-color .3s ease,background .3s ease,opacity .3s ease,transform .3s ease}
+.svc2 .n{font-family:'Space Mono',monospace;font-size:.75rem;color:var(--signal)}
+.svc2 h3{font-family:'Oswald',sans-serif;font-weight:600;font-size:1.15rem;color:var(--paper);margin:6px 0 8px;line-height:1.25}
+.svc2 p{margin:0;color:var(--paper-dim);font-size:.94rem;line-height:1.55}
+.svc2 .tool{display:inline-block;margin-top:14px;font-family:'Space Mono',monospace;font-size:.7rem;color:var(--steel);
+  border:1px solid var(--line);border-radius:5px;padding:4px 8px}
+/* обрано симптом: потрібні перевірки підсвічені, решта притихли */
+.svc2.filtered article{opacity:.38}
+.svc2.filtered article.hit{opacity:1;border-color:var(--signal);background:linear-gradient(var(--surface),var(--surface)) padding-box;transform:translateY(-2px)}
+.svc2 article.hit .n::after{content:" · потрібна перевірка";color:var(--signal)}
+
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:18px;counter-reset:s}
+@media (max-width:980px){ .steps{grid-template-columns:1fr 1fr} }
+@media (max-width:560px){ .steps{grid-template-columns:1fr} }
+.steps li{counter-increment:s;padding-top:18px;border-top:2px solid var(--line-strong);position:relative}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:'Space Mono',monospace;font-size:.75rem;color:var(--signal);display:block;margin-bottom:8px}
+.steps li:first-child{border-top-color:var(--signal)}
+.steps b{display:block;color:var(--paper);font-size:1rem;margin-bottom:6px}
+.steps span{color:var(--steel);font-size:.9rem;line-height:1.55}
+
+.cta2{display:flex;justify-content:space-between;align-items:center;gap:20px 32px;flex-wrap:wrap;padding:32px;border-radius:18px;
+  background:radial-gradient(ellipse 600px 260px at 100% 0%, rgba(244,180,0,.10), transparent 60%), var(--ink-2);border:1px solid var(--line)}
+.cta2 h2{margin:0 0 6px}
+.cta2 p{margin:0;color:var(--paper-dim)}
+.cta2 .acts{display:flex;flex-wrap:wrap;gap:12px}
+@media (max-width:640px){ .cta2{padding:22px} .cta2 .acts .btn{width:100%;justify-content:center} }
+
+.page-hero2{background:radial-gradient(ellipse 900px 420px at 85% -25%, rgba(244,180,0,.12), transparent 60%), var(--ink);border-bottom:1px solid var(--line);padding-bottom:48px}
+.page-hero2 h1{font-size:clamp(2.3rem,5.4vw,3.8rem);font-weight:700;color:var(--paper);line-height:1.05;margin:0 0 16px}
+.page-hero2 .lede{margin-bottom:24px}
+.jump{display:flex;flex-wrap:wrap;gap:10px}
+.jump a{text-decoration:none;color:var(--paper-dim);border:1px solid var(--line-strong);border-radius:999px;padding:8px 16px;font-size:.88rem;transition:border-color .2s,color .2s}
+.jump a:hover{border-color:var(--signal);color:var(--signal)}

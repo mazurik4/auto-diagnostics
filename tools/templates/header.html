@@ -1,21 +1,18 @@
-<header>
-  <nav class="nav">
-    <a href="{{site}}index.html" class="brand">
-      <img class="brand-mark" src="{{site}}img/halfautoelectriklogo.png" alt="Логотип Майстерні">
-      <span class="brand-text">Автодіагностика<span>Майстерня · Київ</span></span>
-    </a>
-    <button class="burger" aria-label="Меню" aria-expanded="false" id="burgerBtn">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="{{site}}index.html#about">Про нас</a></li>
-      <li><a href="{{site}}index.html#services">Послуги</a></li>
-      <li><a href="{{site}}index.html#process">Процес</a></li>
-      <li><a href="{{site}}index.html#news">Новини</a></li>
-      <li><a href="{{site}}roboty/"{{active_roboty}}>Наші роботи</a></li>
-      <li><a href="{{site}}gallery.html">Галерея</a></li>
-      <li><a href="{{site}}index.html#contacts">Контакти</a></li>
-      <li><a class="nav-cta" href="tel:+380954851166"><svg class="tel-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Подзвонити</a></li>
-    </ul>
-  </nav>
-</header>
+<div class="isle" role="banner">
+  <div class="isle-cap">
+    <a class="brand" href="{{site}}index.html"><img src="{{site}}img/halfautoelectriklogo.png" alt="Логотип майстерні" width="38" height="38"><span class="t"><span><b>Автодіагностика</b><small>Майстерня · Київ</small></span></span></a>
+    <nav aria-label="Розділи сайту"><a href="{{site}}poslugy.html"{{cur_poslugy}}>Послуги</a><a href="{{site}}roboty/"{{cur_roboty}}>Наші роботи</a><a href="{{site}}gallery.html"{{cur_gallery}}>Галерея</a><a href="{{site}}pro-nas.html"{{cur_pro_nas}}>Про нас</a><a href="{{site}}kontakty.html"{{cur_kontakty}}>Контакти</a><span class="pill"></span></nav>
+    <a class="call" href="tel:+380954851166"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Подзвонити</a>
+  </div>
+</div>
+<div class="topbar">
+  <a class="brand" href="{{site}}index.html"><img src="{{site}}img/halfautoelectriklogo.png" alt="Логотип майстерні" width="34" height="34"><b>Автодіагностика</b></a>
+  <span class="st"><span class="dot" data-st></span><span class="stt"><span data-st-short>Зачинено</span></span></span>
+</div>
+<nav class="tabbar" aria-label="Розділи сайту">
+  <a href="{{site}}poslugy.html"{{cur_poslugy}}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0 5 5L22 14l-8 8-2.3-2.3a4 4 0 0 0-5-5L2 10l8-8 2.3 2.3a4 4 0 0 0 2.4 2z"/></svg><span>Послуги</span></a>
+  <a href="{{site}}roboty/"{{cur_roboty}}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg><span>Роботи</span></a>
+  <a class="mid" href="tel:+380954851166" aria-label="Подзвонити"><span class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><span>Дзвінок</span></a>
+  <a href="{{site}}gallery.html"{{cur_gallery}}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg><span>Галерея</span></a>
+  <a href="{{site}}kontakty.html"{{cur_kontakty}}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Контакти</span></a>
+</nav>
