@@ -10,7 +10,8 @@
   background:rgba(30,32,36,.72);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);
   border:1px solid var(--line-strong);border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.35);}
 .isle .brand{display:flex;align-items:center;gap:0;margin-right:6px;text-decoration:none;color:var(--paper);flex:none}
-.isle .brand img{width:38px;height:38px;object-fit:contain;transition:transform .6s cubic-bezier(.65,0,.35,1)}
+/* логотип вытягнутий (3:2) — задаємо саме такі пропорції, а не квадрат, інакше він виходить дрібним */
+.isle .brand img{width:57px;height:38px;object-fit:cover;border-radius:6px;transition:transform .6s cubic-bezier(.65,0,.35,1)}
 .isle .brand .t{display:grid;grid-template-columns:1fr;margin-left:9px;
   transition:grid-template-columns .6s cubic-bezier(.65,0,.35,1),margin-left .6s cubic-bezier(.65,0,.35,1)}
 .isle .brand .t > span{min-width:0;overflow:hidden;white-space:nowrap;
@@ -46,11 +47,11 @@
   .isle{display:none}
   .page-first{padding-top:36px !important}
   body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
-  .topbar{display:flex;position:sticky;top:0;z-index:900;height:56px;align-items:center;justify-content:space-between;
+  .topbar{display:flex;position:sticky;top:0;z-index:900;height:64px;align-items:center;justify-content:space-between;
     padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));
     background:rgba(27,29,33,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-  .topbar .brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--paper)}
-  .topbar .brand img{width:34px;height:34px;object-fit:contain}
+  .topbar .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--paper)}
+  .topbar .brand img{width:69px;height:46px;object-fit:cover;border-radius:7px}
   .topbar .brand b{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.9rem}
   .topbar .st{display:flex;align-items:center;font-size:.75rem;color:var(--paper-dim)}
   .tabbar{display:grid;position:fixed;left:0;right:0;bottom:0;z-index:900;grid-template-columns:repeat(5,1fr);align-items:end;
