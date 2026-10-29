@@ -130,7 +130,7 @@
         </div>
       </div>
       <div class="scope">
-        <div class="scope-head"><span class="tag">Канал 1 · Сигнал датчика</span><span class="tag" id="scopeTime">00:00</span></div>
+        <div class="scope-head"><span class="tag">Канал 1 · Сигнал датчика</span><span class="tag" id="scopeTime">00:00:00</span></div>
         <div class="scope-screen"><div class="grid-lines"></div><svg viewBox="0 0 400 170" preserveAspectRatio="none"><path id="scopePath" class="scan-line" d="M0,85 L400,85"></path></svg></div>
         <div class="scope-foot"><span class="chip">OBD-II</span><span class="chip">CAN-BUS</span><span class="chip">ECU LIVE DATA</span></div>
       </div>
@@ -247,16 +247,21 @@
 <script>
 (function(){
   // осцилограф у першому екрані — та сама «жива» синусоїда, що й зараз
-  var p = document.getElementById('scopePath'), tm = document.getElementById('scopeTime'), t = 0, start = Date.now();
+  var p = document.getElementById('scopePath'), tm = document.getElementById('scopeTime'), t = 0;
   var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function draw(){
     t += 0.045; var d = 'M0,85 ';
     for(var x = 0; x <= 400; x += 4){ var y = 85 + Math.sin(x*0.045 + t)*22 + Math.sin(x*0.11 + t*1.7)*9 + Math.sin(x*0.013 + t*0.5)*10; d += 'L' + x + ',' + y.toFixed(1) + ' '; }
     p.setAttribute('d', d);
-    var s = Math.floor((Date.now() - start) / 1000); tm.textContent = String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
     if(!still) requestAnimationFrame(draw);
   }
   draw();
+  // годинник у куті осцилографа показує поточний час, як на старому сайті
+  function tick(){
+    var n = new Date();
+    tm.textContent = String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0') + ':' + String(n.getSeconds()).padStart(2,'0');
+  }
+  tick(); setInterval(tick, 1000);
 })();
 </script>
 </body>
