@@ -11,16 +11,16 @@
       var day = {Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}[pick('weekday')];
       var mins = (+pick('hour') % 24) * 60 + (+pick('minute'));
       if((day >= 1 && day <= 5 && mins >= 600 && mins < 1020) || (day === 6 && mins >= 600 && mins < 840))
-        return {open:true, html:'Майстерня зараз працює', short:'Майстерня зараз<br>працює'};
+        return {open:true, html:'Майстерня зараз працює', short:'Зараз працює'};
     }catch(e){}
-    // тексти як на старому сайті; у смужці на телефоні — у два рядки, бо поруч логотип
-    return {open:false, html:'Поза графіком — <a href="/kontakty.html#zayavka" class="cta-inline">залиште заявку</a>', short:'Майстерня зараз<br>не працює'};
+    // тексти як на старому сайті; у смужці на телефоні — коротко, бо поруч логотип
+    return {open:false, html:'Поза графіком — <a href="/kontakty.html#zayavka" class="cta-inline">залиште заявку</a>', short:'Поза графіком'};
   }
   function showStatus(){
     var st = status();
     document.querySelectorAll('.dot[data-st]').forEach(function(d){ d.classList.toggle('off', !st.open); });
     document.querySelectorAll('[data-st-text]').forEach(function(n){ n.innerHTML = st.html; });
-    document.querySelectorAll('[data-st-short]').forEach(function(n){ n.innerHTML = st.short; });
+    document.querySelectorAll('[data-st-short]').forEach(function(n){ n.textContent = st.short; });
   }
   showStatus();
   setInterval(showStatus, 60000);
