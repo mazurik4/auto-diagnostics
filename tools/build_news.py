@@ -70,6 +70,34 @@ def cut_words(text: str, limit: int) -> str:
     return text[:limit].rsplit(" ", 1)[0].rstrip(",.;:—-– ") + "…"
 
 
+# Марки авто: у «хлібних крихтах» показуємо марку й модель замість довгого заголовка.
+BRANDS = ["Acura", "Alfa Romeo", "Audi", "BMW", "BYD", "Cadillac", "Chery", "Chevrolet", "Chrysler",
+          "Citroen", "Citroën", "Dacia", "Daewoo", "Daihatsu", "Dodge", "Fiat", "Ford", "Geely", "Honda",
+          "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Lada", "ВАЗ", "Land Rover", "Range Rover",
+          "Lexus", "Mazda", "Mercedes-Benz", "Mercedes", "Mini", "Mitsubishi", "Nissan", "Opel",
+          "Peugeot", "Porsche", "Renault", "Seat", "Skoda", "Škoda", "Smart", "SsangYong", "Subaru",
+          "Suzuki", "Tesla", "Toyota", "Volkswagen", "VW", "Volvo", "ЗАЗ"]
+BRAND_RE = re.compile(r"(?<![\w-])(" + "|".join(re.escape(b) for b in sorted(BRANDS, key=len, reverse=True)) + r")(?![\w-])",
+                      re.IGNORECASE)
+
+
+def crumb_title(title: str) -> str:
+    """Коротка назва для крихт: «Peugeot 301 1.6л 2011» або перші слова заголовка."""
+    m = BRAND_RE.search(title)
+    if m:
+        words = [m.group(1)]
+        for w in title[m.end():].split()[:4]:
+            # зупиняємось на тире/розділових знаках і на звичайних словах («року», «відновили»)
+            if not re.search(r"[\w]", w) or re.fullmatch(r"[а-яіїєґ'’ʼ]+[,.;:…]*", w):
+                break
+            clean = w.rstrip(",.;:…")
+            words.append(clean)
+            if clean != w:
+                break
+        return " ".join(words)
+    return cut_words(title, 26)
+
+
 def split_post(text: str):
     """Заголовок — перший рядок поста, якщо він короткий; інакше перше речення."""
     text = text.strip()
@@ -167,13 +195,13 @@ def build(posts, out_dir: Path, ctx):
                 "itemListElement": [
                     {"@type": "ListItem", "position": 1, "name": "Головна", "item": SITE_URL + "/"},
                     {"@type": "ListItem", "position": 2, "name": "Наші роботи", "item": f"{SITE_URL}/{SECTION}/"},
-                    {"@type": "ListItem", "position": 3, "name": p["title"], "item": url},
+                    {"@type": "ListItem", "position": 3, "name": crumb_title(p["title"]), "item": url},
                 ],
             },
         ], ensure_ascii=False, indent=1)
         body = render(
             "post.html",
-            site=ctx["site"], archive=ctx["archive_href"], title=esc(p["title"]),
+            site=ctx["site"], archive=ctx["archive_href"], title=esc(p["title"]), crumb=esc(crumb_title(p["title"])),
             date_iso=p["created_at"][:10], date=esc(p["date"]), img=esc(p["img_src"]), alt=esc(p["alt"]),
             img_w=str(p.get("img_w") or 1200), img_h=str(p.get("img_h") or 900),
             text=paragraphs(p["body"]), gbp=esc(p.get("url") or GBP_URL),
