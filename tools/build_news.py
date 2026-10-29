@@ -168,6 +168,27 @@ def prepare(posts, ctx):
         p["alt"] = cut_words(p["title"], 110)
         p["img_src"] = ctx["img_src"](p)
         p["thumb_src"] = ctx["thumb_src"](p)
+        # решта фото поста: <slug>-2.jpg, <slug>-3.jpg… (перше — <slug>.jpg)
+        p["extra"] = [{"name": f"{slug}-{n}", "url": u} for n, u in enumerate(p.get("photos") or [], start=2)]
+
+
+def gallery(p) -> str:
+    """Головне фото + ряд мініатюр усіх фото поста; post.js відкриває їх на весь екран."""
+    shots = [{"full": p["img_src"], "thumb": p["thumb_src"]}] + [
+        {"full": f"img/{e['name']}.jpg", "thumb": f"img/thumb/{e['name']}.jpg"} for e in p["extra"]]
+    total = len(shots)
+    count = (f'<span class="post-photo-count" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" '
+             f'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/>'
+             f'<circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>{total} фото</span>') if total > 1 else ""
+    out = [f'      <figure class="post-photo">\n        <a href="{esc(shots[0]["full"])}" data-photo="0" aria-label="Відкрити фото на весь екран">'
+           f'<img src="{esc(p["img_src"])}" alt="{esc(p["alt"])}" width="{p.get("img_w") or 1200}" height="{p.get("img_h") or 900}"></a>{count}\n      </figure>']
+    if total > 1:
+        out.append('      <div class="post-thumbs">')
+        for i, s in enumerate(shots):
+            out.append(f'        <a href="{esc(s["full"])}" data-photo="{i}" aria-label="Фото {i + 1} з {total}">'
+                       f'<img src="{esc(s["thumb"])}" alt="{esc(cut_words(p["title"], 80))}, фото {i + 1}" loading="lazy"></a>')
+        out.append('      </div>')
+    return "\n".join(out)
 
 
 def build(posts, out_dir: Path, ctx):
@@ -184,7 +205,7 @@ def build(posts, out_dir: Path, ctx):
             {
                 "@context": "https://schema.org", "@type": "BlogPosting",
                 "headline": p["title"][:110], "description": cut_words(p["body"], 160),
-                "datePublished": p["created_at"][:19], "image": img_abs, "url": url,
+                "datePublished": p["created_at"][:19], "image": [img_abs] + [f"{SITE_URL}/{SECTION}/img/{e['name']}.jpg" for e in p["extra"]], "url": url,
                 "inLanguage": "uk",
                 "author": {"@type": "Organization", "name": "Автоелектрик Київ", "url": SITE_URL + "/"},
                 "publisher": {"@type": "AutoRepair", "name": "Автоелектрик Київ", "url": SITE_URL + "/",
@@ -202,8 +223,7 @@ def build(posts, out_dir: Path, ctx):
         body = render(
             "post.html",
             site=ctx["site"], archive=ctx["archive_href"], title=esc(p["title"]), crumb=esc(crumb_title(p["title"])),
-            date_iso=p["created_at"][:10], date=esc(p["date"]), img=esc(p["img_src"]), alt=esc(p["alt"]),
-            img_w=str(p.get("img_w") or 1200), img_h=str(p.get("img_h") or 900),
+            date_iso=p["created_at"][:10], date=esc(p["date"]), gallery=gallery(p),
             text=paragraphs(p["body"]), gbp=esc(p.get("url") or GBP_URL),
             others="\n".join(card(q, "") for q in others),
         )
@@ -251,20 +271,21 @@ def save_images(posts, out_dir: Path, fetcher):
     img_dir = out_dir / "img"
     (img_dir / "thumb").mkdir(parents=True, exist_ok=True)
     for p in posts:
-        # повне фото — для сторінки роботи, зменшена копія 640 px — для карток
-        for target, data in (
-            (img_dir / f"{p['slug']}.jpg", fetcher(p, "")),
-            (img_dir / "thumb" / f"{p['slug']}.jpg", fetcher(p, "640")),
-        ):
-            if not target.exists() or target.read_bytes() != data:
-                target.write_bytes(data)
+        # повне фото — для сторінки роботи, зменшена копія 640 px — для карток і мініатюр
+        for name, url in [(p["slug"], p["image_url"])] + [(e["name"], e["url"]) for e in p["extra"]]:
+            for target, data in (
+                (img_dir / f"{name}.jpg", fetcher(url, "")),
+                (img_dir / "thumb" / f"{name}.jpg", fetcher(url, "640")),
+            ):
+                if not target.exists() or target.read_bytes() != data:
+                    target.write_bytes(data)
         p["img_w"], p["img_h"] = jpeg_size((img_dir / f"{p['slug']}.jpg").read_bytes())
 
 
 def remove_stale(posts, out_dir: Path, archive_file: str):
     """Пост приховали в адмінці або змінили заголовок — стара сторінка й фото зникають."""
     pages = {p["file"] for p in posts} | {archive_file}
-    images = {f"{p['slug']}.jpg" for p in posts}
+    images = {f"{n}.jpg" for p in posts for n in [p["slug"]] + [e["name"] for e in p["extra"]]}
     for f in out_dir.glob("*.html"):
         if f.name not in pages:
             f.unlink()
@@ -333,8 +354,8 @@ def main():
         "extra_head": (TEMPLATES / "analytics.html").read_text(encoding="utf-8"),
     }
     prepare(posts, ctx)
-    def photo(p, width):
-        url = API_URL + p["image_url"]
+    def photo(path, width):
+        url = API_URL + path
         return fetch(url + ("&" if "?" in url else "?") + f"w={width}" if width else url)
     save_images(posts, out, photo)
     build(posts, out, ctx)
