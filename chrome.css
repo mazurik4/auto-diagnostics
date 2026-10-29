@@ -54,6 +54,7 @@
   .topbar .brand img{width:69px;height:46px;object-fit:cover;border-radius:7px}
   .topbar .brand b{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.9rem}
   .topbar .st{display:flex;align-items:center;font-size:.75rem;color:var(--paper-dim)}
+  .topbar .st .stt > span{line-height:1.25}
   /* вузькі телефони: щоб назва не впиралась у статус */
   @media (max-width:370px){ .topbar .brand b{font-size:.8rem} .topbar .brand{gap:8px} }
   @media (max-width:340px){ .topbar .brand b{display:none} }
