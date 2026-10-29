@@ -37,9 +37,12 @@
   transition:transform .55s ease,opacity .55s ease,border-color .3s ease;
 }
 .gal-slide.is-active{transform:none;opacity:1;border-color:var(--line-strong);}
-.gal-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.gal-slide img{position:relative;width:100%;height:100%;object-fit:contain;display:block;}
+/* розмита копія фото за ним: заповнює поля, коли фото квадратне чи вертикальне */
+.gal-slide img.gal-slide-bg{position:absolute;inset:0;object-fit:cover;transform:scale(1.15);filter:blur(26px) brightness(.5) saturate(1.15);}
+.gal-slide-bg:not([src]){visibility:hidden;}
 .gal-slide-cap{
-  position:absolute;left:0;right:0;bottom:0;padding:48px 22px 18px;
+  position:absolute;z-index:1;left:0;right:0;bottom:0;padding:48px 22px 18px;
   display:flex;align-items:center;justify-content:space-between;gap:12px;pointer-events:none;
   background:linear-gradient(to top,rgba(10,11,13,.78),rgba(10,11,13,0));
 }

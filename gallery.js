@@ -379,7 +379,13 @@
       img.alt = catTitle(item.category) + ' — фото з майстерні';
       img.decoding = 'async';
       if(i > 1) img.loading = 'lazy';
+      // фото показуємо цілим; поля навколо заповнює та сама картинка, розмита й затемнена
+      const bg = el('img', 'gal-slide-bg');
+      bg.alt = '';
+      bg.setAttribute('aria-hidden', 'true');
+      img.addEventListener('load', function(){ bg.src = img.currentSrc || img.src; });
       loadImg(img, imgUrl(item.image_url));
+      s.appendChild(bg);
       s.appendChild(img);
       const cap = el('div', 'gal-slide-cap');
       cap.appendChild(el('span', 'gal-tag', catTitle(item.category)));
