@@ -54,6 +54,9 @@
   .topbar .brand img{width:69px;height:46px;object-fit:cover;border-radius:7px}
   .topbar .brand b{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.9rem}
   .topbar .st{display:flex;align-items:center;font-size:.75rem;color:var(--paper-dim)}
+  /* вузькі телефони: щоб назва не впиралась у статус */
+  @media (max-width:370px){ .topbar .brand b{font-size:.8rem} .topbar .brand{gap:8px} }
+  @media (max-width:340px){ .topbar .brand b{display:none} }
   .tabbar{display:grid;position:fixed;left:0;right:0;bottom:0;z-index:900;grid-template-columns:repeat(5,1fr);align-items:end;
     height:calc(74px + env(safe-area-inset-bottom,0px));
     padding:0 max(6px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));
