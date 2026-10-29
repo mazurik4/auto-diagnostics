@@ -9,16 +9,21 @@
       var parts = new Intl.DateTimeFormat('en-GB', {timeZone:'Europe/Kyiv', weekday:'short', hour:'2-digit', minute:'2-digit', hour12:false}).formatToParts(new Date());
       var pick = function(t){ return (parts.find(function(p){ return p.type === t; }) || {}).value; };
       var day = {Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}[pick('weekday')];
-      var mins = (+pick('hour')) * 60 + (+pick('minute'));
-      if(day >= 1 && day <= 5 && mins >= 600 && mins < 1020) return {open:true, text:'Відкрито · працюємо до 17:00', short:'Відкрито до 17:00'};
-      if(day === 6 && mins >= 600 && mins < 840) return {open:true, text:'Відкрито · працюємо до 14:00', short:'Відкрито до 14:00'};
+      var mins = (+pick('hour') % 24) * 60 + (+pick('minute'));
+      if((day >= 1 && day <= 5 && mins >= 600 && mins < 1020) || (day === 6 && mins >= 600 && mins < 840))
+        return {open:true, html:'Майстерня зараз працює', short:'Зараз працює'};
     }catch(e){}
-    return {open:false, text:'Зачинено · відкриємо о 10:00', short:'Зачинено'};
+    // тексти як на старому сайті; у смужці на телефоні — коротко, бо поруч логотип
+    return {open:false, html:'Поза графіком — <a href="/kontakty.html#zayavka" class="cta-inline">залиште заявку</a>', short:'Поза графіком'};
   }
-  var st = status();
-  document.querySelectorAll('.dot[data-st]').forEach(function(d){ d.classList.toggle('off', !st.open); });
-  document.querySelectorAll('[data-st-text]').forEach(function(n){ n.textContent = st.text; });
-  document.querySelectorAll('[data-st-short]').forEach(function(n){ n.textContent = st.short; });
+  function showStatus(){
+    var st = status();
+    document.querySelectorAll('.dot[data-st]').forEach(function(d){ d.classList.toggle('off', !st.open); });
+    document.querySelectorAll('[data-st-text]').forEach(function(n){ n.innerHTML = st.html; });
+    document.querySelectorAll('[data-st-short]').forEach(function(n){ n.textContent = st.short; });
+  }
+  showStatus();
+  setInterval(showStatus, 60000);
 
   // ---------- капсула: «пігулка» під пунктом меню ----------
   var isle = document.querySelector('.isle');
