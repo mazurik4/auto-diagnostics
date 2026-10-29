@@ -169,3 +169,14 @@
 .jump{display:flex;flex-wrap:wrap;gap:10px}
 .jump a{text-decoration:none;color:var(--paper-dim);border:1px solid var(--line-strong);border-radius:999px;padding:8px 16px;font-size:.88rem;transition:border-color .2s,color .2s}
 .jump a:hover{border-color:var(--signal);color:var(--signal)}
+
+/* ---------- Про нас ---------- */
+.about2{display:grid;grid-template-columns:.8fr 1.2fr;gap:36px;align-items:start}
+@media (max-width:860px){ .about2{grid-template-columns:1fr;gap:22px} }
+/* «Чим ми вимірюємо»: картки приладів */
+.tools2{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:860px){ .tools2{grid-template-columns:1fr 1fr} }
+@media (max-width:520px){ .tools2{grid-template-columns:1fr} }
+.tool2{padding:20px 22px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.tool2 b{display:block;font-family:'Oswald',sans-serif;font-weight:600;font-size:1.12rem;color:var(--paper);margin-bottom:6px}
+.tool2 span{color:var(--paper-dim);font-size:.93rem;line-height:1.55}
