@@ -180,7 +180,7 @@ def gallery(p) -> str:
     count = (f'<span class="post-photo-count" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" '
              f'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/>'
              f'<circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>{total} фото</span>') if total > 1 else ""
-    out = [f'      <figure class="post-photo">\n        <a href="{esc(shots[0]["full"])}" data-photo="0" aria-label="Відкрити фото на весь екран">'
+    out = [f'      <figure class="post-photo{" multi" if total > 1 else ""}">\n        <a href="{esc(shots[0]["full"])}" data-photo="0" aria-label="Відкрити фото на весь екран">'
            f'<img src="{esc(p["img_src"])}" alt="{esc(p["alt"])}" width="{p.get("img_w") or 1200}" height="{p.get("img_h") or 900}"></a>{count}\n      </figure>']
     if total > 1:
         out.append('      <div class="post-thumbs">')
