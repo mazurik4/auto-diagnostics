@@ -2,6 +2,7 @@
 // й анонімна статистика (ті самі події, що раніше були в script.js головної).
 (function(){
   'use strict';
+  var BASE = (document.currentScript && document.currentScript.src || '').replace(/site\.js.*$/, '');
 
   // ---------- відкрито чи ні — за київським часом ----------
   function status(){
@@ -116,6 +117,91 @@
   try { isNewSession = !sessionStorage.getItem('sv'); sessionStorage.setItem('sv', '1'); } catch(e){}
   track('view', location.pathname, { ref: isNewSession ? referrerSource() : '', new_session: isNewSession });
 
+  // ---------- «Подзвонити» на комп'ютері ----------
+  // З комп'ютера дзвонити не можна, тому на пристроях з мишею посилання tel: відкриває вікно:
+  // номер, QR-код (набрати з телефона), форма «Передзвонимо самі» і Telegram. Телефони й планшети — як раніше.
+  var PHONE_SHOW = '+38 (095) 485-11-66';
+  var desktopPointer = window.matchMedia ? window.matchMedia('(hover: hover) and (pointer: fine)') : {matches:false};
+  var cbx = null, cbxOpener = null;
+
+  function buildCallBox(){
+    cbx = document.createElement('div');
+    cbx.className = 'cbx';
+    cbx.setAttribute('role', 'dialog');
+    cbx.setAttribute('aria-modal', 'true');
+    cbx.setAttribute('aria-labelledby', 'cbxTitle');
+    cbx.innerHTML =
+      '<div class="cbx-card">' +
+        '<button type="button" class="cbx-close" aria-label="Закрити"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
+        '<h2 id="cbxTitle">Зателефонуйте нам</h2>' +
+        '<p class="cbx-num">' + PHONE_SHOW + '</p>' +
+        '<p class="cbx-hours">Пн–Пт 10:00–17:00 · Сб 10:00–14:00</p>' +
+        '<div class="cbx-qr"><img src="' + BASE + 'img/qr-call.svg" width="116" height="116" alt="QR-код: відкриє набір номера на телефоні">' +
+          '<span>Наведіть камеру телефона — відкриється набір номера</span></div>' +
+        '<div class="cbx-or"><span>або залиште номер</span></div>' +
+        '<form class="cbx-form" novalidate>' +
+          '<input type="text" name="name" placeholder="Ваше ім\'я" autocomplete="name" aria-label="Ваше ім\'я">' +
+          '<input type="tel" name="phone" value="+380" autocomplete="tel" aria-label="Ваш телефон">' +
+          '<button type="submit" class="btn btn-primary">Передзвонимо самі</button>' +
+        '</form>' +
+        '<p class="cbx-msg" role="status" hidden></p>' +
+        '<a class="cbx-tg" href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener">Або напишіть у Telegram →</a>' +
+      '</div>';
+    document.body.appendChild(cbx);
+    cbx.addEventListener('click', function(e){ if(e.target === cbx) closeCallBox(); });
+    cbx.querySelector('.cbx-close').addEventListener('click', closeCallBox);
+    var form = cbx.querySelector('.cbx-form'), msg = cbx.querySelector('.cbx-msg');
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = form.elements.name, phone = form.elements.phone, btn = form.querySelector('button');
+      name.classList.remove('input-error'); phone.classList.remove('input-error');
+      if(!name.value.trim()){ name.classList.add('input-error'); name.focus(); return; }
+      if(phone.value.replace(/\D/g, '').length < 12){ phone.classList.add('input-error'); phone.focus(); return; }
+      btn.disabled = true; btn.textContent = 'Надсилаємо…'; msg.hidden = true;
+      fetch(API_URL + '/api/callback', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name: name.value.trim(), phone: phone.value.trim(), symptom: ''})
+      }).then(function(r){
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        track('form_submit', 'вікно дзвінка');
+        form.hidden = true;
+        msg.className = 'cbx-msg ok'; msg.textContent = '✓ Дякуємо! Передзвонимо найближчим часом.'; msg.hidden = false;
+      }).catch(function(){
+        btn.disabled = false; btn.textContent = 'Передзвонимо самі';
+        msg.className = 'cbx-msg err'; msg.textContent = 'Не вдалося надіслати. Спробуйте ще раз або напишіть у Telegram.'; msg.hidden = false;
+      });
+    });
+  }
+
+  function openCallBox(opener){
+    if(!cbx) buildCallBox();
+    cbxOpener = opener;
+    document.documentElement.style.overflow = 'hidden';
+    cbx.classList.add('open');
+    var first = cbx.querySelector('input[name="name"]');
+    setTimeout(function(){ (first && !first.closest('[hidden]') ? first : cbx.querySelector('.cbx-close')).focus(); }, 60);
+  }
+
+  function closeCallBox(){
+    if(!cbx) return;
+    cbx.classList.remove('open');
+    document.documentElement.style.overflow = '';
+    if(cbxOpener && cbxOpener.focus) cbxOpener.focus();
+  }
+
+  document.addEventListener('keydown', function(e){
+    if(!cbx || !cbx.classList.contains('open')) return;
+    if(e.key === 'Escape'){ closeCallBox(); return; }
+    if(e.key === 'Tab'){
+      // фокус не виходить за межі вікна
+      var f = [].filter.call(cbx.querySelectorAll('button, input, a[href]'), function(n){ return !n.disabled && !n.closest('[hidden]'); });
+      if(!f.length) return;
+      var firstEl = f[0], lastEl = f[f.length - 1];
+      if(e.shiftKey && document.activeElement === firstEl){ e.preventDefault(); lastEl.focus(); }
+      else if(!e.shiftKey && document.activeElement === lastEl){ e.preventDefault(); firstEl.focus(); }
+    }
+  });
+
   function clickPlace(el){
     if(el.closest('.hero-actions')) return 'головний екран';
     if(el.closest('.isle')) return 'шапка';
@@ -130,7 +216,10 @@
     var a = e.target.closest('a');
     if(!a) return;
     var href = a.getAttribute('href') || '';
-    if(href.indexOf('tel:') === 0) track('call_click', clickPlace(a));
+    if(href.indexOf('tel:') === 0){
+      track('call_click', clickPlace(a));
+      if(desktopPointer.matches && !a.closest('.tabbar')){ e.preventDefault(); openCallBox(a); }
+    }
     else if(href.indexOf('t.me/') !== -1) track('tg_click', clickPlace(a));
     else if(href.indexOf('maps/dir') !== -1) track('route_click', clickPlace(a));
     else if(a.classList.contains('work-card')) track('news_click', (a.querySelector('.work-card-title') || {}).textContent);
