@@ -117,6 +117,72 @@
   try { isNewSession = !sessionStorage.getItem('sv'); sessionStorage.setItem('sv', '1'); } catch(e){}
   track('view', location.pathname, { ref: isNewSession ? referrerSource() : '', new_session: isNewSession });
 
+  // ---------- поля форм (як на старому сайті) ----------
+  // Ім'я — лише літери й пробіл. Телефон — «+380 » вписується при кліку, далі не більше 9 цифр.
+  // Що не підійшло — прибирається, а під полем на 2,5 с з'являється червоне пояснення.
+  var PHONE_PREFIX = '+380 ', PHONE_DIGITS = 9;
+  function fieldMsg(input, box, text){
+    box.textContent = text; box.classList.add('show'); input.classList.add('input-error');
+    clearTimeout(box._t);
+    box._t = setTimeout(function(){ box.classList.remove('show'); input.classList.remove('input-error'); }, 2500);
+  }
+  function fieldClear(input, box){
+    clearTimeout(box._t); box.classList.remove('show'); input.classList.remove('input-error');
+  }
+  function guardFields(nameInput, phoneInput, nameBox, phoneBox){
+    nameInput.addEventListener('input', function(){
+      var raw = this.value, cleaned = raw.replace(/[^\p{L}\s]/gu, '');
+      if(cleaned !== raw){
+        var pos = Math.max(0, (this.selectionStart || 0) - (raw.length - cleaned.length));
+        this.value = cleaned;
+        try{ this.setSelectionRange(pos, pos); }catch(e){}
+        fieldMsg(nameInput, nameBox, 'Ім\'я повинно містити лише літери');
+      } else fieldClear(nameInput, nameBox);
+    });
+    phoneInput.addEventListener('focus', function(){
+      if(this.value === '') this.value = PHONE_PREFIX;
+      var end = this.value.length;
+      try{ this.setSelectionRange(end, end); }catch(e){}
+    });
+    phoneInput.addEventListener('blur', function(){
+      if(this.value.trim() === PHONE_PREFIX.trim()){ this.value = ''; fieldClear(phoneInput, phoneBox); }
+    });
+    phoneInput.addEventListener('input', function(){
+      var v = this.value, hadLetters, digits;
+      if(v.indexOf(PHONE_PREFIX) === 0){
+        var tail = v.slice(PHONE_PREFIX.length);
+        hadLetters = /\D/.test(tail); digits = tail.replace(/\D/g, '');
+      } else {
+        // вставили номер цілком: «+38 (050) 111-22-33», «0501112233», «380501112233»
+        hadLetters = /[^\d\s+()\-]/.test(v); digits = v.replace(/\D/g, '');
+        if(/^380/.test(digits)) digits = digits.slice(3); else if(digits[0] === '0') digits = digits.slice(1);
+      }
+      var over = digits.length > PHONE_DIGITS;
+      if(over) digits = digits.slice(0, PHONE_DIGITS);
+      this.value = PHONE_PREFIX + digits;
+      var end = this.value.length;
+      try{ this.setSelectionRange(end, end); }catch(e){}
+      if(hadLetters) fieldMsg(phoneInput, phoneBox, 'Номер повинен містити лише цифри');
+      else if(over) fieldMsg(phoneInput, phoneBox, 'Максимум 9 цифр після +380');
+      else fieldClear(phoneInput, phoneBox);
+    });
+    // «+380 » не стирається клавішами Backspace/Delete
+    phoneInput.addEventListener('keydown', function(e){
+      var pos = this.selectionStart;
+      if((e.key === 'Backspace' && pos <= PHONE_PREFIX.length && this.selectionEnd <= PHONE_PREFIX.length) ||
+         (e.key === 'Delete' && pos < PHONE_PREFIX.length)) e.preventDefault();
+    });
+    return {
+      // перевірка перед відправкою: false — є помилка (поле підсвічене й у фокусі)
+      validate: function(){
+        if(!nameInput.value.trim()){ fieldMsg(nameInput, nameBox, 'Вкажіть ім\'я'); nameInput.focus(); return false; }
+        if(phoneInput.value.replace(/\D/g, '').length < 12){ fieldMsg(phoneInput, phoneBox, 'Введіть 9 цифр після +380'); phoneInput.focus(); return false; }
+        return true;
+      }
+    };
+  }
+  window.siteGuardFields = guardFields;
+
   // ---------- «Подзвонити» на комп'ютері ----------
   // З комп'ютера дзвонити не можна, тому на пристроях з мишею посилання tel: відкриває вікно:
   // номер, QR-код (набрати з телефона), форма «Передзвонимо самі» і Telegram. Телефони й планшети — як раніше.
@@ -141,7 +207,9 @@
         '<div class="cbx-or"><span>або залиште номер</span></div>' +
         '<form class="cbx-form" novalidate>' +
           '<input type="text" name="name" placeholder="Ваше ім\'я" autocomplete="name" aria-label="Ваше ім\'я">' +
-          '<input type="tel" name="phone" value="+380" autocomplete="tel" aria-label="Ваш телефон">' +
+          '<div class="form-error"></div>' +
+          '<input type="tel" name="phone" placeholder="+380" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">' +
+          '<div class="form-error"></div>' +
           '<button type="submit" class="btn btn-primary">Передзвонимо самі</button>' +
         '</form>' +
         '<p class="cbx-msg" role="status" hidden></p>' +
@@ -151,12 +219,12 @@
     cbx.addEventListener('click', function(e){ if(e.target === cbx) closeCallBox(); });
     cbx.querySelector('.cbx-close').addEventListener('click', closeCallBox);
     var form = cbx.querySelector('.cbx-form'), msg = cbx.querySelector('.cbx-msg');
+    var errs = form.querySelectorAll('.form-error');
+    var guard = guardFields(form.elements.name, form.elements.phone, errs[0], errs[1]);
     form.addEventListener('submit', function(e){
       e.preventDefault();
       var name = form.elements.name, phone = form.elements.phone, btn = form.querySelector('button');
-      name.classList.remove('input-error'); phone.classList.remove('input-error');
-      if(!name.value.trim()){ name.classList.add('input-error'); name.focus(); return; }
-      if(phone.value.replace(/\D/g, '').length < 12){ phone.classList.add('input-error'); phone.focus(); return; }
+      if(!guard.validate()) return;
       btn.disabled = true; btn.textContent = 'Надсилаємо…'; msg.hidden = true;
       fetch(API_URL + '/api/callback', {
         method: 'POST', headers: {'Content-Type': 'application/json'},

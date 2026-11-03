@@ -146,8 +146,10 @@
           <div class="sym-picked" id="cbSym" hidden><span id="cbSymText"></span><button type="button" id="cbSymClear" aria-label="Прибрати симптом">×</button></div>
           <div class="form-row">
             <input type="text" id="cbName" placeholder="Ваше ім'я" required autocomplete="name">
-            <input type="tel" id="cbPhone" placeholder="+380" required autocomplete="tel">
+            <input type="tel" id="cbPhone" placeholder="+380" required autocomplete="tel" inputmode="tel">
           </div>
+          <div class="form-error" id="cbNameError"></div>
+          <div class="form-error" id="cbPhoneError"></div>
           <div class="form-row" style="margin-top:10px;">
             <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Замовити дзвінок</button>
           </div>
@@ -192,12 +194,12 @@
   if(sym){ box.hidden = false; document.getElementById('cbSymText').textContent = 'Симптом: ' + sym; }
   document.getElementById('cbSymClear').addEventListener('click', function(){ box.hidden = true; try{ sessionStorage.removeItem('symptom'); }catch(e){} });
   var form = document.getElementById('cbForm');
+  var guard = window.siteGuardFields(document.getElementById('cbName'), document.getElementById('cbPhone'), document.getElementById('cbNameError'), document.getElementById('cbPhoneError'));
   form.addEventListener('submit', function(e){
     e.preventDefault();
     var name = document.getElementById('cbName').value.trim();
     var phone = document.getElementById('cbPhone').value.trim();
-    if(!name){ document.getElementById('cbName').focus(); return; }
-    if(phone.replace(/\D/g, '').length < 12){ document.getElementById('cbPhone').focus(); return; }
+    if(!guard.validate()) return;
     var symptom = box.hidden ? '' : sym;
     if(window.siteTrack) window.siteTrack('form_submit', symptom);
     var btn = form.querySelector('button[type="submit"]');

@@ -148,6 +148,8 @@
 .cbx-form input.input-error{border-color:#ff6b5e;}
 .cbx-form .btn{width:100%;justify-content:center;}
 .cbx-form .btn[disabled]{opacity:.7;cursor:progress;}
+.cbx .form-error{display:none;color:#ff6b5e;font-size:.82rem;font-weight:500;margin-top:-4px;}
+.cbx .form-error.show{display:block;}
 .cbx-msg{margin:6px 0 0;font-size:.95rem;}
 .cbx-msg.ok{color:var(--signal);font-weight:600;}
 .cbx-msg.err{color:#ff8a7e;}
