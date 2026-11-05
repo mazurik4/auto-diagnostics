@@ -175,7 +175,7 @@
     return {
       // перевірка перед відправкою: false — є помилка (поле підсвічене й у фокусі)
       validate: function(){
-        if(!nameInput.value.trim()){ fieldMsg(nameInput, nameBox, 'Вкажіть ім\'я'); nameInput.focus(); return false; }
+        if(nameInput.value.trim().length < 2){ fieldMsg(nameInput, nameBox, nameInput.value.trim() ? 'Ім\'я занадто коротке' : 'Вкажіть ім\'я'); nameInput.focus(); return false; }
         if(phoneInput.value.replace(/\D/g, '').length < 12){ fieldMsg(phoneInput, phoneBox, 'Введіть 9 цифр після +380'); phoneInput.focus(); return false; }
         return true;
       }
@@ -226,6 +226,10 @@
       var name = form.elements.name, phone = form.elements.phone, btn = form.querySelector('button');
       if(!guard.validate()) return;
       btn.disabled = true; btn.textContent = 'Надсилаємо…'; msg.hidden = true;
+      // як на «Контактах»: заявка йде на сервер, а Telegram відкривається з готовим текстом.
+      // Відкриваємо одразу в обробнику натискання, інакше браузер заблокує нове вікно.
+      var tgText = encodeURIComponent('Замовлення дзвінка з сайту.\nІм\'я: ' + name.value.trim() + '\nТелефон: ' + phone.value.trim());
+      window.open('https://t.me/Autoworkshop_Alex?text=' + tgText, '_blank');
       fetch(API_URL + '/api/callback', {
         method: 'POST', headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({name: name.value.trim(), phone: phone.value.trim(), symptom: ''})
@@ -233,10 +237,10 @@
         if(!r.ok) throw new Error('HTTP ' + r.status);
         track('form_submit', 'вікно дзвінка');
         form.hidden = true;
-        msg.className = 'cbx-msg ok'; msg.textContent = '✓ Дякуємо! Передзвонимо найближчим часом.'; msg.hidden = false;
+        msg.className = 'cbx-msg ok'; msg.textContent = '✓ Дякуємо! Заявку отримано. У Telegram, що відкрився, натисніть «Надіслати» — так ми побачимо її одразу.'; msg.hidden = false;
       }).catch(function(){
         btn.disabled = false; btn.textContent = 'Передзвонимо самі';
-        msg.className = 'cbx-msg err'; msg.textContent = 'Не вдалося надіслати. Спробуйте ще раз або напишіть у Telegram.'; msg.hidden = false;
+        msg.className = 'cbx-msg err'; msg.textContent = 'Не вдалося зберегти заявку. Надішліть її в Telegram, що відкрився, або спробуйте ще раз.'; msg.hidden = false;
       });
     });
   }
