@@ -139,6 +139,17 @@
 }
 .gal-card:hover .gal-tag,.gal-card:focus-visible .gal-tag{opacity:1;transform:none;}
 .gal-card--video{cursor:pointer;}
+/* відео: кадр цілим поверх розмитої копії, по центру кнопка Play, знизу підказка */
+.gal-card--video img{position:relative;object-fit:contain;}
+.gal-card--video img.gal-card-bg{position:absolute;inset:0;object-fit:cover;transform:scale(1.15);filter:blur(22px) brightness(.5) saturate(1.15);}
+.gal-card--video:hover img.gal-card-bg,.gal-card--video:focus-visible img.gal-card-bg{transform:scale(1.15);}
+.gal-card--video::after{opacity:1;}
+.gal-play{position:absolute;left:50%;top:50%;z-index:1;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(27,29,33,.72);border:2px solid rgba(236,238,241,.85);color:var(--paper);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  box-shadow:0 6px 24px rgba(0,0,0,.45);transition:transform .25s ease,background .25s ease,border-color .25s ease,color .25s ease;}
+.gal-play svg{width:26px;height:26px;margin-left:3px;}
+.gal-card--video:hover .gal-play,.gal-card--video:focus-visible .gal-play{transform:scale(1.1);background:var(--signal);border-color:var(--signal);color:var(--signal-ink);}
+.gal-hint{position:absolute;left:0;right:0;bottom:12px;z-index:1;text-align:center;font-size:.8rem;font-weight:600;color:var(--paper);text-shadow:0 1px 6px rgba(0,0,0,.6);}
 .gal-badge{
   position:absolute;top:10px;left:10px;z-index:1;display:inline-flex;align-items:center;gap:6px;
   background:rgba(35,38,43,.82);border:1px solid var(--line-strong);border-radius:999px;padding:6px 11px;
@@ -194,3 +205,4 @@ body.lb-open{overflow:hidden;}
   .gal-section{margin-bottom:40px;}
   .gal-slide-cap{padding:36px 14px 12px;}
 }
+@media (max-width:640px){.gal-play{width:50px;height:50px;margin:-30px 0 0 -25px}.gal-play svg{width:22px;height:22px}.gal-hint{font-size:.72rem;bottom:9px}}

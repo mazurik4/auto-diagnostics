@@ -328,13 +328,22 @@
     return wrap;
   }
 
+  // Google віддає лише кадр відео, тому саме відео відкриваємо в Картах Google: за ключем медіа
+  // (item.media_key) Карти показують саме цей ролик. Немає ключа — просто профіль.
+  function videoUrl(item){
+    if(!item.media_key) return data.profile_url;
+    return 'https://www.google.com/maps/place/' + encodeURIComponent('Автоелектрик Київ') +
+      '/@50.4000131,30.4302686,17z/data=!3m7!1e5!3m5!1s' + encodeURIComponent(item.media_key) +
+      '!2e10!3e11!7i' + (item.width || 320) + '!8i' + (item.height || 568) + '?hl=uk';
+  }
+
   function card(item, i){
     const isVideo = item.type === 'VIDEO';
     const node = el(isVideo ? 'a' : 'button', 'gal-card' + (isVideo ? ' gal-card--video' : ''));
     node.style.setProperty('--i', i % PAGE_SIZE);
     const title = catTitle(item.category);
     if(isVideo){
-      node.href = data.profile_url; node.target = '_blank'; node.rel = 'noopener';
+      node.href = videoUrl(item); node.target = '_blank'; node.rel = 'noopener';
       node.setAttribute('aria-label', 'Відео — дивитися в Google');
     } else {
       node.type = 'button';
@@ -346,10 +355,22 @@
     img.loading = 'lazy';
     img.decoding = 'async';
     loadImg(img, imgUrl(item.thumb_url));
+    if(isVideo){
+      // кадр показуємо цілим (відео зазвичай вертикальне), поля заповнює його ж розмита копія
+      const bg = el('img', 'gal-card-bg');
+      bg.alt = ''; bg.setAttribute('aria-hidden', 'true'); bg.loading = 'lazy';
+      loadImg(bg, imgUrl(item.thumb_url));
+      node.appendChild(bg);
+    }
     node.appendChild(img);
     if(isVideo){
-      const b = el('span', 'gal-badge', 'Відео · Google');
+      const play = el('span', 'gal-play');
+      play.setAttribute('aria-hidden', 'true');
+      play.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.2v13.6a1 1 0 0 0 1.5.86l11-6.8a1 1 0 0 0 0-1.72l-11-6.8A1 1 0 0 0 8 5.2z"/></svg>';
+      node.appendChild(play);
+      const b = el('span', 'gal-badge', 'Відео');
       node.appendChild(b);
+      node.appendChild(el('span', 'gal-hint', 'Дивитись у Google ↗'));
     } else {
       node.appendChild(el('span', 'gal-tag', title));
     }
