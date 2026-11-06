@@ -22,7 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
 <link rel="stylesheet" href="../pages.css?v=3">
-<link rel="stylesheet" href="../chrome.css">
+<link rel="stylesheet" href="../chrome.css?v=4">
 <script type="application/ld+json">
 [
  {
@@ -102,16 +102,28 @@
   </div>
 </div>
 <div class="topbar">
-  <a class="brand" href="../index.html"><img src="../img/halfautoelectriklogo.png" alt="Логотип майстерні" width="69" height="46"><b>Автодіагностика</b></a>
-  <span class="st"><span class="dot" data-st></span><span class="stt"><span data-st-short>Поза графіком</span></span></span>
+  <a class="brand" href="../index.html"><img src="../img/halfautoelectriklogo.png" alt="Логотип майстерні" width="69" height="46"><span class="tid"><b>Автодіагностика</b><span class="st"><span class="dot" data-st></span><span class="stt"><span data-st-short>Поза графіком</span></span></span></span></a>
+  <a class="tcall" href="tel:+380954851166" aria-label="Подзвонити"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+  <button class="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 </div>
-<nav class="tabbar" aria-label="Розділи сайту">
-  <a href="../poslugy.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0 5 5L22 14l-8 8-2.3-2.3a4 4 0 0 0-5-5L2 10l8-8 2.3 2.3a4 4 0 0 0 2.4 2z"/></svg><span>Послуги</span></a>
-  <a href="../roboty/" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg><span>Роботи</span></a>
-  <a class="mid" href="tel:+380954851166" aria-label="Подзвонити"><span class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><span>Дзвінок</span></a>
-  <a href="../gallery.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg><span>Галерея</span></a>
-  <a href="../kontakty.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Контакти</span></a>
-</nav>
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Меню" aria-hidden="true">
+  <button class="menu-x" type="button" aria-label="Закрити меню"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <nav aria-label="Розділи сайту">
+    <a href="../index.html" style="--i:0">Головна</a>
+    <a href="../poslugy.html" style="--i:1">Послуги</a>
+    <a href="../roboty/" aria-current="page" style="--i:2">Наші роботи</a>
+    <a href="../gallery.html" style="--i:3">Галерея</a>
+    <a href="../pro-nas.html" style="--i:4">Про нас</a>
+    <a href="../kontakty.html" style="--i:5">Контакти</a>
+  </nav>
+  <div class="menu-st"><span class="dot" data-st></span><span data-st-text>Перевіряємо статус…</span></div>
+  <p class="menu-addr">Київ, вул. Гуцульська 97А</p>
+  <a class="btn btn-primary menu-call" href="tel:+380954851166"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Подзвонити</a>
+  <div class="menu-acts">
+    <a class="btn btn-ghost" href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg> Написати в Telegram</a>
+    <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&destination=50.400036,30.430157" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg> Побудувати маршрут</a>
+  </div>
+</div>
 
 <main id="top">
   <article class="post page-first">
@@ -227,6 +239,6 @@
   <a class="fab-tg2" href="https://t.me/Autoworkshop_Alex" target="_blank" rel="noopener" aria-label="Написати в Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></a>
 </div>
 
-<script src="../site.js?v=4"></script>
+<script src="../site.js?v=5"></script>
 </body>
 </html>

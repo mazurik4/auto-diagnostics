@@ -41,36 +41,54 @@
 /* перший блок кожної сторінки відсувається з-під капсули */
 .page-first{padding-top:128px !important}
 
-/* ---------- телефон: верхня смужка + нижні вкладки ---------- */
-.topbar,.tabbar{display:none}
+/* ---------- телефон: верхня смужка (лого, статус, дзвінок, меню) + меню на весь екран ---------- */
+/* Нічого не прижато до нижнього краю: плашка Safari там перехоплювала перше натискання. */
+.topbar,.menu{display:none}
 @media (max-width:900px){
   .isle{display:none}
   .page-first{padding-top:36px !important}
-  body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
-  .topbar{display:flex;position:sticky;top:0;z-index:900;height:64px;align-items:center;justify-content:space-between;
+  /* внизу більше немає панелі, що закривала б вміст */
+  body{padding-bottom:0}
+  .topbar{display:flex;position:sticky;top:0;z-index:900;height:64px;align-items:center;gap:8px;
     padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));
     background:rgba(27,29,33,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-  .topbar .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--paper)}
-  .topbar .brand img{width:69px;height:46px;object-fit:cover;border-radius:7px}
-  .topbar .brand b{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.9rem}
-  .topbar .st{display:flex;align-items:center;font-size:.75rem;color:var(--paper-dim)}
-  /* вузькі телефони: щоб назва не впиралась у статус */
-  @media (max-width:370px){ .topbar .brand b{font-size:.8rem} .topbar .brand{gap:8px} }
-  @media (max-width:340px){ .topbar .brand b{display:none} }
-  .tabbar{display:grid;position:fixed;left:0;right:0;bottom:0;z-index:900;grid-template-columns:repeat(5,1fr);align-items:end;
-    height:calc(74px + env(safe-area-inset-bottom,0px));
-    padding:0 max(6px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));
-    background:rgba(22,24,27,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
-  .tabbar a{color:var(--steel);font:600 .66rem 'Inter',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;gap:4px;
-    padding:8px 0 0;text-decoration:none;position:relative;transition:color .2s}
-  .tabbar a svg{width:22px;height:22px}
-  .tabbar a[aria-current="page"]{color:var(--paper)}
-  .tabbar a[aria-current="page"]::before{content:"";position:absolute;top:0;width:22px;height:3px;border-radius:3px;background:var(--signal)}
-  .tabbar .mid{align-self:start}
-  .tabbar .mid .ring{width:56px;height:56px;border-radius:50%;background:var(--signal);color:var(--signal-ink);display:grid;place-items:center;margin-top:-22px;
-    box-shadow:0 0 0 6px rgba(22,24,27,.94);animation:tabPulse 2.6s ease-in-out infinite}
-  .tabbar .mid span{color:var(--signal)}
-  @keyframes tabPulse{0%,100%{box-shadow:0 0 0 6px rgba(22,24,27,.94),0 0 0 6px rgba(47,184,94,0)}50%{box-shadow:0 0 0 6px rgba(22,24,27,.94),0 0 0 14px rgba(47,184,94,.16)}}
+  .topbar .brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-decoration:none;color:var(--paper)}
+  .topbar .brand img{width:69px;height:46px;object-fit:cover;border-radius:7px;flex:none}
+  .topbar .tid{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .topbar .tid b{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.9rem;line-height:1.1;white-space:nowrap}
+  .topbar .st{display:flex;align-items:center;font-size:.72rem;color:var(--paper-dim);white-space:nowrap}
+  .tcall,.burger{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;padding:0;cursor:pointer;text-decoration:none;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  .tcall{background:var(--signal);color:var(--signal-ink);border:0}
+  .burger{background:rgba(255,255,255,.08);border:1px solid var(--line-strong);color:var(--paper)}
+  .tcall svg,.burger svg{width:20px;height:20px}
+  .tcall:focus-visible,.burger:focus-visible,.menu-x:focus-visible,.menu nav a:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+  /* вузькі телефони: щоб назва не впиралась у кнопки */
+  @media (max-width:370px){ .topbar .tid b{font-size:.8rem} .topbar .brand{gap:8px} }
+  @media (max-width:340px){ .topbar .tid b{display:none} }
+
+  .menu{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    padding:max(14px,env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));
+    background:rgba(18,19,22,.99);opacity:0;visibility:hidden;transform:translateY(-8px);
+    transition:opacity .25s ease,transform .3s cubic-bezier(.22,1,.36,1),visibility 0s linear .3s}
+  .menu.open{opacity:1;visibility:visible;transform:none;transition:opacity .25s ease,transform .3s cubic-bezier(.22,1,.36,1)}
+  .menu-x{align-self:flex-end;flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+    background:transparent;border:1px solid var(--line-strong);color:var(--paper-dim);transition:background .2s,border-color .2s,color .2s;touch-action:manipulation}
+  .menu-x:active{background:var(--signal);border-color:var(--signal);color:var(--signal-ink)}
+  .menu-x svg{width:22px;height:22px}
+  .menu nav{display:grid;margin-top:8px}
+  .menu nav a{display:flex;justify-content:space-between;align-items:center;padding:13px 2px;border-bottom:1px solid var(--line);
+    font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(1.6rem,7.4vw,2.2rem);line-height:1.1;text-transform:uppercase;color:var(--paper);text-decoration:none;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  .menu nav a[aria-current="page"]::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--signal)}
+  .menu.open nav a{animation:menuIn .42s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i,0) * 45ms + 80ms)}
+  @keyframes menuIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .menu-st{display:flex;align-items:center;gap:8px;margin:22px 2px 4px;font-size:.92rem;font-weight:600;color:var(--paper)}
+  .menu-addr{margin:0 2px 16px;font-size:.9rem;color:var(--paper-dim)}
+  .menu-call{width:100%;justify-content:center;padding:15px 18px;font-size:1rem;touch-action:manipulation}
+  .menu-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .menu-acts .btn{justify-content:center;padding:12px 8px;font-size:.8rem;gap:6px;text-align:center;touch-action:manipulation}
+  @media (max-width:420px){ .menu-acts{grid-template-columns:1fr} .menu-acts .btn{font-size:.88rem;padding:13px 12px} }
 }
 
 /* статус у смужці: лише мигаюча точка, доки видно значок у першому екрані; потім текст «витікає» з точки */
@@ -92,7 +110,7 @@
 .foot2 a:hover{color:var(--signal)}
 
 @media (prefers-reduced-motion:reduce){
-  .isle *, .st *, .tabbar *{transition:none !important;animation:none !important}
+  .isle *, .st *, .menu, .menu *{transition:none !important;animation:none !important}
 }
 
 /* ---------- кружечки справа внизу: Telegram і «нагору» ---------- */
@@ -113,7 +131,7 @@
 .fab-up:hover,.fab-up:focus-visible{background:var(--signal);border-color:var(--signal);color:var(--signal-ink);box-shadow:0 8px 22px rgba(47,184,94,.35)}
 .fab-up{transition:opacity .3s ease,transform .35s cubic-bezier(.3,1.4,.5,1),box-shadow .2s ease,background .2s ease,border-color .2s ease,color .2s ease}
 @media (max-width:900px){
-  /* на телефоні — над нижньою панеллю, трохи менші */
+  /* на телефоні — вище нижнього краю (там плашка Safari), трохи менші */
   .fabs{right:max(14px,env(safe-area-inset-right,0px));bottom:calc(88px + env(safe-area-inset-bottom,0px));gap:8px}
   .fabs a{width:46px;height:46px}
 }

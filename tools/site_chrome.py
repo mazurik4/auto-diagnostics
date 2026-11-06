@@ -15,7 +15,7 @@ from datetime import datetime
 from pathlib import Path
 
 TEMPLATES = Path(__file__).resolve().parent / "templates"
-MENU_KEYS = ["poslugy", "roboty", "gallery", "pro_nas", "kontakty"]
+MENU_KEYS = ["home", "poslugy", "roboty", "gallery", "pro_nas", "kontakty"]
 
 
 def _fill(name: str, values: dict) -> str:

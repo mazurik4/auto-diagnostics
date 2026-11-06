@@ -71,6 +71,53 @@
     }
   }
 
+  // ---------- телефон: меню на весь екран ----------
+  var menu = document.getElementById('menu'), burger = document.querySelector('.burger');
+  if(menu && burger){
+    var menuClose = menu.querySelector('.menu-x');
+    var openMenu = function(){
+      menu.classList.add('open'); menu.setAttribute('aria-hidden', 'false'); burger.setAttribute('aria-expanded', 'true');
+      document.documentElement.style.overflow = 'hidden';
+      setTimeout(function(){ menuClose.focus(); }, 60);
+    };
+    var closeMenu = function(back){
+      if(!menu.classList.contains('open')) return;
+      menu.classList.remove('open'); menu.setAttribute('aria-hidden', 'true'); burger.setAttribute('aria-expanded', 'false');
+      document.documentElement.style.overflow = '';
+      if(back !== false) burger.focus();
+    };
+    burger.addEventListener('click', openMenu);
+    menuClose.addEventListener('click', function(){ closeMenu(); });
+    // перехід по пункту чи кнопці закриває меню (на тій самій сторінці — теж)
+    menu.addEventListener('click', function(e){ if(e.target.closest('a')) closeMenu(false); });
+    document.addEventListener('keydown', function(e){
+      if(!menu.classList.contains('open')) return;
+      if(e.key === 'Escape'){ closeMenu(); return; }
+      if(e.key === 'Tab'){
+        var f = [].filter.call(menu.querySelectorAll('button, a[href]'), function(n){ return n.offsetParent !== null; });
+        if(!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      }
+    });
+    // свайп вниз закриває меню (якщо воно не прокручене)
+    var sx = null, sy = 0;
+    menu.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive:true});
+    menu.addEventListener('touchend', function(e){
+      if(sx === null) return;
+      var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+      sx = null;
+      if(menu.scrollTop <= 0 && dy > 90 && Math.abs(dy) > Math.abs(dx) * 1.5) closeMenu();
+    }, {passive:true});
+    // на широкому екрані меню не потрібне: знімаємо блокування прокрутки
+    if(window.matchMedia){
+      var wide = window.matchMedia('(min-width: 901px)');
+      var onWide = function(){ if(wide.matches) closeMenu(false); };
+      if(wide.addEventListener) wide.addEventListener('change', onWide); else if(wide.addListener) wide.addListener(onWide);
+    }
+  }
+
   // ---------- кнопка «нагору»: з'являється після 500px прокрутки ----------
   var up = document.querySelector('[data-up]');
   if(up){
@@ -277,7 +324,8 @@
   function clickPlace(el){
     if(el.closest('.hero-actions')) return 'головний екран';
     if(el.closest('.isle')) return 'шапка';
-    if(el.closest('.tabbar')) return 'нижня панель';
+    if(el.closest('.menu')) return 'меню';
+    if(el.closest('.topbar')) return 'шапка';
     if(el.closest('.fabs')) return 'плаваюча кнопка';
     if(el.closest('.visit')) return 'контакти';
     if(el.closest('.cta2, .cta-band, .post-cta')) return 'заклик';
@@ -290,12 +338,12 @@
     var href = a.getAttribute('href') || '';
     if(href.indexOf('tel:') === 0){
       track('call_click', clickPlace(a));
-      if(desktopPointer.matches && !a.closest('.tabbar')){ e.preventDefault(); openCallBox(a); }
+      if(desktopPointer.matches){ e.preventDefault(); openCallBox(a); }
     }
     else if(href.indexOf('t.me/') !== -1) track('tg_click', clickPlace(a));
     else if(href.indexOf('maps/dir') !== -1) track('route_click', clickPlace(a));
     else if(a.classList.contains('work-card')) track('news_click', (a.querySelector('.work-card-title') || {}).textContent);
-    else if(a.closest('.isle nav, .tabbar')) track('nav_click', href);
+    else if(a.closest('.isle nav, .menu nav')) track('nav_click', href);
   });
   document.addEventListener('toggle', function(e){
     var d = e.target;
