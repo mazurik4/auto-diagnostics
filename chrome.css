@@ -131,8 +131,8 @@
 .fab-up:hover,.fab-up:focus-visible{background:var(--signal);border-color:var(--signal);color:var(--signal-ink);box-shadow:0 8px 22px rgba(47,184,94,.35)}
 .fab-up{transition:opacity .3s ease,transform .35s cubic-bezier(.3,1.4,.5,1),box-shadow .2s ease,background .2s ease,border-color .2s ease,color .2s ease}
 @media (max-width:900px){
-  /* на телефоні — вище нижнього краю (там плашка Safari), трохи менші */
-  .fabs{right:max(14px,env(safe-area-inset-right,0px));bottom:calc(52px + env(safe-area-inset-bottom,0px));gap:8px}
+  /* на телефоні — трохи менші, прямо над плашкою Safari; env(safe-area-inset-bottom) не додаємо: Safari сам дає там ~56px */
+  .fabs{right:max(14px,env(safe-area-inset-right,0px));bottom:52px;gap:8px}
   .fabs a{width:46px;height:46px}
 }
 
