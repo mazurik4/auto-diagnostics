@@ -167,7 +167,8 @@
   // ---------- поля форм (як на старому сайті) ----------
   // Ім'я — лише літери й пробіл. Телефон — «+380 » вписується при кліку, далі не більше 9 цифр.
   // Що не підійшло — прибирається, а під полем на 2,5 с з'являється червоне пояснення.
-  var PHONE_PREFIX = '+380 ', PHONE_DIGITS = 9;
+  var PHONE_PREFIX = '+38 (0', PHONE_DIGITS = 9;
+  var PHONE_MASK = '+38 (0__) ___-__-__';  // сіра підказка в порожньому полі
   function fieldMsg(input, box, text){
     box.textContent = text; box.classList.add('show'); input.classList.add('input-error');
     clearTimeout(box._t);
@@ -176,6 +177,18 @@
   function fieldClear(input, box){
     clearTimeout(box._t); box.classList.remove('show'); input.classList.remove('input-error');
   }
+  // 501112233 -> «+38 (050) 111-22-33»: формат, як номер майстерні на сайті; додається по мірі набору
+  function formatPhone(d){
+    var out = PHONE_PREFIX + d.slice(0, 2);
+    if(d.length >= 2) out += ')';
+    if(d.length > 2) out += ' ' + d.slice(2, 5);
+    if(d.length > 5) out += '-' + d.slice(5, 7);
+    if(d.length > 7) out += '-' + d.slice(7, 9);
+    return out;
+  }
+  // у Telegram номер іде міжнародним записом без пропусків, щоб його можна було натиснути й одразу подзвонити
+  function phoneForTelegram(value){ return '+' + String(value).replace(/\D/g, ''); }
+  window.sitePhoneForTelegram = phoneForTelegram;
   function guardFields(nameInput, phoneInput, nameBox, phoneBox){
     nameInput.addEventListener('input', function(){
       var raw = this.value, cleaned = raw.replace(/[^\p{L}\s]/gu, '');
@@ -192,32 +205,43 @@
       try{ this.setSelectionRange(end, end); }catch(e){}
     });
     phoneInput.addEventListener('blur', function(){
-      if(this.value.trim() === PHONE_PREFIX.trim()){ this.value = ''; fieldClear(phoneInput, phoneBox); }
+      if(this.value === PHONE_PREFIX){ this.value = ''; fieldClear(phoneInput, phoneBox); }
     });
     phoneInput.addEventListener('input', function(){
-      var v = this.value, hadLetters, digits;
+      var v = this.value, hadLetters, digits, all = v.replace(/\D/g, '');
+      hadLetters = /[^\d\s+()\-]/.test(v);
       if(v.indexOf(PHONE_PREFIX) === 0){
-        var tail = v.slice(PHONE_PREFIX.length);
-        hadLetters = /\D/.test(tail); digits = tail.replace(/\D/g, '');
+        digits = all.slice(3);                       // «380» уже в префіксі
       } else {
         // вставили номер цілком: «+38 (050) 111-22-33», «0501112233», «380501112233»
-        hadLetters = /[^\d\s+()\-]/.test(v); digits = v.replace(/\D/g, '');
+        digits = all;
         if(/^380/.test(digits)) digits = digits.slice(3); else if(digits[0] === '0') digits = digits.slice(1);
       }
       var over = digits.length > PHONE_DIGITS;
       if(over) digits = digits.slice(0, PHONE_DIGITS);
-      this.value = PHONE_PREFIX + digits;
+      this.value = formatPhone(digits);
       var end = this.value.length;
       try{ this.setSelectionRange(end, end); }catch(e){}
       if(hadLetters) fieldMsg(phoneInput, phoneBox, 'Номер повинен містити лише цифри');
       else if(over) fieldMsg(phoneInput, phoneBox, 'Максимум 9 цифр після +380');
       else fieldClear(phoneInput, phoneBox);
     });
-    // «+380 » не стирається клавішами Backspace/Delete
+    // «+38 (0» не стирається; Backspace після дужки чи дефіса стирає останню цифру, а не роздільник
     phoneInput.addEventListener('keydown', function(e){
-      var pos = this.selectionStart;
-      if((e.key === 'Backspace' && pos <= PHONE_PREFIX.length && this.selectionEnd <= PHONE_PREFIX.length) ||
-         (e.key === 'Delete' && pos < PHONE_PREFIX.length)) e.preventDefault();
+      var s = this.selectionStart, en = this.selectionEnd, v = this.value, L = PHONE_PREFIX.length;
+      if(e.key === 'Delete' && s < L){ e.preventDefault(); return; }
+      if(e.key !== 'Backspace') return;
+      if(s !== en){ if(s < L) e.preventDefault(); return; }
+      if(s <= L){ e.preventDefault(); return; }
+      var j = s - 1;
+      while(j >= L && /\D/.test(v.charAt(j))) j--;
+      if(j < L){ e.preventDefault(); return; }
+      if(j !== s - 1){
+        e.preventDefault();
+        this.value = v.slice(0, j) + v.slice(j + 1);
+        try{ this.setSelectionRange(j, j); }catch(err){}
+        this.dispatchEvent(new Event('input', {bubbles:true}));
+      }
     });
     return {
       // перевірка перед відправкою: false — є помилка (поле підсвічене й у фокусі)
@@ -255,7 +279,7 @@
         '<form class="cbx-form" novalidate>' +
           '<input type="text" name="name" placeholder="Ваше ім\'я" autocomplete="name" aria-label="Ваше ім\'я">' +
           '<div class="form-error"></div>' +
-          '<input type="tel" name="phone" placeholder="+380" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">' +
+          '<input type="tel" name="phone" placeholder="+38 (0__) ___-__-__" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">' +
           '<div class="form-error"></div>' +
           '<button type="submit" class="btn btn-primary">Передзвонимо самі</button>' +
         '</form>' +
@@ -275,7 +299,7 @@
       btn.disabled = true; btn.textContent = 'Надсилаємо…'; msg.hidden = true;
       // як на «Контактах»: заявка йде на сервер, а Telegram відкривається з готовим текстом.
       // Відкриваємо одразу в обробнику натискання, інакше браузер заблокує нове вікно.
-      var tgText = encodeURIComponent('Замовлення дзвінка з сайту.\nІм\'я: ' + name.value.trim() + '\nТелефон: ' + phone.value.trim());
+      var tgText = encodeURIComponent('Замовлення дзвінка з сайту.\nІм\'я: ' + name.value.trim() + '\nТелефон: ' + phoneForTelegram(phone.value));
       window.open('https://t.me/Autoworkshop_Alex?text=' + tgText, '_blank');
       fetch(API_URL + '/api/callback', {
         method: 'POST', headers: {'Content-Type': 'application/json'},
