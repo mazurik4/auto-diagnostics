@@ -62,6 +62,13 @@
   .tcall{background:var(--signal);color:var(--signal-ink);border:0}
   .burger{background:rgba(255,255,255,.08);border:1px solid var(--line-strong);color:var(--paper)}
   .tcall svg,.burger svg{width:20px;height:20px}
+  /* кнопка звонка «дзвонить»: значок трясеться як слухавка, потім пауза */
+  .tcall svg{transform-origin:50% 50%;animation:phoneRing 4.5s ease-in-out infinite}
+  @keyframes phoneRing{
+    0%,16%,100%{transform:none}
+    2%{transform:rotate(-16deg)} 4%{transform:rotate(16deg)} 6%{transform:rotate(-14deg)} 8%{transform:rotate(14deg)}
+    10%{transform:rotate(-9deg)} 12%{transform:rotate(9deg)} 14%{transform:rotate(-4deg)}
+  }
   .tcall:focus-visible,.burger:focus-visible,.menu-x:focus-visible,.menu nav a:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
   /* вузькі телефони: щоб назва не впиралась у кнопки */
   @media (max-width:370px){ .topbar .tid b{font-size:.8rem} .topbar .brand{gap:8px} }
@@ -110,7 +117,7 @@
 .foot2 a:hover{color:var(--signal)}
 
 @media (prefers-reduced-motion:reduce){
-  .isle *, .st *, .menu, .menu *{transition:none !important;animation:none !important}
+  .isle *, .st *, .menu, .menu *, .tcall svg{transition:none !important;animation:none !important}
 }
 
 /* ---------- кружечки справа внизу: Telegram і «нагору» ---------- */
