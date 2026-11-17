@@ -337,12 +337,66 @@
       '!2e10!3e11!7i' + (item.width || 320) + '!8i' + (item.height || 568) + '?hl=uk';
   }
 
+  // ---------- відео на сайті ----------
+  // Файл відео зберігає бекенд (/api/gallery/{id}/video). Відкриваємо його у вікні з плеєром.
+  let vm = null, vmOpener = null;
+  function closeVideo(){
+    if(!vm) return;
+    const v = vm.querySelector('video');
+    try{ v.pause(); }catch(e){}
+    v.removeAttribute('src'); v.load();
+    vm.classList.remove('open');
+    document.body.classList.remove('lb-open');
+    document.removeEventListener('keydown', vmKey);
+    if(vmOpener && vmOpener.focus) vmOpener.focus();
+  }
+  function vmKey(e){
+    if(e.key === 'Escape') closeVideo();
+    else if(e.key === 'Tab'){
+      const f = [].filter.call(vm.querySelectorAll('button, a[href]'), function(n){ return n.offsetParent !== null; });
+      if(!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  }
+  function openVideo(item, opener){
+    if(!vm){
+      vm = el('div', 'vm');
+      vm.setAttribute('role', 'dialog'); vm.setAttribute('aria-modal', 'true'); vm.setAttribute('aria-label', 'Відео');
+      vm.innerHTML =
+        '<button type="button" class="vm-close" aria-label="Закрити"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
+        '<video controls playsinline preload="metadata"></video>' +
+        '<a class="vm-g" target="_blank" rel="noopener">Дивитись у Google ↗</a>';
+      document.body.appendChild(vm);
+      vm.addEventListener('click', function(e){ if(e.target === vm) closeVideo(); });
+      vm.querySelector('.vm-close').addEventListener('click', closeVideo);
+    }
+    vmOpener = opener;
+    const v = vm.querySelector('video');
+    v.poster = imgUrl(item.image_url || item.thumb_url);
+    v.src = imgUrl(item.video_url);
+    vm.querySelector('.vm-g').href = videoUrl(item);
+    vm.classList.add('open');
+    document.body.classList.add('lb-open');
+    document.addEventListener('keydown', vmKey);
+    vm.querySelector('.vm-close').focus();
+    track('gallery_open', 'відео');
+    const p = v.play(); if(p && p.catch) p.catch(function(){ /* автозапуск заблоковано — є кнопка Play у плеєрі */ });
+  }
+
   function card(item, i){
     const isVideo = item.type === 'VIDEO';
-    const node = el(isVideo ? 'a' : 'button', 'gal-card' + (isVideo ? ' gal-card--video' : ''));
+    // є файл відео — граємо на сайті (кнопка), немає — як раніше, веде в Google (посилання)
+    const playable = isVideo && !!item.video_url;
+    const node = el(isVideo && !playable ? 'a' : 'button', 'gal-card' + (isVideo ? ' gal-card--video' : ''));
     node.style.setProperty('--i', i % PAGE_SIZE);
     const title = catTitle(item.category);
-    if(isVideo){
+    if(playable){
+      node.type = 'button';
+      node.setAttribute('aria-label', 'Відео — дивитися');
+      node.addEventListener('click', function(){ openVideo(item, node); });
+    } else if(isVideo){
       node.href = videoUrl(item); node.target = '_blank'; node.rel = 'noopener';
       node.setAttribute('aria-label', 'Відео — дивитися в Google');
     } else {
@@ -370,7 +424,7 @@
       node.appendChild(play);
       const b = el('span', 'gal-badge', 'Відео');
       node.appendChild(b);
-      node.appendChild(el('span', 'gal-hint', 'Дивитись у Google ↗'));
+      if(!playable) node.appendChild(el('span', 'gal-hint', 'Дивитись у Google ↗'));
     } else {
       node.appendChild(el('span', 'gal-tag', title));
     }
