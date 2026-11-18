@@ -331,7 +331,7 @@
   // Google віддає лише кадр відео, тому саме відео відкриваємо в Картах Google: за ключем медіа
   // (item.media_key) Карти показують саме цей ролик. Немає ключа — просто профіль.
   function videoUrl(item){
-    if(!item.media_key) return data.profile_url;
+    if(!item.media_key || (window.matchMedia && matchMedia('(hover:none),(pointer:coarse)').matches)) return data.profile_url;
     return 'https://www.google.com/maps/place/' + encodeURIComponent('Автоелектрик Київ') +
       '/@50.4000131,30.4302686,17z/data=!3m7!1e5!3m5!1s' + encodeURIComponent(item.media_key) +
       '!2e10!3e11!7i' + (item.width || 320) + '!8i' + (item.height || 568) + '?hl=uk';
