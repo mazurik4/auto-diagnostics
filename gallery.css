@@ -219,3 +219,4 @@ body.lb-open{overflow:hidden;}
 .vm-g{color:var(--paper-dim);text-decoration:none;font-weight:600;font-size:.92rem;transition:color .2s;}
 .vm-g:hover,.vm-g:focus-visible{color:var(--signal);outline:none;}
 @media (prefers-reduced-motion:reduce){.vm{transition:none}}
+@media (hover:none),(pointer:coarse){.vm-g{display:none;}}
